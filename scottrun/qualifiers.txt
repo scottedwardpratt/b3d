@@ -1,0 +1,8 @@
+#qualifier alice_cent0_5
+#BEAM_INFO ALICE_PBPB
+#
+qualifier alice_cent0_10
+BEAM_INFO ALICE_PBPB
+#
+#qualifier alice_cent0_20
+#BEAM_INFO ALICE_PBPB

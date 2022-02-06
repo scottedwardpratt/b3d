@@ -1,0 +1,3 @@
+/Users/scottpratt/git/b3d/software/CMakeFiles/b3d.dir
+/Users/scottpratt/git/b3d/software/CMakeFiles/edit_cache.dir
+/Users/scottpratt/git/b3d/software/CMakeFiles/rebuild_cache.dir

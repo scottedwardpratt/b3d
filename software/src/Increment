@@ -1,0 +1,3 @@
+balancearrays.cc:	numer_pipi->name="pipi";
+balancearrays.cc:	numer_pipi->WriteNumer(bf_results_dirname,numertype,NoQ);
+balancearrays.cc:					numer_pipi->Increment(&partaa,&partbb,effa,effb);
