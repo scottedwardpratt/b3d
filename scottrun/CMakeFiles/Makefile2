@@ -63,7 +63,7 @@ CMAKE_BINARY_DIR = /Users/scottpratt/git/b3d/scottrun
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/b3d.exe.dir/all
+all: CMakeFiles/b3dtest.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -73,7 +73,7 @@ preinstall:
 # The main recursive "clean" target.
 clean: CMakeFiles/extern_b3d.dir/clean
 clean: CMakeFiles/extern_commonutils.dir/clean
-clean: CMakeFiles/b3d.exe.dir/clean
+clean: CMakeFiles/b3dtest.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -129,31 +129,31 @@ CMakeFiles/extern_commonutils.dir/clean:
 .PHONY : CMakeFiles/extern_commonutils.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/b3d.exe.dir
+# Target rules for target CMakeFiles/b3dtest.dir
 
 # All Build rule for target.
-CMakeFiles/b3d.exe.dir/all: CMakeFiles/extern_b3d.dir/all
-CMakeFiles/b3d.exe.dir/all: CMakeFiles/extern_commonutils.dir/all
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.exe.dir/build.make CMakeFiles/b3d.exe.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.exe.dir/build.make CMakeFiles/b3d.exe.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/scottpratt/git/b3d/scottrun/CMakeFiles --progress-num=1,2 "Built target b3d.exe"
-.PHONY : CMakeFiles/b3d.exe.dir/all
+CMakeFiles/b3dtest.dir/all: CMakeFiles/extern_b3d.dir/all
+CMakeFiles/b3dtest.dir/all: CMakeFiles/extern_commonutils.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3dtest.dir/build.make CMakeFiles/b3dtest.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3dtest.dir/build.make CMakeFiles/b3dtest.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/scottpratt/git/b3d/scottrun/CMakeFiles --progress-num=1,2 "Built target b3dtest"
+.PHONY : CMakeFiles/b3dtest.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/b3d.exe.dir/rule: cmake_check_build_system
+CMakeFiles/b3dtest.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/scottpratt/git/b3d/scottrun/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/b3d.exe.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/b3dtest.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/scottpratt/git/b3d/scottrun/CMakeFiles 0
-.PHONY : CMakeFiles/b3d.exe.dir/rule
+.PHONY : CMakeFiles/b3dtest.dir/rule
 
 # Convenience name for target.
-b3d.exe: CMakeFiles/b3d.exe.dir/rule
-.PHONY : b3d.exe
+b3dtest: CMakeFiles/b3dtest.dir/rule
+.PHONY : b3dtest
 
 # clean rule for target.
-CMakeFiles/b3d.exe.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.exe.dir/build.make CMakeFiles/b3d.exe.dir/clean
-.PHONY : CMakeFiles/b3d.exe.dir/clean
+CMakeFiles/b3dtest.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3dtest.dir/build.make CMakeFiles/b3dtest.dir/clean
+.PHONY : CMakeFiles/b3dtest.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

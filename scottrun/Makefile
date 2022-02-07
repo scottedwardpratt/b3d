@@ -143,24 +143,24 @@ extern_commonutils/fast:
 .PHONY : extern_commonutils/fast
 
 #=============================================================================
-# Target rules for targets named b3d.exe
+# Target rules for targets named b3dtest
 
 # Build rule for target.
-b3d.exe: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 b3d.exe
-.PHONY : b3d.exe
+b3dtest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 b3dtest
+.PHONY : b3dtest
 
 # fast build rule for target.
-b3d.exe/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.exe.dir/build.make CMakeFiles/b3d.exe.dir/build
-.PHONY : b3d.exe/fast
+b3dtest/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3dtest.dir/build.make CMakeFiles/b3dtest.dir/build
+.PHONY : b3dtest/fast
 
 b3dmain.o: b3dmain.cc.o
 .PHONY : b3dmain.o
 
 # target to build an object file
 b3dmain.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.exe.dir/build.make CMakeFiles/b3d.exe.dir/b3dmain.cc.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3dtest.dir/build.make CMakeFiles/b3dtest.dir/b3dmain.cc.o
 .PHONY : b3dmain.cc.o
 
 b3dmain.i: b3dmain.cc.i
@@ -168,7 +168,7 @@ b3dmain.i: b3dmain.cc.i
 
 # target to preprocess a source file
 b3dmain.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.exe.dir/build.make CMakeFiles/b3d.exe.dir/b3dmain.cc.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3dtest.dir/build.make CMakeFiles/b3dtest.dir/b3dmain.cc.i
 .PHONY : b3dmain.cc.i
 
 b3dmain.s: b3dmain.cc.s
@@ -176,7 +176,7 @@ b3dmain.s: b3dmain.cc.s
 
 # target to generate assembly for a file
 b3dmain.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.exe.dir/build.make CMakeFiles/b3d.exe.dir/b3dmain.cc.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3dtest.dir/build.make CMakeFiles/b3dtest.dir/b3dmain.cc.s
 .PHONY : b3dmain.cc.s
 
 # Help Target
@@ -189,7 +189,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... extern_b3d"
 	@echo "... extern_commonutils"
-	@echo "... b3d.exe"
+	@echo "... b3dtest"
 	@echo "... b3dmain.o"
 	@echo "... b3dmain.i"
 	@echo "... b3dmain.s"
