@@ -7,7 +7,6 @@
 void CAction::Perform(){
 	CPartMap::iterator ppos;
 	CPart *part;
-	//printf("performing action of type %d, tau=%g\n",type,tau);
 
 	b3d->nactions+=1;
 	Kill();
@@ -17,15 +16,16 @@ void CAction::Perform(){
 		part=ppos->second;
 		part->Propagate(tau);
 		if(part->currentmap != &(b3d->PartMap)){
-			printf("wrong map for part in Action List\n");
+			sprintf(message,"wrong map for part in Action List\n");
+			actionlog->Info(message);
 			part->Print();
 			part->active=true;
 			part->ChangeMap(&(b3d->PartMap));
 		}
 	}
 	if(tau+1.0E-4<b3d->tau){
-		printf("FATAL:: action earlier than tau!!!!, b3d->tau=%15.10e, action tau=%15.10e\n",b3d->tau,tau);
-		exit(1);
+		sprintf(message,"FATAL:: action earlier than tau!!!!, b3d->tau=%15.10e, action tau=%15.10e\n",b3d->tau,tau);
+		actionlog->Fatal(message);
 	}
 	if(type==6){
 		PerformExitCell();
@@ -49,11 +49,9 @@ void CAction::Perform(){
 		PerformSECalc();
 	}
 	else{
-		printf("FATAL: action type = %d is unknown, exiting\n",type);
-		exit(1);
+		sprintf(message,"FATAL: action type = %d is unknown, exiting\n",type);
+		actionlog->Fatal(message);
 	}
-	//b3d->CheckPartMap();
-	//printf("---------\n");
 	
 }
 

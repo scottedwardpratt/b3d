@@ -2,6 +2,7 @@
 #define __HYPER_H__
 
 #include "commondefs.h"
+#include "log.h"
 
 // Info for HyperSurface
 class CHyperElement{
@@ -16,7 +17,7 @@ public:
 	void GetP(CResInfo *resinfo,FourVector &p,double &mass,double maxweight);
 	void Copy(CHyperElement *oldhyper);
 	int MakeParts();
-	void Print();
+	void Print(CLog *hyperlog);
 	// Note dOmegaX and dOmegaY = d\Omega_\mu
 	// (subscript mu, so p.Omega = p0*dOmega0+px*dOmegaX+py*dOmegaY)
 	static CSampler *sampler;

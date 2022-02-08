@@ -18,7 +18,8 @@ double CB3D::WriteOSCAR(int ievent){
 	CPartMap::iterator ppos;
 	
 	int nparts=PartMap.size();
-	printf("writing %d particles to %s\n",nparts,oscarfilename.c_str());
+	sprintf(message,"writing %d particles to %s\n",nparts,oscarfilename.c_str());
+	b3dlog->Info(message);
 	if(oscarfile==NULL){
 		if(BINARY_RW)
 			oscarfile=fopen(oscarfilename.c_str(),"wb");
@@ -61,7 +62,8 @@ double CB3D::WriteOSCAR(int ievent){
 			fprintf(oscarfile,"%5d %5d %12.6e %12.6e %12.6e %12.6e %12.6e %12.6e %12.6e %12.6e %12.6e %g\n",
 		ipart,part->resinfo->code,part->p[1],part->p[2],part->p[3],part->p[0],sqrt(part->msquared),part->r[1],part->r[2],part->r[3],part->r[0],part->weight);
 		if(ppos==PartMap.end()){
-			printf("ppos shouldn't be here\n");
+			sprintf(message,"ppos shouldn't be here\n");
+			b3dlog->Fatal(message);
 		}
 		++ppos;
 	}
@@ -101,8 +103,8 @@ int CB3D::ReadOSCAR(int ievent){
 	else{
 		fscanf(oscarfile,"%d %d %lf %lf",&ievent_read,&nparts_read,&bmin,&bmax);
 		if(!feof(oscarfile) && ievent_read!=ievent){
-			printf("trying to read wrong event, ievent=%d, ievent_read=%d\n",ievent,ievent_read);
-			exit(1);
+			sprintf(message,"trying to read wrong event, ievent=%d, ievent_read=%d\n",ievent,ievent_read);
+			b3dlog->Fatal(message);
 		}
 	}
 	if(feof(oscarfile)){
@@ -136,98 +138,7 @@ int CB3D::ReadOSCAR(int ievent){
 	return nparts_read;
 }
 
-/*
-void CB3D::ReadBalanceParts(){
-	vector<int> netcharge(50000,0);
-	string filename=parmap.getS("BALANCE_INPUT_FILENAME","vinzentdata/hadrons.csv");
-	printf("reading %s\n",filename.c_str());
-	FILE *fptr=fopen(filename.c_str(),"r");
-	int nqgppions=0;
-	double sigma=0;
-	int nsigma=0;
-	CPartMap::iterator ppos;
-	vector<CPart *> newpart;
-	newpart.reserve(10);
-	newpart.clear();
-	CResInfo *resinfo;
-	char dummy[120];
-	fgets(dummy,120,fptr);
-	double x,y,z,t,E,px,py,pz,mt,tau_read,eta,eta0,rapidity,mass;
-	int pid,intweight=1,ibalpair=-999999,oldibalpair=-999999;
-	int ibalread=0,iibalread;
-	int nbalpairs=0,nparts=0;
-	int nevencheck=0,noddcheck=0;
-	bool firstread=true;
-	do{
-		fscanf(fptr,"%d %d %lf %lf %lf %lf %lf %lf %lf %lf",&pid,&ibalread,&x,&y,&z,&tau_read,&E,&px,&py,&pz);
-		ibalpair=lrint(floor(double(ibalread)/2.0));
-		if((ibalpair!=oldibalpair || feof(fptr)) && firstread==false){
-			//if previous round of ibalpair didn't have any good pairs, kill all particles
-			if(feof(fptr) || newpart.size()!=0){
-				for(nparts=0;nparts<int(newpart.size());nparts++){
-					newpart[nparts]->Kill();
-				}
-			}
-			nbalpairs+=nevencheck*noddcheck;
-			newpart.clear();
-			nevencheck=0;
-			noddcheck=0;
-		}
-		firstread=false;
-		
-		if(!feof(fptr)){
-			resinfo=reslist->GetResInfoPtr(pid);
-			if(ibalread==int(netcharge.size())){
-				netcharge.resize(netcharge.size()+5000);
-				for(iibalread=ibalread;iibalread<int(netcharge.size());iibalread++)
-					netcharge[iibalread]=0;
-			}
-			netcharge[ibalread]+=resinfo->charge;
-			mass=resinfo->mass;
-			mt=sqrt(mass*mass+px*px+py*py);
-			E=sqrt(mt*mt+pz*pz);
-			eta=1.0*randy->ran_gauss();
-			if(abs(pid)==211){
-				nsigma+=1;
-				sigma+=eta*eta;
-			}
-			z=tau_read*sinh(eta);
-			t=tau_read*cosh(eta);
-			eta0=asinh(z/t);
-			rapidity=(eta-eta0)+0.5*log((E+pz)/(E-pz));
-			E=mt*cosh(rapidity);
-			pz=mt*sinh(rapidity);
-			if(abs(pid)==211 && ibalread!=-1)
-				nqgppions+=1;
-			
-			if(ibalread%2==0)
-				nevencheck+=1;
-			if(ibalread%2==1)
-				noddcheck+=1;
-			nparts=newpart.size();
-			newpart.push_back(GetDeadPart());
-			rapidity=0.5*log((E+pz)/(E-pz));
-			resinfo=reslist->GetResInfoPtr(pid);
-			mass=resinfo->mass;
-			newpart[nparts]->InitBalance(pid,x,y,tau,eta,px,py,mass,rapidity,intweight,ibalread);
-			if(newpart[nparts]->resinfo->CheckForNeutral()){
-				printf("why are we generating a neutral particle?\n");
-				exit(1);
-			}
-		}
-		oldibalpair=ibalpair;
-	}while(!feof(fptr));
-	int netbal=0;
-	for(ibalread=0;ibalread<int(netcharge.size());ibalread+=2){
-		netbal+=netcharge[ibalread]*netcharge[ibalread+1];
-	}
-	printf("netbal=%d\n",netbal);
-	printf("--- nbalpairs=%d, nqgppions=%d, sigma=%g\n",nbalpairs,nqgppions,sqrt(sigma/double(nsigma)));
-}
-*/
-
 double CB3D::WriteBalanceParts(int ievent){
-	printf("In WriteBalance..... PartMap.size()=%d\n",int(PartMap.size()));
 	CB3DBinaryBalancePartInfo bpart;
 	double sigma=0;
 	int nsigma=0;
@@ -283,7 +194,8 @@ double CB3D::WriteBalanceParts(int ievent){
 		++ppos;
 		ipart+=1;
 	} while(ipart<nparts);
-	printf("WriteBalance -- sigma=%g\n",sqrt(sigma/double(nsigma)));
+	sprintf(message,"WriteBalance -- sigma=%g\n",sqrt(sigma/double(nsigma)));
+	b3dlog->Info(message);
 	return dnchdy/(2.0*ETAMAX);
 }
 
@@ -307,8 +219,8 @@ int CB3D::ReadBalanceParts(int ievent){
 	else{
 		fscanf(oscarfile,"%d %d %lf %lf",&ievent_read,&nparts_read,&bmin,&bmax);
 		if(!feof(oscarfile) && ievent_read!=ievent){
-			printf("trying to read wrong event, ievent=%d, ievent_read=%d\n",ievent,ievent_read);
-			exit(1);
+			sprintf(message,"trying to read wrong event, ievent=%d, ievent_read=%d\n",ievent,ievent_read);
+			b3dlog->Fatal(message);
 		}
 	}
 	if(feof(oscarfile)){
@@ -323,15 +235,12 @@ int CB3D::ReadBalanceParts(int ievent){
 			p[2]=bpart.py;
 			rapidity=bpart.rapidity;
 			balanceID=bpart.balanceID;
-			//printf("ID=%d, p=(%g,%g), y=%g, bID=%d\n",ID,p[1],p[2],rapidity,balanceID);
 		}
 		else{
-			printf("should only work for binary rw\n");
-			exit(1);
+			sprintf(message,"should only work for binary rw\n");
+			b3dlog->Fatal(message);
 			//fscanf(oscarfile,"%d %d %lf %lf %lf",&ipart,&ID,&p[1],&p[2],&rapidity);
 		}
-		//Readprintf("read in ipart=%d, ID=%d, p=(%g,%g), y=%g, nparts_read=%d\n",
-		//ipart,ID,p[1],p[2],rapidity,nparts_read);
 		r[1]=r[2]=0.0;
 		eta=rapidity;
 		while(fabs(eta)>ETAMAX)

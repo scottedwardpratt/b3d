@@ -20,15 +20,10 @@ int main(int argc, char *argv[]){
 	nevents=1+ieventf-ievent0;
 	printf("ievent0=%d, ieventf=%d\n",ievent0,ieventf);
 	CB3D *b3d=new CB3D(run_name);
-	printf("check a\n");
 	b3d->InitCascade();
-	printf("check b\n");
 	CQualifiers qualifiers;
-	printf("huh?\n");
 	qualifiers.Read("qualifiers.txt");
-	printf("check c\n");
 	for(iqual=0;iqual<qualifiers.nqualifiers;iqual++){
-		printf("check d, iqual=%d\n",iqual);
 		ncolls=0;
 		npartstot=0;
 		b3d->SetQualifier(qualifiers.qualifier[iqual]->qualname);

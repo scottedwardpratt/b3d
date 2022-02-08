@@ -631,6 +631,7 @@ CMakeFiles/b3d.dir/src/makepart.cc.o: \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/./RealQZ.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h \
+  /Users/scottpratt/git/commonutils/software/include/log.h \
   /Users/scottpratt/git/b3d/software/include/resonances.h \
   /Users/scottpratt/git/commonutils/software/include/randy.h \
   /Users/scottpratt/git/commonutils/software/include/misc.h \
@@ -641,4 +642,5 @@ CMakeFiles/b3d.dir/src/makepart.cc.o: \
   /Users/scottpratt/git/b3d/software/include/mucalc.h \
   /Users/scottpratt/git/b3d/software/include/part.h \
   /Users/scottpratt/git/commonutils/software/include/decay_nbody.h \
+  /Users/scottpratt/git/b3d/software/include/acceptance.h \
   /Users/scottpratt/git/b3d/software/include/sampler.h

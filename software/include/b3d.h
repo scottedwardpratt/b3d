@@ -7,6 +7,8 @@
 #include "mutinfo.h"
 #include "mucalc.h"
 #include "decay_nbody.h"
+#include "acceptance.h"
+#include "log.h"
 
 using namespace std;
 
@@ -41,12 +43,14 @@ public:
 	double ANNIHILATION_SREDUCTION;  // reduces annihilation cross section based on amount of strangeness
 	int DENSWRITE_NTAU;
 	int NBOSE;
+	char message[200];
 	double DENSWRITE_DELTAU,MUTCALC_DELTAU;
 	vector<vector<vector<CB3DCell *> > > cell;
 	vector<vector<CMuTInfo *> > muTinfo;
 	vector<double> annihilation_array;
 	CSEInfo *SEinfo;
 	CDecay_NBody *decay_nbody;
+	CLog *b3dlog;
 	
 	void ReadCharges(int ichargefile);
 	void GenHadronsFromCharges();
@@ -227,6 +231,8 @@ public:
 	~CAction();
 
 	static CB3D *b3d;
+	static CLog *actionlog;
+	static char *message;
 
 	CActionMap::iterator GetPos(CActionMap *actionmap);
 	void MoveToActionMap();

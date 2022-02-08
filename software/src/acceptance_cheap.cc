@@ -21,7 +21,6 @@ void CAcceptance_CHEAP::CalcAcceptance(bool &accept,double &efficiency,CPart *pa
 	
 	accept=false;
 	pt=sqrt(part->p[1]*part->p[1]+part->p[2]*part->p[2]);
-	//printf("pt=%g\n",pt);
 	pmag=sqrt(pt*pt+part->p[3]*part->p[3]);
 	eta=atanh(part->p[3]/pmag);
 	/*
@@ -30,7 +29,8 @@ void CAcceptance_CHEAP::CalcAcceptance(bool &accept,double &efficiency,CPart *pa
 	if(dca[0]<1.5){
 	efficiency=0.0;
 	pt=sqrt(part->p[1]*part->p[1]+part->p[2]*part->p[2]);
-	//printf("pt=%g\n",pt);
+	//sprintf(message,"pt=%g\n",pt);
+	acclog->Info(message);
 	pmag=sqrt(pt*pt+part->p[3]*part->p[3]);
 	eta=atanh(part->p[3]/pmag);
 	//y=atanh(part->p[3]/part->p[0]);
@@ -62,7 +62,8 @@ void CAcceptance_CHEAP::CalcAcceptance(bool &accept,double &efficiency,CPart *pa
 	}
 	}
 	else{
-	printf("dca=%g,%g,%g,%g\n",dca[0],dca[1],dca[2],dca[3]);
+	sprintf(message,"dca=%g,%g,%g,%g\n",dca[0],dca[1],dca[2],dca[3]);
+	acclog->Info(message);
 	}
 	if(m!=m){
 	part->Print();
@@ -78,7 +79,10 @@ void CAcceptance_CHEAP::CalcAcceptance(bool &accept,double &efficiency,CPart *pa
 	pmag=sqrt(pt*pt+part->p[3]*part->p[3]);
 	eta=atanh(part->p[3]/pmag);
 	//y=atanh(part->p[3]/part->p[0]);
-	//if(dca[0]>0.000001) printf("dca=%g,%g,%g,%g\n",dca[0],dca[1],dca[2],dca[3]);
+	//if(dca[0]>0.000001){
+	sprintf(message,"dca=%g,%g,%g,%g\n",dca[0],dca[1],dca[2],dca[3]);
+	acclog->Info(message);
+	}
 	if(pt>ptmin && pt<ptmax && eta>ETAMIN && eta<ETAMAX){
 	accept=true;
 	efficiency=0.8;
@@ -107,7 +111,8 @@ void CAcceptance_CHEAP::CalcAcceptanceNoID(bool &accept,double &efficiency,CPart
 	double A0;
 	if(dca[0]<1.5){
 	efficiency=0.0;
-	//printf("pt=%g\n",pt);
+	//sprintf(message,"pt=%g\n",pt);
+	acclog->Info(message);
 	//y=atanh(part->p[3]/part->p[0]);
 	m=part->resinfo->mass;
 	 
@@ -137,7 +142,8 @@ void CAcceptance_CHEAP::CalcAcceptanceNoID(bool &accept,double &efficiency,CPart
 	}
 	}
 	else{
-	printf("dca=%g,%g,%g,%g\n",dca[0],dca[1],dca[2],dca[3]);
+	sprintf(message,"dca=%g,%g,%g,%g\n",dca[0],dca[1],dca[2],dca[3]);
+	acclog->Info(message);
 	}
 	if(m!=m){
 	part->Print();
@@ -153,7 +159,10 @@ void CAcceptance_CHEAP::CalcAcceptanceNoID(bool &accept,double &efficiency,CPart
 	pmag=sqrt(pt*pt+part->p[3]*part->p[3]);
 	eta=atanh(part->p[3]/pmag);
 	//y=atanh(part->p[3]/part->p[0]);
-	//if(dca[0]>0.000001) printf("dca=%g,%g,%g,%g\n",dca[0],dca[1],dca[2],dca[3]);
+	//if(dca[0]>0.000001){
+	sprintf(message,"dca=%g,%g,%g,%g\n",dca[0],dca[1],dca[2],dca[3]);
+	acclog->Info(message);
+	}
 	if(pt>ptmin && pt<ptmax && eta>ETAMIN && eta<ETAMAX){
 	accept=true;
 	efficiency=0.8;

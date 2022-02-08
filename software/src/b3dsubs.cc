@@ -14,10 +14,12 @@ void CB3D::WriteAnnihilationData(){
 		double total=0.0;
 		int iitau,imax=lrint(TAUCOLLMAX);
 		for(iitau=0;iitau<imax;iitau++){
-			printf("%6.2f %g\n",(iitau+0.5),annihilation_array[iitau]);
+			sprintf(message,"%6.2f %g\n",(iitau+0.5),annihilation_array[iitau]);
+			b3dlog->Info(message);
 			total+=annihilation_array[iitau];
 		}
-		printf("%g total annihilations, nbaryons=%d, annihilation fraction=%g\n",total,nbaryons,2.0*total/double(nbaryons));
+		sprintf(message,"%g total annihilations, nbaryons=%d, annihilation fraction=%g\n",total,nbaryons,2.0*total/double(nbaryons));
+		b3dlog->Info(message);
 	}
 }
 
@@ -60,10 +62,12 @@ void CB3D::KillAllParts(){
 	while(ppos!=PartMap.end()){
 		part=ppos->second;
 		if(part->currentmap!=&PartMap){
-			printf("KillAllParts:  currentpart not listed as PartMap\n");
+			sprintf(message,"Fatal: KillAllParts:  currentpart not listed as PartMap\n");
+			b3dlog->Info(message);
 			part->Print();
-			printf("PartMap.size=%d, DeadPartMap.size=%d\n",int(PartMap.size()),int(DeadPartMap.size()));
+			sprintf(message,"PartMap.size=%d, DeadPartMap.size=%d\n",int(PartMap.size()),int(DeadPartMap.size()));
 			part->currentmap=&PartMap;
+			b3dlog->Fatal(message);
 			exit(1);
 			//Misc::Pause();
 		}
@@ -75,10 +79,11 @@ void CB3D::KillAllParts(){
 	for(ppos=DeadPartMap.begin();ppos!=DeadPartMap.end();++ppos){
 		part=ppos->second;
 		if(part->currentmap!=&DeadPartMap){
-			printf("particle in dead part map has wrong current map\n");
+			sprintf(message,"particle in dead part map has wrong current map\n");
+			b3dlog->Info(message);
 			part->Print();
-			printf("PartMap.size=%d, DeadPartMap.size=%d\n",int(PartMap.size()),int(DeadPartMap.size()));
-			exit(1);
+			sprintf(message,"PartMap.size=%d, DeadPartMap.size=%d\n",int(PartMap.size()),int(DeadPartMap.size()));
+			b3dlog->Fatal(message);
 		}
 	}
 
@@ -107,11 +112,11 @@ void CB3D::PrintActionMap(CActionMap *actionmap){
 	CActionMap::iterator epos;
 	CAction *action;
 	int iaction=0;
-	printf("_________________ ACTIONMAP %d actions _________________________\n",int(actionmap->size()));
+	sprintf(message,"_________________ ACTIONMAP %d actions _________________________\n",int(actionmap->size()));
+	b3dlog->Info(message);
 	for(epos=actionmap->begin();epos!=actionmap->end();++epos){
 		iaction+=1;
 		action=epos->second;
-		printf("iaction=%d : ",iaction);
 		action->Print();
 	}
 }
@@ -140,14 +145,16 @@ void CB3D::FindAllCollisions(){
 void CB3D::PrintPartList(){
 	CPartMap::iterator ppos2,ppos1=PartMap.begin();
 	while(ppos1!=PartMap.end()){
-		printf("%d ",ppos1->second->listid);
+		sprintf(message,"%d ",ppos1->second->listid);
 		ppos2=ppos1; ++ppos2;
 		if(ppos2!=PartMap.end()){
-			if(ppos1->second->actionmother!=ppos2->second->actionmother) printf("| ");
+			if(ppos1->second->actionmother!=ppos2->second->actionmother)
+				sprintf(message,"%s| ",message);
 		}
 		++ppos1;
 	}
-	printf("\n");
+	sprintf(message,"%s\n",message);
+	b3dlog->Info(message);
 }
 
 void CB3D::PrintMuTInfo(){
@@ -180,16 +187,17 @@ void CB3D::ListFutureCollisions(){
 	CActionMap::iterator epos=ActionMap.begin();
 	CAction *action;
 	CPartMap::iterator p1,p2;
-	printf("------------------- LIST OF FUTURE COLLISIONS ---------------------\n");
+	sprintf(message,"------------------- LIST OF FUTURE COLLISIONS ---------------------\n");
 	while(epos!=ActionMap.end()){
 		action=epos->second;
 		if(action->type==2){
 			p1=action->partmap.begin();
 			p2=p1; ++p2;
-			printf("%d  %d  will collide at %g\n",p1->second->listid,p2->second->listid,double(action->tau));
+			sprintf(message,"%s%d  %d  will collide at %g\n",message,p1->second->listid,p2->second->listid,double(action->tau));
 		}
 		epos++;
 	}
+	b3dlog->Info(message);
 }
 
 double CB3D::CalcSigma(CPart *part1,CPart *part2){
@@ -296,8 +304,8 @@ double CB3D::CalcSigma(CPart *part1,CPart *part2){
 			}
 			iw+=1;
 			if(iw==NWMAX){
-				printf("MUST INCREASE NWMAX in int CB3D::Collide\n");
-				exit(1);
+				sprintf(message,"MUST INCREASE NWMAX in int CB3D::Collide\n");
+				b3dlog->Fatal(message);
 			}
 			inel++;
 
@@ -361,7 +369,8 @@ CPart* CB3D::GetDeadPart(){
 		for(int ipart=0;ipart<DELNPARTSTOT*NSAMPLE;ipart++){
 			new CPart(npartstot);
 		}
-		printf("made new parts, npartstot=%d, tau=%g\n",npartstot,tau);
+		sprintf(message,"made new parts, npartstot=%d, tau=%g\n",npartstot,tau);
+		b3dlog->Info(message);
 	}
 	return DeadPartMap.begin()->second;
 }
@@ -371,7 +380,8 @@ void CB3D::GetDeadParts(CPart *&part1,CPart *&part2){
 	while(DeadPartMap.size()<2){
 		for(ipart=0;ipart<DELNPARTSTOT*NSAMPLE;ipart++)
 			new CPart(npartstot);
-		printf("made new parts, npartstot=%d, tau=%g\n",npartstot,tau);
+		sprintf(message,"made new parts, npartstot=%d, tau=%g\n",npartstot,tau);
+		b3dlog->Info(message);
 	}
 	CPartMap::iterator ppos=DeadPartMap.begin();
 	part1=ppos->second;
@@ -384,7 +394,8 @@ void CB3D::GetDeadParts(array<CPart*,5> &product){
 	while(DeadPartMap.size()<5){
 		for(ipart=0;ipart<DELNPARTSTOT*NSAMPLE;ipart++)
 			new CPart(npartstot);
-		printf("made new parts, npartstot=%d, tau=%g\n",npartstot,tau);
+		sprintf(message,"made new parts, npartstot=%d, tau=%g\n",npartstot,tau);
+		b3dlog->Info(message);
 	}
 	CPartMap::iterator ppos=DeadPartMap.begin();
 	for(ipart=0;ipart<5;ipart++){
@@ -397,7 +408,8 @@ CAction* CB3D::GetDeadAction(){
 	if(DeadActionMap.size()==0){
 		for(int iaction=0;iaction<DELNACTIONSTOT*NSAMPLE;iaction++)
 			new CAction(nactionstot);		
-		printf("created %d new actions, nactionstot=%d\n",DELNACTIONSTOT*NSAMPLE,nactionstot);
+		sprintf(message,"created %d new actions, nactionstot=%d\n",DELNACTIONSTOT*NSAMPLE,nactionstot);
+		b3dlog->Info(message);
 	}
 	return DeadActionMap.begin()->second;
 }
@@ -408,9 +420,9 @@ void CB3D::CheckPartMap(){
 	for(iter=PartMap.begin();iter!=PartMap.end();iter++){
 		part=iter->second;
 		if(part->currentmap!=&PartMap){
-			printf("----- FAILED CheckPartMap-----\n");
 			part->Print();
-			exit(1);
+			sprintf(message,"----- FAILED CheckPartMap-----\n");
+			b3dlog->Fatal(message);
 		}
 	}
 }

@@ -638,5 +638,7 @@ CMakeFiles/b3d.dir/src/mucalc.cc.o: \
   /Users/scottpratt/git/commonutils/software/include/constants.h \
   /Users/scottpratt/git/commonutils/software/include/misc.h \
   /Users/scottpratt/git/commonutils/software/include/randy.h \
+  /Users/scottpratt/git/b3d/software/include/acceptance.h \
+  /Users/scottpratt/git/commonutils/software/include/log.h \
   /Users/scottpratt/git/b3d/software/include/resonances.h \
   /Users/scottpratt/git/b3d/software/include/part.h

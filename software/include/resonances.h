@@ -2,6 +2,7 @@
 #define __RESONANCES_H__
 
 #include "commondefs.h"
+#include "log.h"
 class CResList;
 
 using namespace std;
@@ -59,9 +60,11 @@ public:
 	double ChiInt(double T,double vmax); // Integral used by ChiOmega
 	double ChiTilde(double T,double vmax); // Integral used by ChiOmega
 	CResInfo();
+	static char *message;
 	static CRandy *randy;
 	static CResList *reslist;
 	static double **ChiA; // stored array used by ChiOmegaInt
+	static CLog *resinfolog;
 };
 
 class CResList{
@@ -83,6 +86,7 @@ double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &ch
 	double GetLambda(double T,double P,double epsilon);
 	void freegascalc_onespecies(double m,double T,double &e,double &p,double &dens,double &sigma2,double &dedt,double &Jtot);
 	void FindFinalProducts(double taumax);
+	char message[500];
 	bool finalproductsfound;
 	CparameterMap *parmap;
 	CMerge ***MergeArray;
@@ -99,6 +103,8 @@ double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &ch
 	static CB3D *b3d;
 	static CBalance *cb;
 	static CSampler *sampler;
+	static CLog *reslog;
+
 };
 
 #endif

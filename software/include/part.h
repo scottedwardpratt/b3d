@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <sys/stat.h>
 #include "commondefs.h"
+#include "log.h"
 
 using namespace std;
 //using namespace boost;
@@ -74,6 +75,8 @@ public:
 
 	static CB3D *b3d;
 	static CBalance *cb;
+	static CLog *partlog;
+	static char *message;
 	double GetEta(double tau);
 	double GetPseudoRapidity();
 	double GetRapidity();

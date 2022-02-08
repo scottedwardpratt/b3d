@@ -27,24 +27,15 @@ void CHyperElement::Copy(CHyperElement *oldhyper){
 	T=oldhyper->T;
 }
 
-/*
-void CHyperElement::CalcDOmegaMax(){
-	double dOmegaVec;
-	double u0=sqrt(1.0+ux*ux+uy*uy);
-	double dOmega2=dOmega0*dOmega0-dOmegaX*dOmegaX-dOmegaY*dOmegaY;
-	udotdOmega=u0*dOmega0-ux*dOmegaX-uy*dOmegaY;
-	dOmegaVec=sqrt(-dOmega2+udotdOmega*udotdOmega);
-	dOmegaMax=fabs(udotdOmega)+dOmegaVec;
-	vOmega=-udotdOmega/dOmegaVec;
-}*/
-
-void CHyperElement::Print(){
-	printf("HyperElement Info:\n");
-	printf("tau=%g, T=%g, x=%g, y=%g, ux=%g, uy=%g, dOmega0=%g, dOmegaX=%g, dOmegaY=%g, udotdOmega=%g\n",
-	tau,T,x,y,ux,uy,dOmega0,dOmegaX,dOmegaY,udotdOmega);
-	printf("pitildexx=%g, pitildeyy=%g, pitildexy=%g\n",
-	pitildexx,pitildeyy,pitildexy);
-	printf("---------------------------------------------------------------\n");
+void CHyperElement::Print(CLog *hyperlog){
+	char message[500];
+	sprintf(message,"HyperElement Info:\n");
+	sprintf(message,"%stau=%g, T=%g, x=%g, y=%g, ux=%g, uy=%g, dOmega0=%g, dOmegaX=%g, dOmegaY=%g, udotdOmega=%g\n",
+	message,tau,T,x,y,ux,uy,dOmega0,dOmegaX,dOmegaY,udotdOmega);
+	sprintf(message,"%spitildexx=%g, pitildeyy=%g, pitildexy=%g\n",
+	message,pitildexx,pitildeyy,pitildexy);
+	sprintf(message,"%s---------------------------------------------------------------\n",message);
+	hyperlog->Info(message);
 }
 
 int CHyperElement::MakeParts(){

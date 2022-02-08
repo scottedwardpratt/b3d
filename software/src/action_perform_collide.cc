@@ -80,8 +80,6 @@ void CAction::PerformCollide(){
 			part->Kill();
 		}
 	}
-	
-	//printf("check colltype=%d, partmap size=%d\n",colltype,int(b3d->PartMap.size()));
 }
 
 #endif

@@ -2,6 +2,7 @@
 #define __BALANCE_ARRAYS_H__
 
 #include "commondefs.h"
+#include "log.h"
 
 using namespace std;
 
@@ -21,6 +22,9 @@ public:
 	void WriteNumer(string dirname,string numertype,bool NoQ);
 	void Print();
 	static CAcceptance *acceptance;
+	static CLog *barrayslog;
+	static char *message;
+	
 };
 
 class CBFDenom{
@@ -31,6 +35,8 @@ public:
 	CBFDenom(CparameterMap *parmapset);
 	void Reset();
 	void Increment(CPart *parta,double eff);
+	static CLog *barrayslog;
+	static char *message;
 };
 
 class CBalanceArrays{
@@ -81,6 +87,8 @@ public:
 	void WriteGammaP();
 	void WriteDenoms();
 	double GetMinv(CPart *parta,CPart *partb);
+	char message[500];
+	CLog *barrayslog;
 };
 
 #endif

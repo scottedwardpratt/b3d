@@ -51,16 +51,15 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 	npions=5-nkaons;
 	npi0=npions-npiplus-npiminus;
 	if(netq!= nKplus+npiplus-nKminus-npiminus){
-		printf("charges don't add up\n");
-		exit(1);
+		sprintf(message,"charges don't add up\n");
+		b3dlog->Fatal(message);
 	}
 	if(nets!= nKplus+nK0-nKminus-nK0bar){
-		printf("charges don't add up\n");
-		exit(1);
+		sprintf(message,"charges don't add up\n");
+		b3dlog->Fatal(message);
 	}
 
 	if(npi0<0){
-		// printf("Annihilate:: yikes: npi0<0, =%d\n",npi0);
 		goto RECHARGE;
 	}
 	npaircheck=0;
@@ -75,11 +74,10 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 			npi0-=2;
 		}
 	}
-	//printf("npi=(%d,%d,%d), nK=(%d,%d,%d,%d)\n",npi0,npiplus,npiminus,nK0,nK0bar,nKplus,nKminus);
 	ndaughters=npi0+npiplus+npiminus+nKplus+nKminus+nK0+nK0bar;
 	if(ndaughters != 5){
-		printf("annihilation doesn't go to 5 particles\n");
-		exit(1);
+		sprintf(message,"annihilation doesn't go to 5 particles\n");
+		b3dlog->Fatal(message);
 	}
 	Minv=0.0;
 	for(alpha=0;alpha<4;alpha++){
@@ -131,12 +129,9 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 		idaughter+=1;
 	}
 	T=0.5*T/double(npions+nkaons); // Pick temperature of 0.5*KE/particles
-	//printf("T=%g, idaughter=%d=?%d\n",T,idaughter,ndaughters);
-	//printf("BEFORE: Minv=%g, P=(%g,%g,%g,%g)\n",Minv,P[0],P[1],P[2],P[3]);
 	
 	// Do a 2-body decay for the last 2 particles
 	DO_OVER:
-	//printf("DO_OVER\n");
 	for(alpha=0;alpha<4;alpha++)
 		PP[alpha]=0;
 	for(idaughter=0;idaughter<ndaughters-2;idaughter++){
@@ -181,7 +176,6 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 	for(alpha=0;alpha<4;alpha++)
 		(*pb)[alpha]=pc[alpha];
 
-	//printf("Before: P=(%g,%g,%g,%g)\n",P[0],P[1],P[2],P[3]);
 	for(alpha=0;alpha<4;alpha++){
 		u[alpha]=P[alpha]/Minv;
 		P[alpha]=0.0;
@@ -194,7 +188,6 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 			P[alpha]+=(*pa)[alpha];
 		}
 	}
-	//printf("After: P=(%g,%g,%g,%g)\n",P[0],P[1],P[2],P[3]);
 	Minv=0.0;
 	for(alpha=0;alpha<4;alpha++)
 		Minv+=g[alpha]*P[alpha]*P[alpha];
@@ -222,12 +215,12 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 
 		dptr->ChangeMap(&PartMap);
 		if(fabs(dptr->eta)>ETAMAX){
-			printf("out of range\n");
-			exit(1);
+			sprintf(message,"eta out of range\n");
+			b3dlog->Fatal(message);
 		}
 		if(dptr->p[0]<0.0){
-			printf("dptr->p[0]=%g\n",dptr->p[0]);
-			exit(1);
+			sprintf(message,"dptr->p[0]=%g\n",dptr->p[0]);
+			b3dlog->Fatal(message);
 		}
 	}
 	return ndaughters;
@@ -252,7 +245,6 @@ double CB3D::GetAnnihilationSigma(CPart *part1,CPart *part2,double &vrel){
 	rstrange*=pow(ANNIHILATION_SREDUCTION,abs(part1->resinfo->strange))+pow(ANNIHILATION_SREDUCTION,abs(part2->resinfo->strange));
 	sigma_annihilation=rstrange*rstrange;
 	vrel=sqrt(triangle)/(part1->p[0]*part2->p[0]);
-	//printf("sigma=%g,vrel=%g, p1=(%g,%g,%g,%g), p2=(%g,%g,%g,%g)\n",sigma_annihilation,vrel,p1[0],p1[1],p1[2],p1[3],p2[0],p2[1],p2[2],p2[3]);
 	return sigma_annihilation;
 }
 

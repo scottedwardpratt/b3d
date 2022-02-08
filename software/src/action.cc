@@ -7,6 +7,9 @@
 #include "seinfo.h"
 
 CB3D *CAction::b3d=NULL;
+CLog *CAction::actionlog=NULL;
+char *CAction::message=new char[500];
+
 CAction::CAction(){
 }
 
@@ -32,18 +35,20 @@ CActionMap::iterator CAction::GetPos(CActionMap *emap){
 		++epos;
 	}
 	if(epos->second!=this){
-		printf("CAction::GetPos cannot find this action\n");
+		sprintf(message,"CAction::GetPos cannot find this action\n");
+		actionlog->Fatal(message);
 		return emap->end();
 	}
-	else return epos;
+	else
+		return epos;
 }
 
 void CAction::MoveToActionMap(){
 	CActionMap::iterator epos,eepos;
 	if(currentmap==&b3d->ActionMap){
-		printf("trying to move action to ActionMap even though action is already in ActionMap\n");
-		printf("wrong current map\n");
-		exit(1);
+		sprintf(message,"trying to move action to ActionMap even though action is already in ActionMap\n");
+		sprintf(message,"%sWrong current map\n",message);
+		actionlog->Fatal(message);
 	}
 	if(currentmap==&b3d->DeadActionMap){
 		epos=GetPos(currentmap);
@@ -52,9 +57,9 @@ void CAction::MoveToActionMap(){
 			partmap.clear();
 		}
 		else{
-			printf("cannot find epos for action in DeadActionMap!!!\n");
-			printf("DeadActionMap.size=%d\n",int(b3d->DeadActionMap.size()));
-			exit(1);
+			sprintf(message,"cannot find epos for action in DeadActionMap!!!\n");
+			sprintf(message,"%sDeadActionMap.size=%d\n",message,int(b3d->DeadActionMap.size()));
+			actionlog->Fatal(message);
 		}
 		key=tau;
 		AddToMap(&b3d->ActionMap);
@@ -67,17 +72,18 @@ void CAction::Kill(){
 	if(currentmap==&b3d->ActionMap){
 		CActionMap::iterator eepos,epos=GetPos(currentmap);
 		if(epos==currentmap->end()){
-			printf("in CAction::Kill(), not in map\n");
-			printf("b3d->ActionMap.size()=%d\n",int(b3d->ActionMap.size()));
+			sprintf(message,"in CAction::Kill(), not in map\n");
+			sprintf(message,"%sb3d->ActionMap.size()=%d\n",message,int(b3d->ActionMap.size()));
+			actionlog->Info(message);
 			ppos=partmap.begin();
 			part=ppos->second;
 			part->Print();
 			epos=GetPos(&b3d->DeadActionMap);
 			if(epos!=b3d->DeadActionMap.end()){
-				printf("found action in DeadActionMap\n");
+				sprintf(message,"found action in DeadActionMap\n");
 			}
-			printf("not in DeadActionMap either\n");
-			exit(1);
+			sprintf(message,"%snot in DeadActionMap either\n",message);
+			actionlog->Fatal(message);
 		}
 		currentmap->erase(epos);
 		b3d->nactionkills+=1;
@@ -115,14 +121,16 @@ void CAction::AddPart(CPart *part){
 }
 
 void CAction::Print(){
-	printf("___________ type=%d, tau=%g, nparts=%d ___________\n",type,tau,int(partmap.size()));
+	sprintf(message,"___________ type=%d, tau=%g, nparts=%d ___________\n",type,tau,int(partmap.size()));
+	actionlog->Info(message);
 	CPartMap::iterator ppos;
 	CPart *part;
 	for(ppos=partmap.begin();ppos!=partmap.end();++ppos){
 		part=ppos->second;
 		part->Print();
 	}
-	printf("_________________________________________________\n");
+	sprintf(message,"_________________________________________________\n");
+	actionlog->Info(message);
 }
 
 void CAction::CheckPartList(){
@@ -133,10 +141,10 @@ void CAction::CheckPartList(){
 		part=ppos->second;
 		ppos2=part->GetPos(&(b3d->PartMap));
 		if(ppos2==b3d->PartMap.end()){
-			printf("____________ CAction::CheckPartList FATAL, action type=%d ________________\n",type);
-			printf("iterator not in expected pmap\n");
 			part->Print();
-			exit(1);
+			sprintf(message,"%s____________ CAction::CheckPartList FATAL, action type=%d ________________\n",message,type);
+			sprintf(message,"%siterator not in expected pmap\n",message);
+			actionlog->Fatal(message);
 		}
 		++ppos;
 	}
@@ -146,8 +154,8 @@ void CAction::PerformDensCalc(){
 	int itau;
 	itau=lrint(floor((tau-0.001)/b3d->DENSWRITE_DELTAU));
 	if(itau>=b3d->DENSWRITE_NTAU){
-		printf("trying to perform CAction::DensCalc() for itau>=DENSWRITE_NTAU, =%d",itau);
-		exit(1);
+		sprintf(message,"trying to perform CAction::DensCalc() for itau>=DENSWRITE_NTAU, =%d",itau);
+		actionlog->Fatal(message);
 	}
 	CB3DCell *cell;
 	int ix,iy,ieta;

@@ -23,22 +23,29 @@ CB3D::CB3D(){
 CB3D::CB3D(string run_name_set){
 	run_name=run_name_set;
 	string parsfilename,dirname;
+	char logfilename[100];
 	dirname="model_output/"+run_name;
 	parsfilename="model_output/fixed_parameters.txt";
-	printf("reading %s\n",parsfilename.c_str());
+	sprintf(logfilename,"logs/%s_log.txt",run_name.c_str());
+	b3dlog=new CLog(logfilename);
+	CPart::partlog=b3dlog;
+	CAcceptance::acclog=b3dlog;
+	CResList::reslog=b3dlog;
+	CResInfo::resinfolog=b3dlog;
+	sprintf(message,"reading %s\n",parsfilename.c_str());
+	b3dlog->Info(message);
 	parmap.ReadParsFromFile(parsfilename);
 	parsfilename=dirname+"/parameters.txt";
-	printf("reading %s\n",parsfilename.c_str());
+	sprintf(message,"reading %s\n",parsfilename.c_str());
+	b3dlog->Info(message);
 	parmap.ReadParsFromFile(parsfilename);
 	CopyParMapPars();
 	string command="mkdir -p model_output/"+run_name;
 	system(command.c_str());
-	printf("howdy a\n");
 	if(BFCALC){
 		parmap.ReadParsFromFile("udsdata/udsparameters.txt");
 		balancearrays=new CBalanceArrays(this);
 	}
-	printf("howdy b\n");
 	ibalmax=0;
 	npartstot=nactionstot=0;
 	CResList::b3d=this;
@@ -56,13 +63,9 @@ CB3D::CB3D(string run_name_set){
 	CPart::b3d=this;
 	CB3DCell::b3d=this;
 	oscarfile=NULL;
-	printf("howdy c\n");
 	reslist=new CResList(&parmap);
-	printf("howdy d\n");
 	sampler=new CSampler(this);
-	printf("howdy e\n");
 	decay_nbody=new CDecay_NBody(randy);
-	printf("howdy f\n");
 }
 
 void CB3D::CopyParMapPars(){

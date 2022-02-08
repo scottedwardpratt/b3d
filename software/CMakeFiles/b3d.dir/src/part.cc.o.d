@@ -630,6 +630,7 @@ CMakeFiles/b3d.dir/src/part.cc.o: \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/./RealQZ.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h \
+  /Users/scottpratt/git/commonutils/software/include/log.h \
   /Users/scottpratt/git/b3d/software/include/b3d.h \
   /Users/scottpratt/git/commonutils/software/include/parametermap.h \
   /Users/scottpratt/git/b3d/software/include/inelastic.h \
@@ -640,5 +641,6 @@ CMakeFiles/b3d.dir/src/part.cc.o: \
   /Users/scottpratt/git/commonutils/software/include/constants.h \
   /Users/scottpratt/git/commonutils/software/include/misc.h \
   /Users/scottpratt/git/commonutils/software/include/randy.h \
+  /Users/scottpratt/git/b3d/software/include/acceptance.h \
   /Users/scottpratt/git/b3d/software/include/balancearrays.h \
   /Users/scottpratt/git/b3d/software/include/cell.h

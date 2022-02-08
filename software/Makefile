@@ -825,29 +825,53 @@ src/regen.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/regen.cc.s
 .PHONY : src/regen.cc.s
 
-src/resonances.o: src/resonances.cc.o
-.PHONY : src/resonances.o
+src/resinfo.o: src/resinfo.cc.o
+.PHONY : src/resinfo.o
 
 # target to build an object file
-src/resonances.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/resonances.cc.o
-.PHONY : src/resonances.cc.o
+src/resinfo.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/resinfo.cc.o
+.PHONY : src/resinfo.cc.o
 
-src/resonances.i: src/resonances.cc.i
-.PHONY : src/resonances.i
+src/resinfo.i: src/resinfo.cc.i
+.PHONY : src/resinfo.i
 
 # target to preprocess a source file
-src/resonances.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/resonances.cc.i
-.PHONY : src/resonances.cc.i
+src/resinfo.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/resinfo.cc.i
+.PHONY : src/resinfo.cc.i
 
-src/resonances.s: src/resonances.cc.s
-.PHONY : src/resonances.s
+src/resinfo.s: src/resinfo.cc.s
+.PHONY : src/resinfo.s
 
 # target to generate assembly for a file
-src/resonances.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/resonances.cc.s
-.PHONY : src/resonances.cc.s
+src/resinfo.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/resinfo.cc.s
+.PHONY : src/resinfo.cc.s
+
+src/reslist.o: src/reslist.cc.o
+.PHONY : src/reslist.o
+
+# target to build an object file
+src/reslist.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/reslist.cc.o
+.PHONY : src/reslist.cc.o
+
+src/reslist.i: src/reslist.cc.i
+.PHONY : src/reslist.i
+
+# target to preprocess a source file
+src/reslist.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/reslist.cc.i
+.PHONY : src/reslist.cc.i
+
+src/reslist.s: src/reslist.cc.s
+.PHONY : src/reslist.s
+
+# target to generate assembly for a file
+src/reslist.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/reslist.cc.s
+.PHONY : src/reslist.cc.s
 
 src/sampler.o: src/sampler.cc.o
 .PHONY : src/sampler.o
@@ -1017,9 +1041,12 @@ help:
 	@echo "... src/regen.o"
 	@echo "... src/regen.i"
 	@echo "... src/regen.s"
-	@echo "... src/resonances.o"
-	@echo "... src/resonances.i"
-	@echo "... src/resonances.s"
+	@echo "... src/resinfo.o"
+	@echo "... src/resinfo.i"
+	@echo "... src/resinfo.s"
+	@echo "... src/reslist.o"
+	@echo "... src/reslist.i"
+	@echo "... src/reslist.s"
 	@echo "... src/sampler.o"
 	@echo "... src/sampler.i"
 	@echo "... src/sampler.s"

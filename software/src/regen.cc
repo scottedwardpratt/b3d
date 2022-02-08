@@ -10,6 +10,7 @@ CB3D *CRegenerate::b3d=NULL;
 CRegenerate::CRegenerate(){
 	CResInfoMap::iterator rpos;
 	CResInfoMap *resmap=&(b3d->reslist->resmap);
+	regenlog=b3d->b3dlog;
 	CResInfo *resinfo;
 	randy=b3d->randy;
 	int iT;
@@ -66,7 +67,8 @@ bool CRegenerate::CheckForRegeneration(CB3DCell *cell,CMuTInfo *muTinfo){
 			part2->resinfo=resinfo2;
 			GetP1P2SigmaV(muTinfo);
 			if(sigmavrel>sigmavmax){
-				printf("sigmavrel=%g, is > than sigmavmax=%g\n",sigmavrel,sigmavmax);
+				sprintf(message,"sigmavrel=%g, is > than sigmavmax=%g\n",sigmavrel,sigmavmax);
+				regenlog->Info(message);
 			}
 			if(b3d->randy->ran()<sigmavrel/sigmavmax){
 				regencheck=true;
@@ -228,7 +230,7 @@ void CRegenerate::GetP1P2SigmaV(CMuTInfo *muTinfo){
 	double sigma=b3d->GetAnnihilationSigma(part1,part2,vrel);
 	sigmavrel=sigma*vrel;
 	if(sigmavrel>sigmavmax){
-		printf("CRegenerate::GetP1P2SigmaV, sigmavrel=%g, sigmavmax=%g\n",sigmavrel,sigmavmax);
-		exit(1);
+		sprintf(message,"CRegenerate::GetP1P2SigmaV, sigmavrel=%g, sigmavmax=%g\n",sigmavrel,sigmavmax);
+		regenlog->Info(message);
 	}
 }

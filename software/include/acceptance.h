@@ -2,6 +2,7 @@
 #define __ACCEPTANCE_H__
 
 #include "commondefs.h"
+#include "log.h"
 
 class CAcceptance{
 public:
@@ -13,6 +14,8 @@ public:
 	virtual void CalcAcceptance(bool &accept,double &efficiency,CPart *part);
 	virtual void CalcAcceptanceNoID(bool &accept,double &efficiency,CPart *part);
 	virtual double GetDelYMax(int pida,int pidb);
+	char message[500];
+	static CLog *acclog;
 };
 
 class CAcceptance_CHEAP : public CAcceptance{

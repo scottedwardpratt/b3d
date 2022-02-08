@@ -4,6 +4,8 @@
 
 #include "acceptance.h"
 
+CLog* CAcceptance::acclog=NULL;
+
 using namespace std;
 
 CAcceptance::CAcceptance(){
@@ -24,25 +26,21 @@ CAcceptance::CAcceptance(CparameterMap *parmapin){
 }
 
 void CAcceptance::CalcAcceptance(bool &accept,double &efficiency,CPart *part){
-	printf("hmmmmmm, should not be here in dummy routine for CalcAcceptance\n");
-	if(part!=NULL){
-		accept=true;
-		efficiency=1.0;
+	sprintf(message,"hmmmmmm, should not be here in dummy routing for CalcAcceptance\n");
+	acclog->Fatal(message);
+	if(part==NULL){
+		accept=true; efficiency=1.0; 
+		accept=false;
 	}
-	else
-		printf("Calculating acceptance for null part\n");
 }
 
 void CAcceptance::CalcAcceptanceNoID(bool &accept,double &efficiency,CPart *part){
-	printf("hmmmmmm, should not be here in dummy routing for CalcAcceptance\n");
-  accept=true;
-	efficiency=1.0;
-	if(part!=NULL){
-		accept=true;
-		efficiency=1.0;
+	sprintf(message,"hmmmmmm, should not be here in dummy routing for CalcAcceptanceNoID\n");
+	acclog->Fatal(message);
+	if(part==NULL){
+		accept=true; efficiency=1.0; 
+		accept=false;
 	}
-	else
-		printf("Calculating acceptance for null part\n");
 }
 
 double CAcceptance::GetDelYMax(int pida,int pidb){

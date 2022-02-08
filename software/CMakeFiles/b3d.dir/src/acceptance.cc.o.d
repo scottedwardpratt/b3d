@@ -629,4 +629,5 @@ CMakeFiles/b3d.dir/src/acceptance.cc.o: \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/RealQZ.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h \
   /usr/local/include/eigen3/Eigen/src/Eigenvalues/./RealQZ.h \
-  /usr/local/include/eigen3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h
+  /usr/local/include/eigen3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h \
+  /Users/scottpratt/git/commonutils/software/include/log.h

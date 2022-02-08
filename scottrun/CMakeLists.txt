@@ -22,10 +22,6 @@ find_library(${GITHOME_MSU}/b3d/software/lib b3d)
 find_library(${GITHOME_MSU}/commonutils/software/lib commonutils)
 
 set(SOURCE_FILES ./b3dmain.cc)
-SET_SOURCE_FILES_PROPERTIES(
-      b3dmain.cc PROPERTIES OBJECT_DEPENDS
-    ${GITHOME_MSU}/b3d/software/lib/libb3d.a
- )
 add_executable(b3dtest ${SOURCE_FILES})
 add_dependencies(b3dtest extern_b3d extern_commonutils)
-target_link_libraries(b3dtest b3d commonutils ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY})
+target_link_libraries(b3dtest b3d commonutils ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY} ${GITHOME_MSU}/commonutils/software/lib/libcommonutils.a ${GSL_LIBRARY} ${GITHOME_MSU}/b3d/software/lib/libb3d.a)

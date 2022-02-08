@@ -19,12 +19,12 @@ void CAction::PerformDecay(){
 
 	mothermass=mother->GetMass();
 	if(mother->cell!=NULL && mother->cell!=mother->FindCell() && tau<b3d->TAUCOLLMAX){
-		printf("Cells don't match for decaying mother\n");
 		mother->CheckRapidity();
 		mother->cell->Print();
 		mother->FindCell()->Print();
 		mother->Print();
-		exit(1);
+		sprintf(message,"Cells don't match for decaying mother\n");
+		actionlog->Fatal(message);
 	}
 	if(tau>b3d->TAUCOLLMAX || mother->cell==NULL){
 		while(b3d->BJORKEN && (mother->eta<-etamax || mother->eta>etamax)){
@@ -51,9 +51,9 @@ void CAction::PerformDecay(){
 			mtot+=daughterresinfo[ibody]->mass;
 		}
 		if(ntry>25){
-			printf("FATAL: action_perform_decay, ntry too big, mothermass=%g\n",mother->GetMass());
 			mother->Print();
-			exit(1);
+			sprintf(message,"FATAL: action_perform_decay, ntry too big, mothermass=%g\n",mother->GetMass());
+			actionlog->Fatal(message);
 		}
 		ntry++;
 	}while(mtot>mothermass);

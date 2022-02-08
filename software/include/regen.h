@@ -2,6 +2,7 @@
 #define __REGEN_H__
 
 #include "commondefs.h"
+#include "log.h"
 
 using namespace std;
 
@@ -39,6 +40,8 @@ public:
 	bool CheckForRegeneration(CB3DCell *cell,CMuTInfo *muTinfo);
 	bool GetBBbarResInfo(CMuTInfo *muTinfo,CResInfo *&resinfo1,CResInfo *&resinfo2);
 	void FillOutPartPRInfo(CPart *part,CB3DCell *cell,CMuTInfo *muTinfo);
+	char message[500];
+	CLog *regenlog;
 
  	static CB3D *b3d;
 };
