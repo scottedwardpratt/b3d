@@ -5,7 +5,6 @@
 #include "parametermap.h"
 #include "inelastic.h"
 #include "mutinfo.h"
-#include "mucalc.h"
 #include "decay_nbody.h"
 #include "acceptance.h"
 #include "log.h"
@@ -46,11 +45,10 @@ public:
 	char message[200];
 	double DENSWRITE_DELTAU,MUTCALC_DELTAU;
 	vector<vector<vector<CB3DCell *> > > cell;
-	vector<vector<CMuTInfo *> > muTinfo;
+	vector<vector<vector<CMuTInfo *>>> muTinfo;
 	vector<double> annihilation_array;
 	CSEInfo *SEinfo;
 	CDecay_NBody *decay_nbody;
-	CLog *b3dlog;
 	
 	void ReadCharges(int ichargefile);
 	void GenHadronsFromCharges();
@@ -126,12 +124,13 @@ public:
 	//void AddAction_SwallowParticles(double tau_breakup);
 	void AddAction_ExitCell(CPart *part);
 	void AddAction_DensCalc(double tauwrite);
-	void AddAction_MuTCalc(double taucalc);
+	void AddAction_MuTCalc_UpdateNPE(double taucalc);
+	void AddAction_MuTCalc();
 	void AddAction_SECalc(double taucalc);
 
 	void ListFutureCollisions();
 	void PrintPartList();
-	void PrintMuTInfo();
+	void WriteMuTInfo();
 	void WriteWeights();
 	void IncrementWeightArrays();
 
@@ -181,6 +180,7 @@ public:
 	void CalcHBT_ALICE();
 	void CalcRealityDiff();
 	void CalcGamma();
+	void CalcMuTU();
 	double legendre(int ell,double x);
 	void Consolidate(string run_name);
 	void CBalanceArray(CB3D *b3d);
@@ -216,7 +216,7 @@ public:
 
 	void Perform();
 	void PerformDensCalc();
-	void PerformMuTCalc();
+	void PerformMuTCalcUpdateNPE();
 	void PerformSECalc();
 	void PerformActivate();
 	void PerformExitCell();
@@ -231,7 +231,6 @@ public:
 	~CAction();
 
 	static CB3D *b3d;
-	static CLog *actionlog;
 	static char *message;
 
 	CActionMap::iterator GetPos(CActionMap *actionmap);

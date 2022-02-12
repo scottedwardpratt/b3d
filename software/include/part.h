@@ -75,7 +75,6 @@ public:
 
 	static CB3D *b3d;
 	static CBalance *cb;
-	static CLog *partlog;
 	static char *message;
 	double GetEta(double tau);
 	double GetPseudoRapidity();

@@ -11,7 +11,6 @@
 #include "randy.h"
 
 CB3D *CPart::b3d=NULL;
-CLog *CPart::partlog=NULL;
 CBalance *CPart::cb=NULL;
 char *CPart::message=new char[500];
 
@@ -103,7 +102,7 @@ void CPart::Init(int IDset,double rxset,double ryset,double tauset,double etaset
 	ID=resinfo->code;
 	if(ID!=IDset){
 		sprintf(message,"ID mismatch, ID=%d, resinfo->codeID=%d\n",IDset,ID);
-		partlog->Info(message);
+		CLog::Info(message);
 	}
 	p[1]=pxset; p[2]=pyset; msquared=mset*mset; y=rapidityset;
 	r[1]=rxset; r[2]=ryset; tau0=tauset; eta=etaset;
@@ -114,9 +113,9 @@ void CPart::Init(int IDset,double rxset,double ryset,double tauset,double etaset
 	bweight=bweightset;
 	if(fabs(eta)>b3d->ETAMAX && b3d->BJORKEN){
 		sprintf(message,"in part->init, eta out of bounds, =%g\n",eta);
-		partlog->Info(message);
+		CLog::Info(message);
 		sprintf(message,"b3d->ETAMAX=%g\n",b3d->ETAMAX);
-		partlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	resinfoptr=b3d->reslist->GetResInfoPtr(ID);
 	if(resinfoptr->decay==false){
@@ -130,12 +129,12 @@ void CPart::Init(int IDset,double rxset,double ryset,double tauset,double etaset
 	if(tau0<0.0){
 		Print();
 		sprintf(message,"FATAL: tau0<0, tau0^2=%g\n",tau0);
-		partlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	if(b3d->BJORKEN && fabs(eta)>b3d->ETAMAX){
 		CyclicReset();
 		sprintf(message,"performed cyclic reset in CPart::Init()\n");
-		partlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	active=false;
 	ChangeMap(&(b3d->PartMap));
@@ -147,7 +146,7 @@ void CPart::CheckRapidity(){
 	if(fabs(y-atanh(p[3]/p[0]))>0.001){
 		Print();
 		sprintf(message,"rapidity screwed up!\n");
-		partlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 }
 
@@ -170,30 +169,30 @@ void CPart::CyclicReset(){
 
 void CPart::Print(){
 	sprintf(message,"________________ PART INFO FOR key=%d _____________________________\n",key);
-	partlog->Info(message);
+	CLog::Info(message);
 	sprintf(message,"Minv^2=%g, ID=%d -----  %s ------\n",p[0]*p[0]-p[1]*p[1]-p[2]*p[2]-p[3]*p[3],resinfo->code,resinfo->name.c_str());
-	partlog->Info(message);
+	CLog::Info(message);
 	sprintf(message,"ID=%d, m_onshell=%g, M=%g, tau0=%g=?%g, tauexit=%g\n r=(%g,%g,%g,%g) eta=%g=?%g\n", 
 	resinfo->code,resinfo->mass,sqrt(msquared),double(tau0),sqrt(r[0]*r[0]-r[3]*r[3]),tauexit,r[0],r[1],r[2],r[3],eta,GetEta(tau0));
-	partlog->Info(message);
+	CLog::Info(message);
 	sprintf(message,"bweight=%g, key=%d, actionmother=%d, active=%d, balanceID=%d\n",
 	bweight,key,actionmother,int(active),balanceID);
-	partlog->Info(message);
+	CLog::Info(message);
 	sprintf(message,"p=(%15.9e,%15.9e,%15.9e,%15.9e), y=%g =? %g\n",p[0],p[1],p[2],p[3],y,atanh(p[3]/p[0]));
-	partlog->Info(message);
+	CLog::Info(message);
 	string currentmapname="IN CELL";
 	if(currentmap==&(b3d->PartMap)) currentmapname="PartMap";
 	if(currentmap==&(b3d->DeadPartMap)) currentmapname="DeadPartMap";
 	sprintf(message,"currentmap=%s\n",currentmapname.c_str());
-	partlog->Info(message);
+	CLog::Info(message);
 	if(cell==NULL) sprintf(message,"CELL=NULL\n");
-	partlog->Info(message);
+	CLog::Info(message);
 	if(nextcell==NULL) sprintf(message,"NEXTCELL=NULL\n");
-	partlog->Info(message);
+	CLog::Info(message);
 	if(cell!=NULL) sprintf(message,"Cell No: ix=%d, iy=%d, ieta=%d\n",cell->ix,cell->iy,cell->ieta);
-	partlog->Info(message);
+	CLog::Info(message);
 	sprintf(message,"________________________________________________________________________\n");
-	partlog->Info(message);partlog->Info(message);
+	CLog::Info(message);CLog::Info(message);
 }
 
 void CPart::ChangeMap(CPartMap *newmap){
@@ -212,7 +211,7 @@ CPartMap::iterator CPart::DeleteFromCurrentMap(){
 		sprintf(message,"FATAL: In CPart::DeleteFromCurrentMap, can't find ppos!!!\n");
 		Print();
 		sprintf(message,"currentmap has length %d\n",int(currentmap->size()));
-		partlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	else currentmap->erase(ppos);
 	currentmap=NULL;
@@ -226,7 +225,7 @@ CPartMap::iterator CPart::DeleteFromMap(CPartMap *partmap){
 	if(ppos==partmap->end()){
 		Print();
 		sprintf(message,"FATAL: In CPart::DeleteFromMap, can't find ppos!!!\n");
-		partlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	else{
 		neighbor++;
@@ -258,9 +257,9 @@ void CPart::AddAction(CAction *action){
 void CPart::Propagate(double tau){
 	if(b3d->BJORKEN && fabs(eta)>b3d->ETAMAX){
 		sprintf(message,"eta screwy before propagation\n");
-		partlog->Info(message);
+		CLog::Info(message);
 		sprintf(message,"eta=%g\n",eta);
-		partlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	double t0,etai=eta;
 	CPartMap::iterator neighbor;
@@ -268,7 +267,7 @@ void CPart::Propagate(double tau){
 		eta=GetEta(tau);//y-asinh((tau0/tau)*sinh(y-eta));
 		if(currentmap==&(b3d->PartMap) && b3d->tau<b3d->TAUCOLLMAX && fabs(eta)>0.0001+b3d->ETAMAX && b3d->BJORKEN && b3d->COLLISIONS){
 			sprintf(message,"eta out of bounds after propagation,correcting, etai=%g, etaf=%g, taui=%g, tauf=%g\n",etai,eta,tau0,tau);
-			partlog->Info(message);
+			CLog::Info(message);
 			Print();
 			if(eta>b3d->ETAMAX)
 				eta=b3d->ETAMAX;
@@ -303,14 +302,14 @@ void CPart::CheckMap(CPartMap *expectedpartmap){
 		Print();
 		if(currentmap==&(b3d->DeadPartMap)){
 			sprintf(message,"particle in DeadPartMap\n");
-			partlog->Info(message);
+			CLog::Info(message);
 		}
 		if(currentmap==&(b3d->PartMap)){
 			sprintf(message,"particlein PartMap\n");
-			partlog->Info(message);
+			CLog::Info(message);
 		}
 		sprintf(message,"XXXXXXXXX particle not in expected map XXXXXXXXX\n");
-		partlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 }
 
@@ -352,7 +351,7 @@ double CPart::GetMT(){
 	if(p[0]<fabs(p[3])){
 		Print();
 		sprintf(message,"CPart::GetMT, catastrophe\n");
-		partlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	return sqrt(p[0]*p[0]-p[3]*p[3]);
 }
@@ -389,7 +388,7 @@ void CPart::Kill(){
 void CPart::BjorkenTranslate(){
 	if(eta<-b3d->ETAMAX || eta>b3d->ETAMAX){
 		sprintf(message,"eta out of bounds before translation\n");
-		partlog->Info(message);
+		CLog::Info(message);
 		Print();
 		if(eta>b3d->ETAMAX)
 			eta=b3d->ETAMAX;
@@ -560,12 +559,12 @@ void CPart::FindCellExit(){
 void CPart::FindActions(){
 	if(active!=true){
 		sprintf(message,"CPart::FindActions(), trying to Reset Inactive particle\n");
-		partlog->Info(message);
+		CLog::Info(message);
 		KillActions();
 	}
 	if(resinfo->code!=22 && msquared<resinfo->minmass*resinfo->minmass){
 		sprintf(message,"msquared too small, =%g, minmass=%g\n",sqrt(msquared),resinfo->minmass);
-		partlog->Info(message);
+		CLog::Info(message);
 		Print();
 		msquared=resinfo->minmass*resinfo->minmass;
 		Setp0();

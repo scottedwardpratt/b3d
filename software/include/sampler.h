@@ -38,7 +38,6 @@ public:
 	CB3D *b3d;
 	double MEANPT,MEANPT_NORM,NPI,NP;
 	int nevents,ievent,nparts,nelements,nvertices;
-	CLog *samplerlog;
 	char message[500];
 };
 

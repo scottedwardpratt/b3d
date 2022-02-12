@@ -13,7 +13,6 @@
 #include "sampler.h"
 #include "balancearrays.h"
 #include "randy.h"
-#include "regen.h"
 #include "seinfo.h"
 #include "hyper.h"
 
@@ -23,21 +22,14 @@ CB3D::CB3D(){
 CB3D::CB3D(string run_name_set){
 	run_name=run_name_set;
 	string parsfilename,dirname;
-	char logfilename[100];
 	dirname="model_output/"+run_name;
 	parsfilename="model_output/fixed_parameters.txt";
-	sprintf(logfilename,"logs/%s_log.txt",run_name.c_str());
-	b3dlog=new CLog(logfilename);
-	CPart::partlog=b3dlog;
-	CAcceptance::acclog=b3dlog;
-	CResList::reslog=b3dlog;
-	CResInfo::resinfolog=b3dlog;
 	sprintf(message,"reading %s\n",parsfilename.c_str());
-	b3dlog->Info(message);
+	CLog::Info(message);
 	parmap.ReadParsFromFile(parsfilename);
 	parsfilename=dirname+"/parameters.txt";
 	sprintf(message,"reading %s\n",parsfilename.c_str());
-	b3dlog->Info(message);
+	CLog::Info(message);
 	parmap.ReadParsFromFile(parsfilename);
 	CopyParMapPars();
 	string command="mkdir -p model_output/"+run_name;
@@ -215,14 +207,24 @@ void CB3D::InitCascade(){
 		CMuTInfo::DELTAU=MUTCALC_DELTAU;
 		CMuTInfo::NTAU=TAUCOLLMAX/MUTCALC_DELTAU;
 		CMuTInfo::NETEVENTS=0;
-		CRegenerate::b3d=this;
-		regen=new CRegenerate();
-		muTinfo.resize(2*NXY);
-		for(ix=0;ix<2*NXY;ix++)
-			muTinfo[ix].resize(2*NXY);
-		for(ix=0;ix<2*NXY;ix++){
-			for(iy=0;iy<2*NXY;iy++)
-				muTinfo[ix][iy]=new CMuTInfo();
+		muTinfo.resize(CMuTInfo::NTAU);
+		for(itau=0;itau<CMuTInfo::NTAU;itau++){
+			muTinfo[itau].resize(2*NXY);
+			for(ix=0;ix<2*NXY;ix++)
+				muTinfo[itau][ix].resize(2*NXY);
+			for(ix=0;ix<2*NXY;ix++){
+				for(iy=0;iy<2*NXY;iy++)
+					muTinfo[itau][ix][iy]=new CMuTInfo((itau+0.5)*CMuTInfo::DELTAU);
+			}
+		}
+		CResInfoMap::iterator rpos;
+		CResInfo *resinfo;
+		for(rpos=reslist->resmap.begin();rpos!=reslist->resmap.end();++rpos){
+			resinfo=rpos->second;
+			if(resinfo->baryon>0){
+				CMuTInfo::Bresinfo.push_back(resinfo);
+			}
+
 		}
 	}
 	if(SECALC){
@@ -249,7 +251,7 @@ void CB3D::SetQualifier(string qualifier_set){
 }
 
 void CB3D::Reset(){
-	int ix,iy,iitau,ntau;
+	int iitau,ntau;
 	double taucalc;
 	KillAllParts();
 	KillAllActions();
@@ -259,14 +261,8 @@ void CB3D::Reset(){
 	if(MUTCALC){
 		ntau=lrint(TAUCOLLMAX/MUTCALC_DELTAU);
 		for(iitau=0;iitau<ntau;iitau++){
-			taucalc=(1+iitau)*MUTCALC_DELTAU;
-			AddAction_MuTCalc(taucalc);
-			for(ix=0;ix<2*NXY;ix++){
-				for(iy=0;iy<2*NXY;iy++){
-					muTinfo[ix][iy]->Tpi=muTinfo[ix][iy]->TK=150.0;
-					muTinfo[ix][iy]->muK=muTinfo[ix][iy]->mupi=0.0;
-				}
-			}
+			taucalc=(0.5+iitau)*MUTCALC_DELTAU;
+			AddAction_MuTCalc();
 		}
 		CMuTInfo::NETEVENTS+=NSAMPLE;
 	}

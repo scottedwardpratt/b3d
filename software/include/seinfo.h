@@ -20,6 +20,7 @@ public:
 	int NTAU;
 	int NETEVENTS;
 	CB3D *b3d;
+	char message[500];
 };
 
 #endif

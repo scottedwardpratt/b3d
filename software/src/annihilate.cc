@@ -52,11 +52,11 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 	npi0=npions-npiplus-npiminus;
 	if(netq!= nKplus+npiplus-nKminus-npiminus){
 		sprintf(message,"charges don't add up\n");
-		b3dlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	if(nets!= nKplus+nK0-nKminus-nK0bar){
 		sprintf(message,"charges don't add up\n");
-		b3dlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 
 	if(npi0<0){
@@ -77,7 +77,7 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 	ndaughters=npi0+npiplus+npiminus+nKplus+nKminus+nK0+nK0bar;
 	if(ndaughters != 5){
 		sprintf(message,"annihilation doesn't go to 5 particles\n");
-		b3dlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	Minv=0.0;
 	for(alpha=0;alpha<4;alpha++){
@@ -216,11 +216,11 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 		dptr->ChangeMap(&PartMap);
 		if(fabs(dptr->eta)>ETAMAX){
 			sprintf(message,"eta out of range\n");
-			b3dlog->Fatal(message);
+			CLog::Fatal(message);
 		}
 		if(dptr->p[0]<0.0){
 			sprintf(message,"dptr->p[0]=%g\n",dptr->p[0]);
-			b3dlog->Fatal(message);
+			CLog::Fatal(message);
 		}
 	}
 	return ndaughters;

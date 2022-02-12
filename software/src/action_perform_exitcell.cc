@@ -35,7 +35,7 @@ void CAction::PerformExitCell(){
 	part->ChangeCell(part->nextcell);
 	if(part->currentmap!=&(b3d->PartMap)){
 		sprintf(message,"In PerformExitCell, part in wrong map\n");
-		actionlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	part->FindActions();
 	b3d->nexit+=1;

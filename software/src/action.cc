@@ -7,7 +7,6 @@
 #include "seinfo.h"
 
 CB3D *CAction::b3d=NULL;
-CLog *CAction::actionlog=NULL;
 char *CAction::message=new char[500];
 
 CAction::CAction(){
@@ -36,7 +35,7 @@ CActionMap::iterator CAction::GetPos(CActionMap *emap){
 	}
 	if(epos->second!=this){
 		sprintf(message,"CAction::GetPos cannot find this action\n");
-		actionlog->Fatal(message);
+		CLog::Fatal(message);
 		return emap->end();
 	}
 	else
@@ -48,7 +47,7 @@ void CAction::MoveToActionMap(){
 	if(currentmap==&b3d->ActionMap){
 		sprintf(message,"trying to move action to ActionMap even though action is already in ActionMap\n");
 		sprintf(message,"%sWrong current map\n",message);
-		actionlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	if(currentmap==&b3d->DeadActionMap){
 		epos=GetPos(currentmap);
@@ -59,7 +58,7 @@ void CAction::MoveToActionMap(){
 		else{
 			sprintf(message,"cannot find epos for action in DeadActionMap!!!\n");
 			sprintf(message,"%sDeadActionMap.size=%d\n",message,int(b3d->DeadActionMap.size()));
-			actionlog->Fatal(message);
+			CLog::Fatal(message);
 		}
 		key=tau;
 		AddToMap(&b3d->ActionMap);
@@ -74,7 +73,7 @@ void CAction::Kill(){
 		if(epos==currentmap->end()){
 			sprintf(message,"in CAction::Kill(), not in map\n");
 			sprintf(message,"%sb3d->ActionMap.size()=%d\n",message,int(b3d->ActionMap.size()));
-			actionlog->Info(message);
+			CLog::Info(message);
 			ppos=partmap.begin();
 			part=ppos->second;
 			part->Print();
@@ -83,7 +82,7 @@ void CAction::Kill(){
 				sprintf(message,"found action in DeadActionMap\n");
 			}
 			sprintf(message,"%snot in DeadActionMap either\n",message);
-			actionlog->Fatal(message);
+			CLog::Fatal(message);
 		}
 		currentmap->erase(epos);
 		b3d->nactionkills+=1;
@@ -122,7 +121,7 @@ void CAction::AddPart(CPart *part){
 
 void CAction::Print(){
 	sprintf(message,"___________ type=%d, tau=%g, nparts=%d ___________\n",type,tau,int(partmap.size()));
-	actionlog->Info(message);
+	CLog::Info(message);
 	CPartMap::iterator ppos;
 	CPart *part;
 	for(ppos=partmap.begin();ppos!=partmap.end();++ppos){
@@ -130,7 +129,7 @@ void CAction::Print(){
 		part->Print();
 	}
 	sprintf(message,"_________________________________________________\n");
-	actionlog->Info(message);
+	CLog::Info(message);
 }
 
 void CAction::CheckPartList(){
@@ -144,7 +143,7 @@ void CAction::CheckPartList(){
 			part->Print();
 			sprintf(message,"%s____________ CAction::CheckPartList FATAL, action type=%d ________________\n",message,type);
 			sprintf(message,"%siterator not in expected pmap\n",message);
-			actionlog->Fatal(message);
+			CLog::Fatal(message);
 		}
 		++ppos;
 	}
@@ -155,7 +154,7 @@ void CAction::PerformDensCalc(){
 	itau=lrint(floor((tau-0.001)/b3d->DENSWRITE_DELTAU));
 	if(itau>=b3d->DENSWRITE_NTAU){
 		sprintf(message,"trying to perform CAction::DensCalc() for itau>=DENSWRITE_NTAU, =%d",itau);
-		actionlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	CB3DCell *cell;
 	int ix,iy,ieta;

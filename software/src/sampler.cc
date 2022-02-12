@@ -9,7 +9,6 @@ using namespace std;
 
 CSampler::CSampler(CB3D *b3dset){
 	b3d=b3dset;
-	samplerlog=b3d->b3dlog;
 	parmap=&(b3d->parmap);
 	xyfptr=NULL;
 #ifdef __SAMPLER_WRITE_XY__
@@ -59,7 +58,7 @@ int CSampler::GenHadronsFromHyperSurface(){
 		nparts+=hyper[ielement].MakeParts();
 	}
 	sprintf(message,"Event %4d sampling: %d parts created from Hyper Surface\n",nevents-1,int(b3d->PartMap.size()));
-	samplerlog->Info(message);
+	CLog::Info(message);
 	return nparts;
 }
 
@@ -119,7 +118,7 @@ void CSampler::ReadHyperElements2D_OSU(){
 	string hyperdata_home=parmap->getS("B3D_HYPERDATA_HOME","hyperdata");
 	filename=hyperdata_home+"/"+b3d->qualifier+"/hyper.txt";
 	sprintf(message,"opening %s\n",filename.c_str());
-	samplerlog->Info(message);
+	CLog::Info(message);
 	FILE *fptr=fopen(filename.c_str(),"r");
 	fgets(dummy,200,fptr);	fgets(dummy,200,fptr);
 	ielement=0;
@@ -147,7 +146,7 @@ void CSampler::ReadHyperElements2D_OSU(){
 				sprintf(message,"%stau=%g, x=%g y=%g\n",message,tau,x,y);
 				sprintf(message,"%sux=%g, uy=%g\n",message,ux,uy);
 				sprintf(message,"%sdOmega=(%g,%g,%g)\n",message,dOmega0,dOmegaX,dOmegaY);
-				samplerlog->Fatal(message);
+				CLog::Fatal(message);
 			}
 			elem->tau=tau;
 			elem->dOmega0=dOmega0*2.0*b3d->ETAMAX;
@@ -173,8 +172,8 @@ void CSampler::ReadHyperElements2D_OSU(){
 			elem->maxweight=&maxweightf;
 			if(udotdOmega<0.0){
 				sprintf(message,"udotdOmega<0\n");
-				elem->Print(samplerlog);
-				samplerlog->Fatal(message);
+				elem->Print();
+				CLog::Fatal(message);
 			}
 			ielement+=1;
 			b3d->TotalVolume+=udotdOmega;
@@ -182,5 +181,5 @@ void CSampler::ReadHyperElements2D_OSU(){
 	}
 	nelements=ielement;
 	sprintf(message,"Exiting ReadHyperElements2D_OSU() happily, TotalVolume=%g\n",b3d->TotalVolume);
-	samplerlog->Info(message);
+	CLog::Info(message);
 }

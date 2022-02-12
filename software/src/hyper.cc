@@ -7,6 +7,7 @@
 //#define __XYREFLECT__
 
 CSampler* CHyperElement::sampler=NULL;
+char *CHyperElement::message=new char[500];
 
 CHyperElement::CHyperElement(){
 	//
@@ -27,15 +28,14 @@ void CHyperElement::Copy(CHyperElement *oldhyper){
 	T=oldhyper->T;
 }
 
-void CHyperElement::Print(CLog *hyperlog){
-	char message[500];
+void CHyperElement::Print(){
 	sprintf(message,"HyperElement Info:\n");
 	sprintf(message,"%stau=%g, T=%g, x=%g, y=%g, ux=%g, uy=%g, dOmega0=%g, dOmegaX=%g, dOmegaY=%g, udotdOmega=%g\n",
 	message,tau,T,x,y,ux,uy,dOmega0,dOmegaX,dOmegaY,udotdOmega);
 	sprintf(message,"%spitildexx=%g, pitildeyy=%g, pitildexy=%g\n",
 	message,pitildexx,pitildeyy,pitildexy);
 	sprintf(message,"%s---------------------------------------------------------------\n",message);
-	hyperlog->Info(message);
+	CLog::Info(message);
 }
 
 int CHyperElement::MakeParts(){
@@ -67,7 +67,6 @@ int CHyperElement::MakeParts(){
 				GetP(resinfo,plab,mass,(*maxweight)[ires]);
 				part=sampler->b3d->GetDeadPart();	
 #ifdef __XY_REFLECT__	
-				printf("HOWDY, I am XY reflecting\n");		
 				if(randy->ran()<0.5){
 					r[1]=-r[1];
 					plab[1]=-plab[1];
@@ -83,8 +82,8 @@ int CHyperElement::MakeParts(){
 				eta=(1.0-2.0*randy->ran())*ETAMAX;
 				rapidity+=eta;
 				if(fabs(eta)>ETAMAX){
-					printf("eta=%g ??, ETAMAX=%g\n",eta,ETAMAX);
-					exit(1);
+					sprintf(message,"eta=%g ??, ETAMAX=%g\n",eta,ETAMAX);
+					CLog::Fatal(message);
 				}
 				part->InitBalance(resinfo->code,r[1],r[2],r[0],eta,plab[1],plab[2],mass,rapidity,bweight,-1);
 				/*

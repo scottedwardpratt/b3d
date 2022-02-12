@@ -15,7 +15,6 @@ public:
 	virtual void CalcAcceptanceNoID(bool &accept,double &efficiency,CPart *part);
 	virtual double GetDelYMax(int pida,int pidb);
 	char message[500];
-	static CLog *acclog;
 };
 
 class CAcceptance_CHEAP : public CAcceptance{

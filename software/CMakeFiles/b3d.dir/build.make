@@ -209,19 +209,19 @@ CMakeFiles/b3d.dir/src/action_perform_exitcell.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/b3d.dir/src/action_perform_exitcell.cc.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/b3d/software/src/action_perform_exitcell.cc -o CMakeFiles/b3d.dir/src/action_perform_exitcell.cc.s
 
-CMakeFiles/b3d.dir/src/action_perform_regen.cc.o: CMakeFiles/b3d.dir/flags.make
-CMakeFiles/b3d.dir/src/action_perform_regen.cc.o: src/action_perform_regen.cc
-CMakeFiles/b3d.dir/src/action_perform_regen.cc.o: CMakeFiles/b3d.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/b3d.dir/src/action_perform_regen.cc.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/b3d.dir/src/action_perform_regen.cc.o -MF CMakeFiles/b3d.dir/src/action_perform_regen.cc.o.d -o CMakeFiles/b3d.dir/src/action_perform_regen.cc.o -c /Users/scottpratt/git/b3d/software/src/action_perform_regen.cc
+CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.o: CMakeFiles/b3d.dir/flags.make
+CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.o: src/action_perform_mutcalc.cc
+CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.o: CMakeFiles/b3d.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.o -MF CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.o.d -o CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.o -c /Users/scottpratt/git/b3d/software/src/action_perform_mutcalc.cc
 
-CMakeFiles/b3d.dir/src/action_perform_regen.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/b3d.dir/src/action_perform_regen.cc.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/b3d/software/src/action_perform_regen.cc > CMakeFiles/b3d.dir/src/action_perform_regen.cc.i
+CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/b3d/software/src/action_perform_mutcalc.cc > CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.i
 
-CMakeFiles/b3d.dir/src/action_perform_regen.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/b3d.dir/src/action_perform_regen.cc.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/b3d/software/src/action_perform_regen.cc -o CMakeFiles/b3d.dir/src/action_perform_regen.cc.s
+CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/b3d/software/src/action_perform_mutcalc.cc -o CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.s
 
 CMakeFiles/b3d.dir/src/addaction.cc.o: CMakeFiles/b3d.dir/flags.make
 CMakeFiles/b3d.dir/src/addaction.cc.o: src/addaction.cc
@@ -419,24 +419,10 @@ CMakeFiles/b3d.dir/src/makepart.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/b3d.dir/src/makepart.cc.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/b3d/software/src/makepart.cc -o CMakeFiles/b3d.dir/src/makepart.cc.s
 
-CMakeFiles/b3d.dir/src/mucalc.cc.o: CMakeFiles/b3d.dir/flags.make
-CMakeFiles/b3d.dir/src/mucalc.cc.o: src/mucalc.cc
-CMakeFiles/b3d.dir/src/mucalc.cc.o: CMakeFiles/b3d.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/b3d.dir/src/mucalc.cc.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/b3d.dir/src/mucalc.cc.o -MF CMakeFiles/b3d.dir/src/mucalc.cc.o.d -o CMakeFiles/b3d.dir/src/mucalc.cc.o -c /Users/scottpratt/git/b3d/software/src/mucalc.cc
-
-CMakeFiles/b3d.dir/src/mucalc.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/b3d.dir/src/mucalc.cc.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/b3d/software/src/mucalc.cc > CMakeFiles/b3d.dir/src/mucalc.cc.i
-
-CMakeFiles/b3d.dir/src/mucalc.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/b3d.dir/src/mucalc.cc.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/b3d/software/src/mucalc.cc -o CMakeFiles/b3d.dir/src/mucalc.cc.s
-
 CMakeFiles/b3d.dir/src/mutinfo.cc.o: CMakeFiles/b3d.dir/flags.make
 CMakeFiles/b3d.dir/src/mutinfo.cc.o: src/mutinfo.cc
 CMakeFiles/b3d.dir/src/mutinfo.cc.o: CMakeFiles/b3d.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/b3d.dir/src/mutinfo.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/b3d.dir/src/mutinfo.cc.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/b3d.dir/src/mutinfo.cc.o -MF CMakeFiles/b3d.dir/src/mutinfo.cc.o.d -o CMakeFiles/b3d.dir/src/mutinfo.cc.o -c /Users/scottpratt/git/b3d/software/src/mutinfo.cc
 
 CMakeFiles/b3d.dir/src/mutinfo.cc.i: cmake_force
@@ -450,7 +436,7 @@ CMakeFiles/b3d.dir/src/mutinfo.cc.s: cmake_force
 CMakeFiles/b3d.dir/src/part.cc.o: CMakeFiles/b3d.dir/flags.make
 CMakeFiles/b3d.dir/src/part.cc.o: src/part.cc
 CMakeFiles/b3d.dir/src/part.cc.o: CMakeFiles/b3d.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/b3d.dir/src/part.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/b3d.dir/src/part.cc.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/b3d.dir/src/part.cc.o -MF CMakeFiles/b3d.dir/src/part.cc.o.d -o CMakeFiles/b3d.dir/src/part.cc.o -c /Users/scottpratt/git/b3d/software/src/part.cc
 
 CMakeFiles/b3d.dir/src/part.cc.i: cmake_force
@@ -461,24 +447,10 @@ CMakeFiles/b3d.dir/src/part.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/b3d.dir/src/part.cc.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/b3d/software/src/part.cc -o CMakeFiles/b3d.dir/src/part.cc.s
 
-CMakeFiles/b3d.dir/src/regen.cc.o: CMakeFiles/b3d.dir/flags.make
-CMakeFiles/b3d.dir/src/regen.cc.o: src/regen.cc
-CMakeFiles/b3d.dir/src/regen.cc.o: CMakeFiles/b3d.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/b3d.dir/src/regen.cc.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/b3d.dir/src/regen.cc.o -MF CMakeFiles/b3d.dir/src/regen.cc.o.d -o CMakeFiles/b3d.dir/src/regen.cc.o -c /Users/scottpratt/git/b3d/software/src/regen.cc
-
-CMakeFiles/b3d.dir/src/regen.cc.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/b3d.dir/src/regen.cc.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/scottpratt/git/b3d/software/src/regen.cc > CMakeFiles/b3d.dir/src/regen.cc.i
-
-CMakeFiles/b3d.dir/src/regen.cc.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/b3d.dir/src/regen.cc.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/scottpratt/git/b3d/software/src/regen.cc -o CMakeFiles/b3d.dir/src/regen.cc.s
-
 CMakeFiles/b3d.dir/src/resinfo.cc.o: CMakeFiles/b3d.dir/flags.make
 CMakeFiles/b3d.dir/src/resinfo.cc.o: src/resinfo.cc
 CMakeFiles/b3d.dir/src/resinfo.cc.o: CMakeFiles/b3d.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/b3d.dir/src/resinfo.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/b3d.dir/src/resinfo.cc.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/b3d.dir/src/resinfo.cc.o -MF CMakeFiles/b3d.dir/src/resinfo.cc.o.d -o CMakeFiles/b3d.dir/src/resinfo.cc.o -c /Users/scottpratt/git/b3d/software/src/resinfo.cc
 
 CMakeFiles/b3d.dir/src/resinfo.cc.i: cmake_force
@@ -492,7 +464,7 @@ CMakeFiles/b3d.dir/src/resinfo.cc.s: cmake_force
 CMakeFiles/b3d.dir/src/reslist.cc.o: CMakeFiles/b3d.dir/flags.make
 CMakeFiles/b3d.dir/src/reslist.cc.o: src/reslist.cc
 CMakeFiles/b3d.dir/src/reslist.cc.o: CMakeFiles/b3d.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object CMakeFiles/b3d.dir/src/reslist.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/b3d.dir/src/reslist.cc.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/b3d.dir/src/reslist.cc.o -MF CMakeFiles/b3d.dir/src/reslist.cc.o.d -o CMakeFiles/b3d.dir/src/reslist.cc.o -c /Users/scottpratt/git/b3d/software/src/reslist.cc
 
 CMakeFiles/b3d.dir/src/reslist.cc.i: cmake_force
@@ -506,7 +478,7 @@ CMakeFiles/b3d.dir/src/reslist.cc.s: cmake_force
 CMakeFiles/b3d.dir/src/sampler.cc.o: CMakeFiles/b3d.dir/flags.make
 CMakeFiles/b3d.dir/src/sampler.cc.o: src/sampler.cc
 CMakeFiles/b3d.dir/src/sampler.cc.o: CMakeFiles/b3d.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object CMakeFiles/b3d.dir/src/sampler.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/b3d.dir/src/sampler.cc.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/b3d.dir/src/sampler.cc.o -MF CMakeFiles/b3d.dir/src/sampler.cc.o.d -o CMakeFiles/b3d.dir/src/sampler.cc.o -c /Users/scottpratt/git/b3d/software/src/sampler.cc
 
 CMakeFiles/b3d.dir/src/sampler.cc.i: cmake_force
@@ -520,7 +492,7 @@ CMakeFiles/b3d.dir/src/sampler.cc.s: cmake_force
 CMakeFiles/b3d.dir/src/scatter.cc.o: CMakeFiles/b3d.dir/flags.make
 CMakeFiles/b3d.dir/src/scatter.cc.o: src/scatter.cc
 CMakeFiles/b3d.dir/src/scatter.cc.o: CMakeFiles/b3d.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object CMakeFiles/b3d.dir/src/scatter.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object CMakeFiles/b3d.dir/src/scatter.cc.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/b3d.dir/src/scatter.cc.o -MF CMakeFiles/b3d.dir/src/scatter.cc.o.d -o CMakeFiles/b3d.dir/src/scatter.cc.o -c /Users/scottpratt/git/b3d/software/src/scatter.cc
 
 CMakeFiles/b3d.dir/src/scatter.cc.i: cmake_force
@@ -534,7 +506,7 @@ CMakeFiles/b3d.dir/src/scatter.cc.s: cmake_force
 CMakeFiles/b3d.dir/src/seinfo.cc.o: CMakeFiles/b3d.dir/flags.make
 CMakeFiles/b3d.dir/src/seinfo.cc.o: src/seinfo.cc
 CMakeFiles/b3d.dir/src/seinfo.cc.o: CMakeFiles/b3d.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object CMakeFiles/b3d.dir/src/seinfo.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object CMakeFiles/b3d.dir/src/seinfo.cc.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/b3d.dir/src/seinfo.cc.o -MF CMakeFiles/b3d.dir/src/seinfo.cc.o.d -o CMakeFiles/b3d.dir/src/seinfo.cc.o -c /Users/scottpratt/git/b3d/software/src/seinfo.cc
 
 CMakeFiles/b3d.dir/src/seinfo.cc.i: cmake_force
@@ -557,7 +529,7 @@ b3d_OBJECTS = \
 "CMakeFiles/b3d.dir/src/action_perform_collide.cc.o" \
 "CMakeFiles/b3d.dir/src/action_perform_decay.cc.o" \
 "CMakeFiles/b3d.dir/src/action_perform_exitcell.cc.o" \
-"CMakeFiles/b3d.dir/src/action_perform_regen.cc.o" \
+"CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.o" \
 "CMakeFiles/b3d.dir/src/addaction.cc.o" \
 "CMakeFiles/b3d.dir/src/annihilate.cc.o" \
 "CMakeFiles/b3d.dir/src/b3d.cc.o" \
@@ -572,10 +544,8 @@ b3d_OBJECTS = \
 "CMakeFiles/b3d.dir/src/hyper.cc.o" \
 "CMakeFiles/b3d.dir/src/inelastic.cc.o" \
 "CMakeFiles/b3d.dir/src/makepart.cc.o" \
-"CMakeFiles/b3d.dir/src/mucalc.cc.o" \
 "CMakeFiles/b3d.dir/src/mutinfo.cc.o" \
 "CMakeFiles/b3d.dir/src/part.cc.o" \
-"CMakeFiles/b3d.dir/src/regen.cc.o" \
 "CMakeFiles/b3d.dir/src/resinfo.cc.o" \
 "CMakeFiles/b3d.dir/src/reslist.cc.o" \
 "CMakeFiles/b3d.dir/src/sampler.cc.o" \
@@ -595,7 +565,7 @@ lib/libb3d.a: CMakeFiles/b3d.dir/src/action_perform_activate.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/action_perform_collide.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/action_perform_decay.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/action_perform_exitcell.cc.o
-lib/libb3d.a: CMakeFiles/b3d.dir/src/action_perform_regen.cc.o
+lib/libb3d.a: CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/addaction.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/annihilate.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/b3d.cc.o
@@ -610,10 +580,8 @@ lib/libb3d.a: CMakeFiles/b3d.dir/src/findcollision.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/hyper.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/inelastic.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/makepart.cc.o
-lib/libb3d.a: CMakeFiles/b3d.dir/src/mucalc.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/mutinfo.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/part.cc.o
-lib/libb3d.a: CMakeFiles/b3d.dir/src/regen.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/resinfo.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/reslist.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/sampler.cc.o
@@ -621,7 +589,7 @@ lib/libb3d.a: CMakeFiles/b3d.dir/src/scatter.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/src/seinfo.cc.o
 lib/libb3d.a: CMakeFiles/b3d.dir/build.make
 lib/libb3d.a: CMakeFiles/b3d.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Linking CXX static library lib/libb3d.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/scottpratt/git/b3d/software/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Linking CXX static library lib/libb3d.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/b3d.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/b3d.dir/link.txt --verbose=$(VERBOSE)
 

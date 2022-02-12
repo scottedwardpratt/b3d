@@ -71,7 +71,6 @@ int CB3D::Collide(CPart *part1,CPart *part2,int &nproducts,array<CPart*,5> &prod
 		if(bjtranslate){
 			part1->BjorkenUnTranslate();
 			part3->BjorkenUnTranslate();
-			//printf("(%g,%g) -> (%g,%g)\n",part1->eta,part2->eta,part3->eta,part4->eta);
 		}
 		
 		return 2;
@@ -173,8 +172,8 @@ int CB3D::Collide(CPart *part1,CPart *part2,int &nproducts,array<CPart*,5> &prod
 				}
 				iw+=1;
 				if(iw==NWMAX){
-					printf("MUST INCREASE NWMAX in int CB3D::Collide\n");
-					exit(1);
+					sprintf(message,"MUST INCREASE NWMAX in int CB3D::Collide\n");
+					CLog::Fatal(message);
 				}
 				inel++;
 			}
@@ -195,12 +194,13 @@ int CB3D::Collide(CPart *part1,CPart *part2,int &nproducts,array<CPart*,5> &prod
 							if(part3!=NULL)
 								part3->BjorkenUnTranslate();
 							else{
-								printf("part3 pointer is NULL in collide.cc\n");
-								exit(1);
+								sprintf(message,"part3 pointer is NULL in collide.cc\n");
+								CLog::Fatal(message);
 							}
 						}
 						if(netb!=0 || netq!=0 || nets!=0){
-							printf("charge not conserved in inel collision, netb=%d, netq=%d, nets=%d\n",netb,netq,nets);
+							sprintf(message,"WARNING: charge not conserved in inel collision, netb=%d, netq=%d, nets=%d\n",netb,netq,nets);
+							CLog::Info(message);
 						}
 						nproducts=2;
 						return 3;

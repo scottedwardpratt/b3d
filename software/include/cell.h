@@ -27,9 +27,9 @@ public:
 	void ReKeyAllParts();
 	void Print();
 	vector<double> dens;
-	
 	CB3DCell(double xmin,double xmax,double ymin,double ymax,double etamin,double etamax);
 	static CB3D *b3d;
+	static char *message;
 };
 
 //!A cell in the expanding cell mesh

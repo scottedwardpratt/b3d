@@ -94,7 +94,7 @@ void CAcceptance_ALICE::CalcAcceptance_Realistic(bool &accept,double &efficiency
 	int pid=part->resinfo->code;
 
 	sprintf(message,"this is dead code in acceptance_ALICE.cc, shouldn't be here\n");
-	acclog->Fatal(message);
+	CLog::Fatal(message);
 	
 	efficiency=0.0;
 	pt=sqrt(part->p[1]*part->p[1]+part->p[2]*part->p[2]);
@@ -130,7 +130,7 @@ void CAcceptance_ALICE_Perfect::CalcAcceptance_Realistic(bool &accept,double &ef
 	double dca[4],dcaxy;
 	int pid=part->resinfo->code;
 	sprintf(message,"this is dead code in acceptance_ALICE.cc, shouldn't be here\n");
-	acclog->Fatal(message);
+	CLog::Fatal(message);
 	
 	efficiency=0.0;
 	pt=sqrt(part->p[1]*part->p[1]+part->p[2]*part->p[2]);

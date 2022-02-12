@@ -22,7 +22,6 @@ public:
 	void WriteNumer(string dirname,string numertype,bool NoQ);
 	void Print();
 	static CAcceptance *acceptance;
-	static CLog *barrayslog;
 	static char *message;
 	
 };
@@ -35,7 +34,6 @@ public:
 	CBFDenom(CparameterMap *parmapset);
 	void Reset();
 	void Increment(CPart *parta,double eff);
-	static CLog *barrayslog;
 	static char *message;
 };
 
@@ -88,7 +86,6 @@ public:
 	void WriteDenoms();
 	double GetMinv(CPart *parta,CPart *partb);
 	char message[500];
-	CLog *barrayslog;
 };
 
 #endif

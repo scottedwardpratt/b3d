@@ -54,8 +54,6 @@ void CHyperElement::GetP(CResInfo *resinfo,FourVector &p,double &mass,double mw)
 	dOmega[0]=dOmega0; dOmega[1]=dOmegaX; dOmega[2]=dOmegaY; dOmega[3]=0.0;
 	Misc::BoostToCM(u,dOmega,dOmegaprime);  //dOmegaprime is dOmega in fluid (u=0) frame
 	pdotdOmega=p[0]*dOmegaprime[0]-p[1]*dOmegaprime[1]-p[2]*dOmegaprime[2];
-	//printf("u=(%g,%g), dOmega=(%g,%g,%g), dOmegaprime=(%g, %g,%g)\n",
-	//ux,uy,dOmega[0],dOmega[1],dOmega[2],dOmegaprime[0],dOmegaprime[1],dOmegaprime[2]);
 	
 	wreflect=pdotdOmega/(p[0]*dOmegaprime[0]);
 	reflect=false;

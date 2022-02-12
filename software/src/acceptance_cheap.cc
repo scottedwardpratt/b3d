@@ -30,7 +30,7 @@ void CAcceptance_CHEAP::CalcAcceptance(bool &accept,double &efficiency,CPart *pa
 	efficiency=0.0;
 	pt=sqrt(part->p[1]*part->p[1]+part->p[2]*part->p[2]);
 	//sprintf(message,"pt=%g\n",pt);
-	acclog->Info(message);
+	CLog::Info(message);
 	pmag=sqrt(pt*pt+part->p[3]*part->p[3]);
 	eta=atanh(part->p[3]/pmag);
 	//y=atanh(part->p[3]/part->p[0]);
@@ -63,7 +63,7 @@ void CAcceptance_CHEAP::CalcAcceptance(bool &accept,double &efficiency,CPart *pa
 	}
 	else{
 	sprintf(message,"dca=%g,%g,%g,%g\n",dca[0],dca[1],dca[2],dca[3]);
-	acclog->Info(message);
+	CLog::Info(message);
 	}
 	if(m!=m){
 	part->Print();
@@ -81,7 +81,7 @@ void CAcceptance_CHEAP::CalcAcceptance(bool &accept,double &efficiency,CPart *pa
 	//y=atanh(part->p[3]/part->p[0]);
 	//if(dca[0]>0.000001){
 	sprintf(message,"dca=%g,%g,%g,%g\n",dca[0],dca[1],dca[2],dca[3]);
-	acclog->Info(message);
+	CLog::Info(message);
 	}
 	if(pt>ptmin && pt<ptmax && eta>ETAMIN && eta<ETAMAX){
 	accept=true;
@@ -112,7 +112,7 @@ void CAcceptance_CHEAP::CalcAcceptanceNoID(bool &accept,double &efficiency,CPart
 	if(dca[0]<1.5){
 	efficiency=0.0;
 	//sprintf(message,"pt=%g\n",pt);
-	acclog->Info(message);
+	CLog::Info(message);
 	//y=atanh(part->p[3]/part->p[0]);
 	m=part->resinfo->mass;
 	 
@@ -143,7 +143,7 @@ void CAcceptance_CHEAP::CalcAcceptanceNoID(bool &accept,double &efficiency,CPart
 	}
 	else{
 	sprintf(message,"dca=%g,%g,%g,%g\n",dca[0],dca[1],dca[2],dca[3]);
-	acclog->Info(message);
+	CLog::Info(message);
 	}
 	if(m!=m){
 	part->Print();
@@ -161,7 +161,7 @@ void CAcceptance_CHEAP::CalcAcceptanceNoID(bool &accept,double &efficiency,CPart
 	//y=atanh(part->p[3]/part->p[0]);
 	//if(dca[0]>0.000001){
 	sprintf(message,"dca=%g,%g,%g,%g\n",dca[0],dca[1],dca[2],dca[3]);
-	acclog->Info(message);
+	CLog::Info(message);
 	}
 	if(pt>ptmin && pt<ptmax && eta>ETAMIN && eta<ETAMAX){
 	accept=true;

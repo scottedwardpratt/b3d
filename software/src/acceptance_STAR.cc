@@ -69,7 +69,7 @@ void CAcceptance_STAR::CalcAcceptance(bool &accept,double &efficiency,CPart *par
 	else{
 		if(abs(pid)!=2112 && abs(pid)!=311 && abs(pid)!=111 && abs(pid)!=22){
 			sprintf(message,"CAcceptance_STAR::CalcAcceptance, pid=%d isn't in STAR list\n",pid);
-			acclog->Fatal(message);
+			CLog::Fatal(message);
 		}
 		accept=false;
 		efficiency=0.0;
@@ -95,7 +95,7 @@ void CAcceptance_STAR::CalcAcceptanceNoID(bool &accept,double &efficiency,CPart 
 	int pid=part->resinfo->code;
 	if(abs(pid)!=2112 && abs(pid)!=311 && abs(pid)!=111 && abs(pid)!=22){
 		sprintf(message,"CAcceptance_STAR::CalcAcceptance, pid=%d isn't in STAR list\n",pid);
-		acclog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	part->CalcDCA(dca);
 	accept=false;

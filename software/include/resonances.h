@@ -64,7 +64,6 @@ public:
 	static CRandy *randy;
 	static CResList *reslist;
 	static double **ChiA; // stored array used by ChiOmegaInt
-	static CLog *resinfolog;
 };
 
 class CResList{
@@ -103,7 +102,6 @@ double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &ch
 	static CB3D *b3d;
 	static CBalance *cb;
 	static CSampler *sampler;
-	static CLog *reslog;
 
 };
 

@@ -15,11 +15,11 @@ void CB3D::WriteAnnihilationData(){
 		int iitau,imax=lrint(TAUCOLLMAX);
 		for(iitau=0;iitau<imax;iitau++){
 			sprintf(message,"%6.2f %g\n",(iitau+0.5),annihilation_array[iitau]);
-			b3dlog->Info(message);
+			CLog::Info(message);
 			total+=annihilation_array[iitau];
 		}
 		sprintf(message,"%g total annihilations, nbaryons=%d, annihilation fraction=%g\n",total,nbaryons,2.0*total/double(nbaryons));
-		b3dlog->Info(message);
+		CLog::Info(message);
 	}
 }
 
@@ -63,11 +63,11 @@ void CB3D::KillAllParts(){
 		part=ppos->second;
 		if(part->currentmap!=&PartMap){
 			sprintf(message,"Fatal: KillAllParts:  currentpart not listed as PartMap\n");
-			b3dlog->Info(message);
+			CLog::Info(message);
 			part->Print();
 			sprintf(message,"PartMap.size=%d, DeadPartMap.size=%d\n",int(PartMap.size()),int(DeadPartMap.size()));
 			part->currentmap=&PartMap;
-			b3dlog->Fatal(message);
+			CLog::Fatal(message);
 			exit(1);
 			//Misc::Pause();
 		}
@@ -80,10 +80,10 @@ void CB3D::KillAllParts(){
 		part=ppos->second;
 		if(part->currentmap!=&DeadPartMap){
 			sprintf(message,"particle in dead part map has wrong current map\n");
-			b3dlog->Info(message);
+			CLog::Info(message);
 			part->Print();
 			sprintf(message,"PartMap.size=%d, DeadPartMap.size=%d\n",int(PartMap.size()),int(DeadPartMap.size()));
-			b3dlog->Fatal(message);
+			CLog::Fatal(message);
 		}
 	}
 
@@ -113,7 +113,7 @@ void CB3D::PrintActionMap(CActionMap *actionmap){
 	CAction *action;
 	int iaction=0;
 	sprintf(message,"_________________ ACTIONMAP %d actions _________________________\n",int(actionmap->size()));
-	b3dlog->Info(message);
+	CLog::Info(message);
 	for(epos=actionmap->begin();epos!=actionmap->end();++epos){
 		iaction+=1;
 		action=epos->second;
@@ -154,30 +154,63 @@ void CB3D::PrintPartList(){
 		++ppos1;
 	}
 	sprintf(message,"%s\n",message);
-	b3dlog->Info(message);
+	CLog::Info(message);
 }
 
-void CB3D::PrintMuTInfo(){
-	int ix,iy,iitau,ntau=lrint(TAUCOLLMAX/CMuTInfo::DELTAU);
-	double tau_print,estarpi,estarK;
+void CB3D::CalcMuTU(){
+	int ix,iy,iitau;
+	for(iitau=0;iitau<CMuTInfo::NTAU;iitau++){
+		for(ix=0;ix<2*NXY;ix++){
+			for(iy=0;iy<2*NXY;iy++){
+				muTinfo[iitau][ix][iy]->CalcMuTU();
+			}
+		}
+	}
+}
+
+void CB3D::WriteMuTInfo(){
+	int ix,iy,iitau;
+	double tau_print,r;
 	char filename[50];
 	FILE *fptr;
 	CMuTInfo *mti;
 	iy=NXY;
-	for(iitau=0;iitau<ntau;iitau++){
+	for(iitau=0;iitau<CMuTInfo::NTAU;iitau++){
 		tau_print=(iitau+1)*MUTCALC_DELTAU;
-		sprintf(filename,"mucalc_results/mutinfo_tau%g.txt",tau_print);
+
+		sprintf(filename,"mucalc_results/mutinfo_pi_tau%g.txt",tau_print);
 		fptr=fopen(filename,"w");
-		fprintf(fptr,"#   x     Npi     E*pi     Tpi     mupi    uxpi    NK      EK*      TK     muK     uxK\n");
-		for(ix=0;ix<2*NXY;ix++){
-			mti=muTinfo[ix][iy];
-			mti->FindMuTInfo_pi(iitau);
-			mti->FindMuTInfo_K(iitau);
-			estarpi=sqrt(mti->Epi[iitau]*mti->Epi[iitau]-mti->Pxpi[iitau]*mti->Pxpi[iitau]-mti->Pypi[iitau]*mti->Pypi[iitau])/mti->Npi[iitau];
-			estarK=sqrt(mti->EK[iitau]*mti->EK[iitau]-mti->PxK[iitau]*mti->PxK[iitau]-mti->PyK[iitau]*mti->PyK[iitau])/mti->NK[iitau];
-			fprintf(fptr,"%6.2f %7d %7.2f %7.2f %7.2f %7.4f %7d %7.2f %7.2f %7.2f %7.4f\n",
-			DXY*(-NXY+ix+0.5),mti->Npi[iitau],estarpi,mti->Tpi,mti->mupi,mti->uxpi,
-			mti->NK[iitau],estarK,mti->TK,mti->muK,mti->uxK);
+		fprintf(fptr,"#   r     Npi    Tpi     Uxpi       mupi\n");
+		for(ix=NXY;ix<2*NXY;ix++){
+			mti=muTinfo[itau][ix][iy];
+			mti->CalcMuTU();
+			r=DXY*(-NXY+ix+0.5);
+			printf("%7.4f %8d   %7.2f    %7.4f    %7.2f\n",
+				r,mti->Npi,mti->Tpi,mti->Uxpi,mti->mupi);
+		}
+		fclose(fptr);
+
+		sprintf(filename,"mucalc_results/mutinfo_K_tau%g.txt",tau_print);
+		fptr=fopen(filename,"w");
+		fprintf(fptr,"#   r     NK     TK      UxK       muK\n");
+		for(ix=NXY;ix<2*NXY;ix++){
+			mti=muTinfo[itau][ix][iy];
+			mti->CalcMuTU();
+			r=DXY*(-NXY+ix+0.5);
+			printf("%7.4f %8d   %7.2f    %7.4f    %7.2f\n",
+				r,mti->NK,mti->TK,mti->UxK,mti->muK);
+		}
+		fclose(fptr);
+
+		sprintf(filename,"mucalc_results/mutinfo_B_tau%g.txt",tau_print);
+		fptr=fopen(filename,"w");
+		fprintf(fptr,"#   r     NB0      NB1     NB2     NB3     TK      UxB       muB    muBS\n");
+		for(ix=NXY;ix<2*NXY;ix++){
+			mti=muTinfo[itau][ix][iy];
+			mti->CalcMuTU();
+			r=DXY*(-NXY+ix+0.5);
+			printf("%7.4f %8d   %8d   %7.2f    %7.4f    %7.2f    %7.2f\n",
+				r,mti->NB,mti->NBS,mti->TB,mti->UxB,mti->muB,mti->muBS);
 		}
 		fclose(fptr);
 	}
@@ -197,7 +230,7 @@ void CB3D::ListFutureCollisions(){
 		}
 		epos++;
 	}
-	b3dlog->Info(message);
+	CLog::Info(message);
 }
 
 double CB3D::CalcSigma(CPart *part1,CPart *part2){
@@ -305,7 +338,7 @@ double CB3D::CalcSigma(CPart *part1,CPart *part2){
 			iw+=1;
 			if(iw==NWMAX){
 				sprintf(message,"MUST INCREASE NWMAX in int CB3D::Collide\n");
-				b3dlog->Fatal(message);
+				CLog::Fatal(message);
 			}
 			inel++;
 
@@ -370,7 +403,7 @@ CPart* CB3D::GetDeadPart(){
 			new CPart(npartstot);
 		}
 		sprintf(message,"made new parts, npartstot=%d, tau=%g\n",npartstot,tau);
-		b3dlog->Info(message);
+		CLog::Info(message);
 	}
 	return DeadPartMap.begin()->second;
 }
@@ -381,7 +414,7 @@ void CB3D::GetDeadParts(CPart *&part1,CPart *&part2){
 		for(ipart=0;ipart<DELNPARTSTOT*NSAMPLE;ipart++)
 			new CPart(npartstot);
 		sprintf(message,"made new parts, npartstot=%d, tau=%g\n",npartstot,tau);
-		b3dlog->Info(message);
+		CLog::Info(message);
 	}
 	CPartMap::iterator ppos=DeadPartMap.begin();
 	part1=ppos->second;
@@ -395,7 +428,7 @@ void CB3D::GetDeadParts(array<CPart*,5> &product){
 		for(ipart=0;ipart<DELNPARTSTOT*NSAMPLE;ipart++)
 			new CPart(npartstot);
 		sprintf(message,"made new parts, npartstot=%d, tau=%g\n",npartstot,tau);
-		b3dlog->Info(message);
+		CLog::Info(message);
 	}
 	CPartMap::iterator ppos=DeadPartMap.begin();
 	for(ipart=0;ipart<5;ipart++){
@@ -409,7 +442,7 @@ CAction* CB3D::GetDeadAction(){
 		for(int iaction=0;iaction<DELNACTIONSTOT*NSAMPLE;iaction++)
 			new CAction(nactionstot);		
 		sprintf(message,"created %d new actions, nactionstot=%d\n",DELNACTIONSTOT*NSAMPLE,nactionstot);
-		b3dlog->Info(message);
+		CLog::Info(message);
 	}
 	return DeadActionMap.begin()->second;
 }
@@ -422,7 +455,7 @@ void CB3D::CheckPartMap(){
 		if(part->currentmap!=&PartMap){
 			part->Print();
 			sprintf(message,"----- FAILED CheckPartMap-----\n");
-			b3dlog->Fatal(message);
+			CLog::Fatal(message);
 		}
 	}
 }

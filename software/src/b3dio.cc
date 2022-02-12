@@ -19,7 +19,7 @@ double CB3D::WriteOSCAR(int ievent){
 	
 	int nparts=PartMap.size();
 	sprintf(message,"writing %d particles to %s\n",nparts,oscarfilename.c_str());
-	b3dlog->Info(message);
+	CLog::Info(message);
 	if(oscarfile==NULL){
 		if(BINARY_RW)
 			oscarfile=fopen(oscarfilename.c_str(),"wb");
@@ -63,7 +63,7 @@ double CB3D::WriteOSCAR(int ievent){
 		ipart,part->resinfo->code,part->p[1],part->p[2],part->p[3],part->p[0],sqrt(part->msquared),part->r[1],part->r[2],part->r[3],part->r[0],part->weight);
 		if(ppos==PartMap.end()){
 			sprintf(message,"ppos shouldn't be here\n");
-			b3dlog->Fatal(message);
+			CLog::Fatal(message);
 		}
 		++ppos;
 	}
@@ -104,7 +104,7 @@ int CB3D::ReadOSCAR(int ievent){
 		fscanf(oscarfile,"%d %d %lf %lf",&ievent_read,&nparts_read,&bmin,&bmax);
 		if(!feof(oscarfile) && ievent_read!=ievent){
 			sprintf(message,"trying to read wrong event, ievent=%d, ievent_read=%d\n",ievent,ievent_read);
-			b3dlog->Fatal(message);
+			CLog::Fatal(message);
 		}
 	}
 	if(feof(oscarfile)){
@@ -195,7 +195,7 @@ double CB3D::WriteBalanceParts(int ievent){
 		ipart+=1;
 	} while(ipart<nparts);
 	sprintf(message,"WriteBalance -- sigma=%g\n",sqrt(sigma/double(nsigma)));
-	b3dlog->Info(message);
+	CLog::Info(message);
 	return dnchdy/(2.0*ETAMAX);
 }
 
@@ -220,7 +220,7 @@ int CB3D::ReadBalanceParts(int ievent){
 		fscanf(oscarfile,"%d %d %lf %lf",&ievent_read,&nparts_read,&bmin,&bmax);
 		if(!feof(oscarfile) && ievent_read!=ievent){
 			sprintf(message,"trying to read wrong event, ievent=%d, ievent_read=%d\n",ievent,ievent_read);
-			b3dlog->Fatal(message);
+			CLog::Fatal(message);
 		}
 	}
 	if(feof(oscarfile)){
@@ -238,7 +238,7 @@ int CB3D::ReadBalanceParts(int ievent){
 		}
 		else{
 			sprintf(message,"should only work for binary rw\n");
-			b3dlog->Fatal(message);
+			CLog::Fatal(message);
 			//fscanf(oscarfile,"%d %d %lf %lf %lf",&ipart,&ID,&p[1],&p[2],&rapidity);
 		}
 		r[1]=r[2]=0.0;

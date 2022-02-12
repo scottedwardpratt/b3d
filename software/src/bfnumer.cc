@@ -8,8 +8,6 @@
 
 using namespace std;
 
-CLog *CBFNumer::barrayslog=NULL;
-CLog *CBFDenom::barrayslog=NULL;
 char *CBFNumer::message=NULL;
 char *CBFDenom::message=NULL;
 CAcceptance *CBFNumer::acceptance=NULL;
@@ -99,7 +97,7 @@ void CBFNumer::Increment(CPart *parta,CPart *partb,double effa,double effb){
 	
 	if(dely<0.0 || deleta<0.0 || qout<0.0 || qside<0.0 || qlong <0.0 || qinv<0.0 || deletas<0.0){
 		sprintf(message,"bad sign: dely=%g, deleta=%g, deletas=%g, q=(%g,%g,%g,%g)\n",dely,deleta,deletas,qout,qside,qlong,qinv);
-		barrayslog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	
 	ibin=floorl(qinv/Dqinv);	
@@ -185,7 +183,7 @@ void CBFDenom::Increment(CPart *part,double eff){
 		Nminus+=eff;
 	else if (fabs(charge)>1){
 		sprintf(message,"charge in CBFDenom::Increment > 1 !! = %d", charge);
-		barrayslog->Info(message);
+		CLog::Info(message);
 	}
 }
 
@@ -278,16 +276,16 @@ void CBFNumer::Print(){
 	for(ibin=0;ibin<Nybins;ibin++){
 		sprintf(message,"%s%6.1f %10.3e\n",message,(0.5+ibin)*Dy,By[ibin]);
 	}
-	barrayslog->Info(message);
+	CLog::Info(message);
 	sprintf(message,"----- Beta -----\n");
 	for(ibin=0;ibin<Netabins;ibin++){
 		sprintf(message,"%s%6.1f %9.5f %9.5f\n",message,(0.5+ibin)*Deta,Beta[ibin],Beta1[ibin]);
 	}
-	barrayslog->Info(message);
+	CLog::Info(message);
 	sprintf(message,"----- Bphi -----\n");
 	for(ibin=0;ibin<Nphibins;ibin++){
 		sprintf(message,"%s%3d: %6.1f %10.3e\n",message,ibin,-180.0+(0.5+ibin)*Dphi,Bphi[ibin]);
 	}
-	barrayslog->Info(message);
+	CLog::Info(message);
 	
 }

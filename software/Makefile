@@ -369,29 +369,29 @@ src/action_perform_exitcell.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/action_perform_exitcell.cc.s
 .PHONY : src/action_perform_exitcell.cc.s
 
-src/action_perform_regen.o: src/action_perform_regen.cc.o
-.PHONY : src/action_perform_regen.o
+src/action_perform_mutcalc.o: src/action_perform_mutcalc.cc.o
+.PHONY : src/action_perform_mutcalc.o
 
 # target to build an object file
-src/action_perform_regen.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/action_perform_regen.cc.o
-.PHONY : src/action_perform_regen.cc.o
+src/action_perform_mutcalc.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.o
+.PHONY : src/action_perform_mutcalc.cc.o
 
-src/action_perform_regen.i: src/action_perform_regen.cc.i
-.PHONY : src/action_perform_regen.i
+src/action_perform_mutcalc.i: src/action_perform_mutcalc.cc.i
+.PHONY : src/action_perform_mutcalc.i
 
 # target to preprocess a source file
-src/action_perform_regen.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/action_perform_regen.cc.i
-.PHONY : src/action_perform_regen.cc.i
+src/action_perform_mutcalc.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.i
+.PHONY : src/action_perform_mutcalc.cc.i
 
-src/action_perform_regen.s: src/action_perform_regen.cc.s
-.PHONY : src/action_perform_regen.s
+src/action_perform_mutcalc.s: src/action_perform_mutcalc.cc.s
+.PHONY : src/action_perform_mutcalc.s
 
 # target to generate assembly for a file
-src/action_perform_regen.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/action_perform_regen.cc.s
-.PHONY : src/action_perform_regen.cc.s
+src/action_perform_mutcalc.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/action_perform_mutcalc.cc.s
+.PHONY : src/action_perform_mutcalc.cc.s
 
 src/addaction.o: src/addaction.cc.o
 .PHONY : src/addaction.o
@@ -729,30 +729,6 @@ src/makepart.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/makepart.cc.s
 .PHONY : src/makepart.cc.s
 
-src/mucalc.o: src/mucalc.cc.o
-.PHONY : src/mucalc.o
-
-# target to build an object file
-src/mucalc.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/mucalc.cc.o
-.PHONY : src/mucalc.cc.o
-
-src/mucalc.i: src/mucalc.cc.i
-.PHONY : src/mucalc.i
-
-# target to preprocess a source file
-src/mucalc.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/mucalc.cc.i
-.PHONY : src/mucalc.cc.i
-
-src/mucalc.s: src/mucalc.cc.s
-.PHONY : src/mucalc.s
-
-# target to generate assembly for a file
-src/mucalc.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/mucalc.cc.s
-.PHONY : src/mucalc.cc.s
-
 src/mutinfo.o: src/mutinfo.cc.o
 .PHONY : src/mutinfo.o
 
@@ -800,30 +776,6 @@ src/part.s: src/part.cc.s
 src/part.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/part.cc.s
 .PHONY : src/part.cc.s
-
-src/regen.o: src/regen.cc.o
-.PHONY : src/regen.o
-
-# target to build an object file
-src/regen.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/regen.cc.o
-.PHONY : src/regen.cc.o
-
-src/regen.i: src/regen.cc.i
-.PHONY : src/regen.i
-
-# target to preprocess a source file
-src/regen.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/regen.cc.i
-.PHONY : src/regen.cc.i
-
-src/regen.s: src/regen.cc.s
-.PHONY : src/regen.s
-
-# target to generate assembly for a file
-src/regen.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3d.dir/build.make CMakeFiles/b3d.dir/src/regen.cc.s
-.PHONY : src/regen.cc.s
 
 src/resinfo.o: src/resinfo.cc.o
 .PHONY : src/resinfo.o
@@ -984,9 +936,9 @@ help:
 	@echo "... src/action_perform_exitcell.o"
 	@echo "... src/action_perform_exitcell.i"
 	@echo "... src/action_perform_exitcell.s"
-	@echo "... src/action_perform_regen.o"
-	@echo "... src/action_perform_regen.i"
-	@echo "... src/action_perform_regen.s"
+	@echo "... src/action_perform_mutcalc.o"
+	@echo "... src/action_perform_mutcalc.i"
+	@echo "... src/action_perform_mutcalc.s"
 	@echo "... src/addaction.o"
 	@echo "... src/addaction.i"
 	@echo "... src/addaction.s"
@@ -1029,18 +981,12 @@ help:
 	@echo "... src/makepart.o"
 	@echo "... src/makepart.i"
 	@echo "... src/makepart.s"
-	@echo "... src/mucalc.o"
-	@echo "... src/mucalc.i"
-	@echo "... src/mucalc.s"
 	@echo "... src/mutinfo.o"
 	@echo "... src/mutinfo.i"
 	@echo "... src/mutinfo.s"
 	@echo "... src/part.o"
 	@echo "... src/part.i"
 	@echo "... src/part.s"
-	@echo "... src/regen.o"
-	@echo "... src/regen.i"
-	@echo "... src/regen.s"
 	@echo "... src/resinfo.o"
 	@echo "... src/resinfo.i"
 	@echo "... src/resinfo.s"

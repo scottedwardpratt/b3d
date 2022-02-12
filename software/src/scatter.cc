@@ -90,7 +90,6 @@ void CB3D::Scatter(CPart *part1,CPart *part2,CPart *part3,CPart *part4){
 		roots+=g[alpha]*ptot[alpha]*ptot[alpha];
 	}
 	roots=sqrt(roots);
-	//printf("BEFORE: roots=%g, ptot=(%g,%g,%g,%g)\n",roots,ptot[0],ptot[1],ptot[2],ptot[3]);
 	for(alpha=0;alpha<4;alpha++)
 		u[alpha]=ptot[alpha]/roots;
 	Misc::BoostToCM(u,q,qprime);

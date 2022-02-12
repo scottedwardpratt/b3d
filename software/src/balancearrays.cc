@@ -11,9 +11,6 @@ using namespace std;
 
 CBalanceArrays::CBalanceArrays(CB3D *b3dset){
 	b3d=b3dset;
-	barrayslog=b3d->b3dlog;
-	CBFNumer::barrayslog=barrayslog;
-	CBFDenom::barrayslog=barrayslog;
 	CBFNumer::message=message;
 	CBFDenom::message=message;
 	reslist=b3d->reslist;
@@ -50,7 +47,7 @@ void CBalanceArrays::InitArrays(){
 	}
 	else{
 		sprintf(message,"Define BF_ACCEPTANCE in parameters.txt\n");
-		barrayslog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	CBFNumer::acceptance=acceptance;
 	NSAMPLE_HYDRO2UDS=NSAMPLE_HYDRO2UDS/(2.0*b3d->ETAMAX);
@@ -109,7 +106,7 @@ void CBalanceArrays::PrintBFDenom(){
 	sprintf(message,"%sK+,K-  : nplus=%g, minus=%g\n",message,denom_K->Nplus,denom_K->Nminus);
 	sprintf(message,"%sp,pbar : nplus=%g, minus=%g\n",message,denom_p->Nplus,denom_p->Nminus);
 	sprintf(message,"%sN+,N-  : nplus=%g, minus=%g\n",message,denom_allcharges->Nplus,denom_allcharges->Nminus);
-	barrayslog->Info(message);
+	CLog::Info(message);
 }
 
 void CBalanceArrays::CreateBFArrays(){
@@ -180,7 +177,7 @@ void CBalanceArrays::ConstructBFs(){
 	ConstructBF(numer_allcharges_phi45,denom_allcharges_phi45,bf_allcharges_phi45,1.0,NoQ);
 	ConstructBF(numer_allcharges_phi90,denom_allcharges_phi90,bf_allcharges_phi90,1.0,NoQ);
 	sprintf(message,"v2=%g, v2prime=%g\n",v2/v2norm,v2prime/v2primenorm);
-	barrayslog->Info(message);
+	CLog::Info(message);
 }
 
 void CBalanceArrays::ConstructBF(CBFNumer *numer,CBFDenom *denom,CBFNumer *bf,double doublecount,bool NoQ){
@@ -242,7 +239,7 @@ void CBalanceArrays::ConstructBF(CBFNumer *numer,CBFDenom *denom,CBFNumer *bf,do
 		}
 	}
 	sprintf(message,"%7s: normalization=%g, npairs=%lld\n",bf->name.c_str(),norm,bf->npairs);
-	barrayslog->Info(message);
+	CLog::Info(message);
 }
 
 void CBalanceArrays::WriteNumers(){
@@ -298,7 +295,7 @@ void CBalanceArrays::WriteGammaP(){
 	fprintf(fptr,"%g %g %g %g\n",gp,2.0*gammap/gammapnorm,normtest,mult);
 	sprintf(message,"gammap=%g =? %g, gammapnorm=%g, normtest=%g, mult=%g, NSAMPLE_HYDRO2UDS=%g, NSAMPLE_UDS2BAL=%d, NEVENTS=%d, Ntot=%g\n",
 	gp,2.0*gammap/gammapnorm,gammapnorm,normtest,mult,NSAMPLE_HYDRO2UDS,NSAMPLE_UDS2BAL,NEVENTS,Ntot);
-	barrayslog->Info(message);
+	CLog::Info(message);
 	fclose(fptr);
 }
 
@@ -333,7 +330,7 @@ void CBalanceArrays::ProcessBFPartMap(){
 			bfpartmap.insert(CPartPair(part->balanceID,part));
 	}
 	sprintf(message,"maxbid=%d, bfpartmap.size=%d\n",maxbid,int(bfpartmap.size()));
-	barrayslog->Info(message);
+	CLog::Info(message);
 	
 	for(balanceID=0;balanceID<maxbid;balanceID+=2){
 		itpair_even=bfpartmap.equal_range(balanceID);
@@ -376,7 +373,7 @@ void CBalanceArrays::ProcessPartMap(){   // makes denom + correlations from casc
 	CPart *parta,*partb;
 	pair<CPartMap::iterator,CPartMap::iterator> itpair;
 	sprintf(message,"processing %d parts in PartMap\n",int(b3d->PartMap.size()));
-	barrayslog->Info(message);
+	CLog::Info(message);
 	NEVENTS+=1;
 	if(FROM_UDS){
 		for(it=b3d->PartMap.begin();it!=b3d->PartMap.end();++it){
@@ -640,7 +637,7 @@ void CBalanceArrays::SetQualifier(string qualifier_set){
 	}
 	else{
 		sprintf(message,"acceptance_description not recognized in CBalanceArrays::SetQualifier()\n");
-		barrayslog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	command="mkdir -p "+bf_results_dirname;
 	system(command.c_str());

@@ -4,8 +4,6 @@
 
 #include "acceptance.h"
 
-CLog* CAcceptance::acclog=NULL;
-
 using namespace std;
 
 CAcceptance::CAcceptance(){
@@ -27,7 +25,7 @@ CAcceptance::CAcceptance(CparameterMap *parmapin){
 
 void CAcceptance::CalcAcceptance(bool &accept,double &efficiency,CPart *part){
 	sprintf(message,"hmmmmmm, should not be here in dummy routing for CalcAcceptance\n");
-	acclog->Fatal(message);
+	CLog::Fatal(message);
 	if(part==NULL){
 		accept=true; efficiency=1.0; 
 		accept=false;
@@ -36,7 +34,7 @@ void CAcceptance::CalcAcceptance(bool &accept,double &efficiency,CPart *part){
 
 void CAcceptance::CalcAcceptanceNoID(bool &accept,double &efficiency,CPart *part){
 	sprintf(message,"hmmmmmm, should not be here in dummy routing for CalcAcceptanceNoID\n");
-	acclog->Fatal(message);
+	CLog::Fatal(message);
 	if(part==NULL){
 		accept=true; efficiency=1.0; 
 		accept=false;

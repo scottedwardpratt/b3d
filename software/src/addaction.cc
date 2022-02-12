@@ -11,12 +11,12 @@ void CB3D::AddAction_Activate(CPart *part){
 	CAction *action;
 	if(BJORKEN && fabs(part->eta)>ETAMAX){
 		sprintf(message,"CB3D::AddAction_Activate, eta out of bounds, =%g\n",fabs(part->eta));
-		b3dlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	action=GetDeadAction();
 	if(action->currentmap==&ActionMap){
 		sprintf(message,"don't even try, action wasn't dead, key=%d\n",int(action->key));
-		b3dlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	action->type=0;
 	action->tau=part->tau0;
@@ -24,7 +24,7 @@ void CB3D::AddAction_Activate(CPart *part){
 	action->partmap.insert(CPartPair(part->key,part));
 	if(action->tau<tau){
 		sprintf(message,"trying to AddAction_Activate at earler time!!! action->tau=%g, tau=%g\n",action->tau,tau);
-		b3dlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	part->actionmap.insert(CActionPair(action->key,action));
 }
@@ -41,7 +41,7 @@ void CB3D::AddAction_Decay(CPart *part,double taudecay){
 		part->Print();
 		part->cell->Print();
 		sprintf(message,"CB3D::AddAction_Decay, trying to AddAction_Decay at earler time!!! action->tau=%g, tau=%g\n",action->tau,tau);
-		b3dlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 }
 
@@ -60,7 +60,7 @@ void CB3D::AddAction_ExitCell(CPart *part){
 			part->Print();
 			part->cell->Print();
 			sprintf(message,"CB3D::AddAction_ExitCell, trying to AddAction_ExitCell at earler time!!! action->tau=%g, tau=%g\n",action->tau,tau);
-			b3dlog->Fatal(message);
+			CLog::Fatal(message);
 		}
 	}
 }
@@ -74,7 +74,7 @@ void CB3D::AddAction_Collision(CPart *part1,CPart *part2,double taucoll,double p
 	if(action->tau<tau){
 		action->Print();
 		sprintf(message,"trying to AddAction_Collision at earler time!!!  tau=%g\n",tau);
-		b3dlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 	action->partmap.insert(CPartPair(part1->key,part1));
 	action->partmap.insert(CPartPair(part2->key,part2));
@@ -93,11 +93,11 @@ void CB3D::AddAction_DensCalc(double taucalc){
 	if(action->tau<tau){
 		action->Print();
 		sprintf(message,"trying to AddAction_DensCalc at earler time!!!  tau=%g\n",tau);
-		b3dlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 }
 
-void CB3D::AddAction_MuTCalc(double taucalc){
+void CB3D::AddAction_MuTCalc_UpdateNPE(double taucalc){
 	CAction *action;
 	action=GetDeadAction();
 	action->type=5;
@@ -107,7 +107,7 @@ void CB3D::AddAction_MuTCalc(double taucalc){
 	if(action->tau<tau){
 		action->Print();
 		sprintf(message,"trying to AddAction_MuTCalc at earler time!!!  tau=%g\n",tau);
-		b3dlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 }
 
@@ -121,7 +121,7 @@ void CB3D::AddAction_SECalc(double taucalc){
 	if(action->tau<tau){
 		action->Print();
 		sprintf(message,"trying to AddAction_MuTCalc at earler time!!!  tau=%g\n",tau);
-		b3dlog->Fatal(message);
+		CLog::Fatal(message);
 	}
 }
 

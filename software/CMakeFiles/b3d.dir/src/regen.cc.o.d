@@ -635,12 +635,11 @@ CMakeFiles/b3d.dir/src/regen.cc.o: \
   /Users/scottpratt/git/commonutils/software/include/parametermap.h \
   /Users/scottpratt/git/b3d/software/include/inelastic.h \
   /Users/scottpratt/git/b3d/software/include/mutinfo.h \
-  /Users/scottpratt/git/b3d/software/include/mucalc.h \
-  /Users/scottpratt/git/b3d/software/include/resonances.h \
-  /Users/scottpratt/git/b3d/software/include/part.h \
   /Users/scottpratt/git/commonutils/software/include/decay_nbody.h \
   /Users/scottpratt/git/commonutils/software/include/constants.h \
   /Users/scottpratt/git/commonutils/software/include/misc.h \
   /Users/scottpratt/git/commonutils/software/include/randy.h \
   /Users/scottpratt/git/b3d/software/include/acceptance.h \
+  /Users/scottpratt/git/b3d/software/include/resonances.h \
+  /Users/scottpratt/git/b3d/software/include/part.h \
   /Users/scottpratt/git/b3d/software/include/cell.h

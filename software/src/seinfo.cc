@@ -15,7 +15,8 @@ CSEInfo::CSEInfo(CB3D *b3dset){
 	ETAOVERS=0.0;
 	NETEVENTS=0;
 	R=RMAX-(TAUMAX-TAU0);
-	printf("For SEINFO: TAU0=%g, TAUMAX=%g, RMAX=%g, R=%g, DELTAU=%g\n",TAU0,TAUMAX,RMAX,R,TAUMAX-TAU0);
+	sprintf(message,"For SEINFO: TAU0=%g, TAUMAX=%g, RMAX=%g, R=%g, DELTAU=%g\n",TAU0,TAUMAX,RMAX,R,TAUMAX-TAU0);
+	CLog::Info(message);
 	epsilon.resize(NTAU+1);
 	Tzz.resize(NTAU+1);
 	Pbar.resize(NTAU+1);
@@ -60,7 +61,8 @@ void CSEInfo::SECalc(){
 		}
 	}
 	volume=2.0*b3d->ETAMAX*b3d->tau*PI*R*R*NETEVENTS;
-	printf("tau=%5.2f, pizz=%9.6f, <uperp>=%g\n",b3d->tau,-(Pbar[itau]-Tzz[itau])/volume,uperpbar[itau]/nhadrons[itau]);
+	sprintf(message,"tau=%5.2f, pizz=%9.6f, <uperp>=%g\n",b3d->tau,-(Pbar[itau]-Tzz[itau])/volume,uperpbar[itau]/nhadrons[itau]);
+	CLog::Info(message);
 }
 
 void CSEInfo::Print(){
@@ -71,15 +73,17 @@ void CSEInfo::Print(){
 	char filename[150];
 	sprintf(filename,"model_output/%s/%s/tij.txt",b3d->run_name.c_str(),b3d->qualifier.c_str());
 	FILE *fptr=fopen(filename,"w");
-	printf("#tau  epsilon   Pbar    Tzz   nhadrons  eta      K0      F0     -pizz   alpha\n");
+	sprintf(message,"#tau  epsilon   Pbar    Tzz   nhadrons  eta      K0      F0     -pizz   alpha\n");
+	CLog::Info(message);
 	fprintf(fptr,"#tau  epsilon   Pbar    Tzz   nhadrons  eta      K0      F0     -pizz    alpha\n");
 	for(itau=0;itau<=NTAU;itau++){
 		tau=TAU0+itau*DELTAU;
 		volume=2.0*b3d->ETAMAX*tau*PI*R*R*NETEVENTS;
 		eta=0.75*tau*(Pbar[itau]-Tzz[itau])/volume;
 		alpha=sqrt(TAU0/tau)*sqrt(F0[itau]/F0[0]);
-		printf("%5.2f %7.3f %7.3f %7.3f %7.4f %7.4f %7.4f %7.2f %7.4f %7.4f\n",
+		sprintf(message,"%5.2f %7.3f %7.3f %7.3f %7.4f %7.4f %7.4f %7.2f %7.4f %7.4f\n",
 		tau,epsilon[itau]/volume,Pbar[itau]/volume,Tzz[itau]/volume,nhadrons[itau]/volume,eta,K0[itau]/volume,F0[itau]/volume,(Pbar[itau]-Tzz[itau])/volume,alpha);
+		CLog::Info(message);
 		fprintf(fptr,"%5.2f %7.3f %7.3f %7.3f %7.4f %7.4f %7.4f %7.2f %7.4f %7.4f\n",
 		tau,epsilon[itau]/volume,Pbar[itau]/volume,Tzz[itau]/volume,nhadrons[itau]/volume,eta,K0[itau]/volume,F0[itau]/volume,(Pbar[itau]-Tzz[itau])/volume,alpha);
 		if(itau==0)
@@ -88,10 +92,10 @@ void CSEInfo::Print(){
 			p1=(Pbar[itau]-Tzz[itau])/alpha;
 		if(itau==2)
 			p2=(Pbar[itau]-Tzz[itau])/alpha;
-		//printf("tau=%g, p=%g, pNS=%g, alpha=%g\n",tau,(Pbar[itau]-Tzz[itau])/(alpha*volume),(4.0/3.0)*eta/(tau*alpha),alpha);
 	}
 	dpizzoveralpha_dt=(2.0*p1-1.5*p0-0.5*p2)/DELTAU;
-	printf("&&&&&&&&&eta/s=%g D(pizz/alpha)/Dt=%g &&&&&&&&&&&&\n",ETAOVERS,dpizzoveralpha_dt);
+	sprintf(message,"&&&&&&&&&eta/s=%g D(pizz/alpha)/Dt=%g &&&&&&&&&&&&\n",ETAOVERS,dpizzoveralpha_dt);
+	CLog::Info(message);
 	fprintf(fptr,"#&&&&&&&&&eta/s=%g D(pizz/alpha)/Dt=%g &&&&&&&&&&&&\n",ETAOVERS,dpizzoveralpha_dt);
 	fclose(fptr);
 }
