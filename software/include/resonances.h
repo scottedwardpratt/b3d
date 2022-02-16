@@ -80,7 +80,8 @@ public:
 double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &chi,double &udcontent,double &strangecontent);
 	double CalcBalanceNorm(int pid,int pidprime,double taumax);
 	void CalcConductivity(double T,double &P,double &epsilon,double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &chi,Eigen::Matrix3d &sigma);
-	void freegascalc_onespecies(double m,double T,double &e,double &p,double &dens,double &sigma2,double &dedt);
+	static void freegascalc_onespecies(double m,double T,double &e,double &p,double &dens,
+		double &sigma2,double &dedt);
 	void freegascalc_onespecies_finitewidth(double m, double m1, double m2, double T,double width,double &epsilon,double &P,double &dens,double &sigma2,double &dedt, double &maxweight);
 	double GetLambda(double T,double P,double epsilon);
 	void freegascalc_onespecies(double m,double T,double &e,double &p,double &dens,double &sigma2,double &dedt,double &Jtot);
