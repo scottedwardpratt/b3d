@@ -7,8 +7,9 @@ using namespace std;
 class CMuTInfo{
 public:
 	CMuTInfo(double tau_set);
-	double tau;
+	double tau,volume;
 	double Pxpi,Pypi,Epi,PxK,PyK,EK,PxB,PyB,EB;
+	double epsilonpi,epsilonK,epsilonB,rhopi,rhoK,rhoB,rhoBS;
 	double Tpi,TK,TB,mupi,muK,muB,muBS;
 	double Txxpi,Tyypi,Txypi;
 	double TxxK,TyyK,TxyK;
@@ -18,6 +19,8 @@ public:
 	
 	void UpdateNPE(CB3DCell *cell);
 	void CalcMuTU();
+	void GetEpsilonU(double T00,double T0x,double T0y,double Txx,double Tyy,double Txy,
+double &Ux,double &Uy,double &epsilon);
 	void Print();
 	//void MuTCalc_PionsWithBose();
 	static CB3D *b3d;

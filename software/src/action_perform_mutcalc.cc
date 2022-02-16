@@ -10,8 +10,9 @@ void CAction::PerformMuTCalcUpdateNPE(){
 	itau=lrint(floor(tau/CMuTInfo::DELTAU));
 	for(ix=0;ix<2*b3d->NXY;ix++){
 		for(iy=0;iy<2*b3d->NXY;iy++){
-			for(ieta=0;ieta<2*b3d->NETA;ieta++)
+			for(ieta=0;ieta<2*b3d->NETA;ieta++){
 				b3d->muTinfo[itau][ix][iy]->UpdateNPE(b3d->cell[ix][iy][ieta]);
+			}
 		}
 	}
 }

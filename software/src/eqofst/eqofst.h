@@ -38,7 +38,7 @@ string parsfilename;
 	double etafact;
 	double Bfact;
 
-	void freegascalc_onespecies(double m,double t,double &p,double &e,double &dens,double &sigma2,double &dedt);
+	static void freegascalc_onespecies(double m,double t,double &p,double &e,double &dens,double &sigma2,double &dedt);
 	void FreeGasCalc_of_TMu(CIntrinsic *intrinsic);
 	double GetLambdaFact(CIntrinsic *intrinsic);
 	double GetBfact(double m,double T); // \int d^3p p^4/e^3 exp(-e/T)

@@ -11,12 +11,13 @@ double CMuTInfo::DELTAU=0.0;
 
 CMuTInfo::CMuTInfo(double tau_set){
 	tau=tau_set;
+	volume=tau*2.0*b3d->ETAMAX*b3d->DXY*b3d->DXY;
 	Pxpi=Pypi=PxK=PyK=PxB=PyB=0.0;
 	Txxpi=Tyypi=Txypi=0.0;
 	TxxK=TyyK=TxyK=0.0;
 	TxxB=TyyB=TxyB=0.0;
 	Npi=NK=NBS=0;
-	Tpi=TK=TB=150.0;
+	Tpi=TK=TB=145.0;
 	mupi=muK=muB=muBS=0.0;
 }
 
@@ -71,12 +72,95 @@ void CMuTInfo::Print(){
 }
 
 void CMuTInfo::CalcMuTU(){
+	double Txx,Tyy,Txy,T00,T0x,T0y,gamma,degen;
+	Txx=Txxpi/(volume*double(NETEVENTS));
+	Tyy=Tyypi/(volume*double(NETEVENTS));
+	Txx=Txxpi/(volume*double(NETEVENTS));
+	T00=Epi/(volume*double(NETEVENTS));
+	T0x=Pxpi/(volume*double(NETEVENTS));
+	T0y=Pypi/(volume*double(NETEVENTS));
+	GetEpsilonU(T00,T0x,T0y,Txx,Tyy,Txy,Uxpi,Uypi,epsilonpi);
+	gamma=sqrt(1.0+Uxpi*Uxpi+Uypi*Uypi);
+	rhopi=double(Npi)/(gamma*volume*double(NETEVENTS));
+	degen=3.0;
+	GetMuT(PionMass,degen,rhopi,epsilonpi,Tpi,mupi);
+}
+
+void CMuTInfo::GetMuT(double mass,double degen,double rho_target,double epsilon_target,double &T,double &mu){
+	double &x,rho,epsilon,P,sigma2,x;
+	double dT,dx,dedx,dedT,drhodx,drhodT;
+	do{
+		EqofState::fregascalc_onespecies(mass,T,P,epsilon,rho,sigma2,dedT);
+
+		epsilon*=degen;
+		dedx=epsilon;
+		epsilon*=x;
+
+		dedT*=degen;
+
+		rho*=degen;
+		drhodx=rho;
+		rho*=x;
+
+		drhodT=degen*epsilon/(T*T);
+		drhodT*=x;
+	}
+}
+
+/*void CMuTInfo::CalcMuTU(){
 	double E,volume,epsilon,U0,Ux,Uy,Pmag;
+	double Mxx,Mxy,Myy;
 	volume=b3d->DXY*b3d->DXY*tau*b3d->DETA;
 
 
+
 	printf("Inside CalcMuTU\n");
+}*/
+
+void CMuTInfo::GetEpsilonU(double T00,double T0x,double T0y,double Txx,double Tyy,double Txy,
+double &Ux,double &Uy,double &epsilon){
+	double Qx,Qy,dQxdUx,dQxdUy,dQydUx,dQydUy;
+	double gamma,Det,dUx,dUy;
+	double A,B,C,dAdUx,dAdUy,dBdUx,dBdUy,dCdUx,dCdUy;
+	bool success=false;
+
+	Ux=T0x/T00;
+	Uy=T0y/T00;
+	do{
+		gamma=sqrt(1.0+Ux*Ux+Uy*Uy);
+		A=gamma*T00;
+		B=(1+gamma/(1.0+gamma))*(T0x*Ux+T0y*Uy);
+		C=-(1.0/(1.0+gamma))*(Ux*Txx*Ux+2.0*Ux*Txy*Uy+Uy*Tyy*Uy);
+		Qx=gamma*T0x+(A+B+C)*Ux;
+		Qy=gamma*T0y+(A+B+C)*Uy;
+		if(Qx*Qx+Qy*Qy>1.0E-8){
+			dAdUx=A*Ux/(gamma*gamma);
+			dAdUy=A*Uy/(gamma*gamma);
+			dBdUx=(1.0+(gamma/(1.0+gamma)))*T0x+(Ux/(gamma*(1.0+gamma)*(1.0+gamma)))*(T0x*Ux+T0y*Uy);
+			dBdUy=(1.0+(gamma/(1.0+gamma)))*T0y+(Uy/(gamma*(1.0+gamma)*(1.0+gamma)))*(T0x*Ux+T0y*Uy);
+			dCdUx=-C*Ux/(gamma*(1.0+gamma))-(2.0/(1.0+gamma))*(Txx*Ux+Txy*Uy);
+			dCdUy=-C*Uy/(gamma*(1.0+gamma))-(2.0/(1.0+gamma))*(Tyy*Uy+Txy*Ux);
+			dQxdUx=(Ux/gamma)*T0x+Ux*(dAdUx+dBdUx+dCdUx);
+			dQxdUy=(Uy/gamma)*T0x+Ux*(dAdUy+dBdUy+dCdUy);
+			dQydUx=(Ux/gamma)*T0y+Uy*(dAdUx+dBdUx+dCdUx);
+			dQydUy=(Uy/gamma)*T0y+Uy*(dAdUy+dBdUy+dCdUy);
+			dQxdUx+=(A+B+C);
+			dQydUy+=(A+B+C);
+			Det=dQxdUx*dQydUy-dQxdUy*dQydUx;
+			dUx=-(dQydUy*Qx-dQxdUy*Qy)/Det;
+			dUy=-(-dQydUx*Qx+dQxdUx*Qy)/Det;
+			Ux+=dUx;
+			Uy+=dUy;
+		}
+		else
+			success=true;
+	}while(!success);
+	gamma=sqrt(1.0+Ux*Ux+Uy*Uy);
+	epsilon=gamma*T00*gamma-2.0*gamma*T0x*Ux-2.0*gamma*T0y*Uy
+	+Ux*Txx*Ux+Uy*Tyy*Uy+2.0*Ux*Txy*Uy;
 }
+
+void CMuTinfo::
 
 /*
 	

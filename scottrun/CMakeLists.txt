@@ -25,3 +25,8 @@ set(SOURCE_FILES ./b3dmain.cc)
 add_executable(b3dtest ${SOURCE_FILES})
 add_dependencies(b3dtest extern_b3d extern_commonutils)
 target_link_libraries(b3dtest b3d commonutils ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY} ${GITHOME_MSU}/commonutils/software/lib/libcommonutils.a ${GSL_LIBRARY} ${GITHOME_MSU}/b3d/software/lib/libb3d.a)
+
+set(SOURCE_FILES ./crap.cc)
+add_executable(crap ${SOURCE_FILES})
+add_dependencies(crap extern_b3d extern_commonutils)
+target_link_libraries(crap b3d commonutils ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${EIGEN3_LIBRARY} ${GITHOME_MSU}/commonutils/software/lib/libcommonutils.a ${GSL_LIBRARY} ${GITHOME_MSU}/b3d/software/lib/libb3d.a)

@@ -155,6 +155,19 @@ b3dtest/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3dtest.dir/build.make CMakeFiles/b3dtest.dir/build
 .PHONY : b3dtest/fast
 
+#=============================================================================
+# Target rules for targets named crap
+
+# Build rule for target.
+crap: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 crap
+.PHONY : crap
+
+# fast build rule for target.
+crap/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/crap.dir/build.make CMakeFiles/crap.dir/build
+.PHONY : crap/fast
+
 b3dmain.o: b3dmain.cc.o
 .PHONY : b3dmain.o
 
@@ -179,6 +192,30 @@ b3dmain.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/b3dtest.dir/build.make CMakeFiles/b3dtest.dir/b3dmain.cc.s
 .PHONY : b3dmain.cc.s
 
+crap.o: crap.cc.o
+.PHONY : crap.o
+
+# target to build an object file
+crap.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/crap.dir/build.make CMakeFiles/crap.dir/crap.cc.o
+.PHONY : crap.cc.o
+
+crap.i: crap.cc.i
+.PHONY : crap.i
+
+# target to preprocess a source file
+crap.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/crap.dir/build.make CMakeFiles/crap.dir/crap.cc.i
+.PHONY : crap.cc.i
+
+crap.s: crap.cc.s
+.PHONY : crap.s
+
+# target to generate assembly for a file
+crap.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/crap.dir/build.make CMakeFiles/crap.dir/crap.cc.s
+.PHONY : crap.cc.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -190,9 +227,13 @@ help:
 	@echo "... extern_b3d"
 	@echo "... extern_commonutils"
 	@echo "... b3dtest"
+	@echo "... crap"
 	@echo "... b3dmain.o"
 	@echo "... b3dmain.i"
 	@echo "... b3dmain.s"
+	@echo "... crap.o"
+	@echo "... crap.i"
+	@echo "... crap.s"
 .PHONY : help
 
 
