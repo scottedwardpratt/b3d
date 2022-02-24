@@ -1,6 +1,3 @@
-#ifndef __ACTION_PERFORM_DECAY_CC__
-#define __ACTION_PERFORM_DECAY_CC__
-
 #include "b3d.h"
 #include "part.h"
 #include "cell.h"
@@ -90,4 +87,3 @@ void CAction::PerformDecay(){
 	mother->Kill();
 	b3d->ndecay+=1;
 }
-#endif

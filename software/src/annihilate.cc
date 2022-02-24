@@ -1,8 +1,6 @@
-#ifndef __ANNIHILATE_CC__
-#define __ANNIHILATE_CC__
-
 #include "b3d.h"
 #include "part.h"
+#include "cell.h"
 #include "resonances.h"
 #include "randy.h"
 #include "constants.h"
@@ -248,4 +246,52 @@ double CB3D::GetAnnihilationSigma(CPart *part1,CPart *part2,double &vrel){
 	return sigma_annihilation;
 }
 
-#endif
+double CB3D::GetAnnihilationSigma_Reduced(CPart *part1,CPart *part2,double &vrel){
+	double mupi,muK,muB,muBS,mutot,netS;
+	double reduction_factor=1.0;
+	CB3DCell *cell1,*cell2;
+	cell1=part1->cell;
+	cell2=part2->cell;
+	if(cell1!=NULL && cell2!=NULL){
+		unsigned int ix1,iy1,ix2,iy2,iitau;
+		ix1=cell1->ix; iy1=cell1->iy;
+		ix2=cell2->ix; iy2=cell2->iy;
+		iitau=lrint(tau/CMuTInfo::DELTAU);
+		if(iitau<muTinfo.size()){
+			if(muTinfo[iitau][ix1][iy1]->Npi>CMuTInfo::NMINCALC
+				&& muTinfo[iitau][ix1][iy1]->NB>CMuTInfo::NMINCALC){
+				if((part1->resinfo->strange==0 && part2->resinfo->strange==0) || 
+					(muTinfo[iitau][ix1][iy1]->NK>CMuTInfo::NMINCALC && muTinfo[iitau][ix2][iy2]->NK
+						&& muTinfo[iitau][ix2][iy2]->NBS>CMuTInfo::NMINCALC
+						&& muTinfo[iitau][ix2][iy2]->NBS>CMuTInfo::NMINCALC)){
+					mupi=0.5*(muTinfo[iitau][ix1][iy1]->mupi+muTinfo[iitau][ix2][iy2]->mupi);
+					muK=0.5*(muTinfo[iitau][ix1][iy1]->muK+muTinfo[iitau][ix2][iy2]->muK);
+					muB=0.5*(muTinfo[iitau][ix1][iy1]->muB+muTinfo[iitau][ix2][iy2]->muB);
+					muBS=0.5*(muTinfo[iitau][ix1][iy1]->muK+muTinfo[iitau][ix2][iy2]->muBS);
+					netS=fabs(part1->resinfo->strange+part2->resinfo->strange);
+					mutot=(5.0-netS)*mupi+netS*muK-2.0*muB-netS*muBS;
+					reduction_factor=1.0-exp(mutot);
+				}
+			}
+		}
+	}
+	const double g[4]={1,-1,-1,-1};
+	double Plab,p1dotp2,triangle,sigma_annihilation,rstrange;
+	int alpha;
+	part1->SetMass(); part2->SetMass();
+	double m1squared=part1->msquared,m2squared=part2->msquared;
+	p1dotp2=0.0;
+	for(alpha=0;alpha<4;alpha++){
+		p1dotp2+=part1->p[alpha]*part2->p[alpha]*g[alpha];
+	}
+	//Plab=sqrt((p1dotp2*p1dotp2/(part2->msquared))-part1->msquared);
+	triangle=p1dotp2*p1dotp2-m1squared*m2squared;
+	Plab=0.5*(m1squared+m2squared)*triangle/(m1squared*m2squared);
+	Plab=sqrt(Plab);
+	sigma_annihilation=6.7*pow(Plab/1000.0,-0.7)/double(NSAMPLE);
+	rstrange=0.5*sqrt(sigma_annihilation);
+	rstrange*=pow(ANNIHILATION_SREDUCTION,abs(part1->resinfo->strange))+pow(ANNIHILATION_SREDUCTION,abs(part2->resinfo->strange));
+	sigma_annihilation=rstrange*rstrange;
+	vrel=sqrt(triangle)/(part1->p[0]*part2->p[0]);
+	return sigma_annihilation*reduction_factor;
+}

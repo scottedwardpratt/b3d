@@ -1,6 +1,3 @@
-#ifndef __ADDACTION_CC__
-#define __ADDACTION_CC__
-
 #include "b3d.h"
 #include "part.h"
 #include "cell.h"
@@ -124,5 +121,3 @@ void CB3D::AddAction_SECalc(double taucalc){
 		CLog::Fatal(message);
 	}
 }
-
-#endif

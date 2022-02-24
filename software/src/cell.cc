@@ -1,6 +1,3 @@
-#ifndef __PART_CC__
-#define __PART_CC__
-
 #include "b3d.h"
 #include "cell.h"
 
@@ -20,5 +17,3 @@ void CB3DCell::Print(){
 	sprintf(message,"%s---------------------\n",message);
 	CLog::Info(message);
 }
-
-#endif

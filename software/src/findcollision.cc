@@ -1,6 +1,3 @@
-#ifndef __FINDCOLLISION_CC__
-#define __FINDCOLLISION_CC__
-
 #include "b3d.h"
 #include "part.h"
 #include "cell.h"
@@ -103,5 +100,3 @@ bool CB3D::FindCollision(CPart *part1,CPart *part2,double &taucoll){
 	}
 	return collide;
 }
-
-#endif

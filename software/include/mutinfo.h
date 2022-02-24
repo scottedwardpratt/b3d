@@ -16,17 +16,23 @@ public:
 	double TxxB,TyyB,TxyB;
 	double Uxpi,Uypi,UxK,UyK,UxB,UyB;
 	int Npi,NK,NB,NBS;
+	bool sufficientN;
 	
 	void UpdateNPE(CB3DCell *cell);
-	void CalcMuTU();
-	void GetEpsilonU(double T00,double T0x,double T0y,double Txx,double Tyy,double Txy,
-double &Ux,double &Uy,double &epsilon);
+	void CalcAllMuTU();
+	static void GetMuT(double mass,double degen,double rho_target,double epsilon_target,
+		double &T,double &mu);
+	static bool GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsilon_target,
+		double &T,double &muB,double &muBS);
+	static void GetEpsilonU(double T00,double T0x,double T0y,double Txx,double Tyy,double Txy,
+		double &Ux,double &Uy,double &epsilon);
 	void Print();
 	//void MuTCalc_PionsWithBose();
 	static CB3D *b3d;
 	static double DELTAU;
 	static int NTAU;
 	static int NETEVENTS;
+	static int NMINCALC;
 	static vector<CResInfo*> Bresinfo;
 };
 

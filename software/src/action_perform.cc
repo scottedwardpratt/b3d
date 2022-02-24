@@ -1,6 +1,3 @@
-#ifndef __ACTION_PERFORM_CC__
-#define __ACTION_PERFORM_CC__
-
 #include "b3d.h"
 #include "part.h"
 
@@ -57,5 +54,3 @@ void CAction::Perform(){
 	}
 	
 }
-
-#endif

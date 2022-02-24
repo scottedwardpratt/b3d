@@ -1,6 +1,3 @@
-#ifndef __ACTION_PERFORM_ACTIVATE_CC__
-#define __ACTION_PERFORM_ACTIVATE_CC__
-
 #include "b3d.h"
 #include "part.h"
 
@@ -18,4 +15,3 @@ void CAction::PerformActivate(){
 	part->FindActions();
 	b3d->nactivate+=1;
 }
-#endif

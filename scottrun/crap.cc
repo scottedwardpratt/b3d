@@ -2,207 +2,150 @@
 #include "randy.h"
 #include "misc.h"
 #include "resonances.h"
+#include "commondefs.h"
 
 using namespace std;
 
-void TestGetMuT(double mass,double degen,double rho_target,double epsilon_target,double &T,double &mu){
-	double x,rho,epsilon,P,sigma2,depsilon,drho,epsilon0,rho0;
-	double dT,dx,dedx,dedT,drhodx,drhodT,accuracy;
-	bool success=false;
-	int ntry=0;
-	double Det;
-	printf("epsilon_target=%g, rho_target=%g\n",epsilon_target,rho_target);
-	x=exp(mu);
+void TestGetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsilon_target,double &T,double &muB,double &muBS){
+	Eigen::Vector3d rho,rho_target,x,dx,drho;
+	Eigen::Matrix3d drhodx;
+	const int NSPECIES=2;
+	vector<string> name{"nucleon","Lambda","Cascade"};
+	vector<double> mass{939.0,1116.0,1314.86};
+	vector<int> degen{8,4,8};
+	vector<int> nstrange{0,1,2};
+	rho_target(0)=epsilon_target/rhoB_target;
+	rho_target(1)=rhoB_target;
+	rho_target(2)=rhoBS_target;
+	double factor,dfactordxB,dfactordxBS;
+	double xB,xBS,e,dedt,dedx1,dedx2;
+	double P,sigma2,epsilon0,rho0,dedt0,accuracy,D;
+	int ntry=0,ispecies,nmax=200;
+
+	x[0]=T;
+	x[1]=muB;
+	x[2]=muBS;
+
+	//printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
+	//printf("rho_target=(%g,%g,%g)\n",rho_target(0),rho_target(1),rho_target(2));
+
 	do{
 		ntry+=1;
-		CResList::freegascalc_onespecies(mass,T,epsilon0,P,rho0,sigma2,dedT);
-		epsilon=epsilon0*degen*x;
-		rho=rho0*degen*x;
-		accuracy=pow((rho-rho_target)/rho_target,2)+pow((epsilon-epsilon_target)/epsilon_target,2);
-		printf("T=%g, epsilon=%g, rho=%g, epsilon/rho=%g, accuracy=%g\n",T,epsilon,rho,epsilon/rho,accuracy);
-		if(accuracy>1.0E-8){
-			dedx=epsilon0*degen;
-			dedT*=degen*x;
-			drhodT=epsilon/(T*T);
-			drhodx=rho0*degen;
-			Det=dedT*drhodx-dedx*drhodT;
-			depsilon=epsilon_target-epsilon;
-			drho=rho_target-rho;
+		T=x(0);
+		xB=x(1);
+		xBS=x(2);
+		rho.setZero();
+		drhodx.setZero();
+		e=dedt=dedx1=dedx2=0.0;
+		for(ispecies=0;ispecies<NSPECIES;ispecies++){
+			CResList::freegascalc_onespecies(mass[ispecies],T,epsilon0,P,rho0,sigma2,dedt0);
 
-			dT=(drhodx*depsilon-dedx*drho)/Det;
-			dx=-(drhodT*depsilon-dedT*drho)/Det;
+			factor=degen[ispecies]*exp(x(1))*exp(x(2)*nstrange[ispecies]);
+			dfactordxB=factor;
+			dfactordxBS=factor*nstrange[ispecies];
 
-			printf("dT=%g, dx=%g\n",dT,dx);
+			e+=epsilon0*factor;
+			rho(1)+=rho0*factor;
+			rho(2)+=rho0*factor*nstrange[ispecies];
 
-			if(fabs(dT)>0.5*T){
-				dx=(0.5*T/dT)*dx;
-				dT=0.5*T;
-			}
+			dedt+=dedt0*factor;
+			dedx1+=epsilon0*dfactordxB;
+			dedx2+=epsilon0*dfactordxBS;
 
-			T+=dT;
-			x+=dx;
+			drhodx(1,0)+=(epsilon0/(T*T))*factor;
+			drhodx(1,1)+=rho0*dfactordxB;
+			drhodx(1,2)+=rho0*dfactordxBS;
+
+			drhodx(2,0)+=(epsilon0/(T*T))*factor*nstrange[ispecies];
+			drhodx(2,1)+=rho0*dfactordxB*nstrange[ispecies];
+			drhodx(2,2)+=rho0*dfactordxBS*nstrange[ispecies];
 		}
-		else
-			success=true;
-	}while(!success && ntry<20);
+		rho(0)=e/rho(1);
+		drhodx(0,0)=(dedt/rho(1))-e*drhodx(1,0)/(rho(1)*rho(1));
+		drhodx(0,1)=(dedx1/rho(1))-e*drhodx(1,1)/(rho(1)*rho(1));
+		drhodx(0,2)=(dedx2/rho(1))-e*drhodx(1,2)/(rho(1)*rho(1));
 
-	mu=log(x);
+		drho=rho_target-rho;
+		dx=drhodx.colPivHouseholderQr().solve(drho);
+
+		/*
+		printf("rho_target=(%g,%g,%g)\n",rho_target(0),rho_target(1),rho_target(2));
+		printf("rho=(%g,%g,%g)\n",rho(0),rho(1),rho(2));
+		printf("dx=(%g,%g,%g)\n",dx(0),dx(1),dx(2));
+		printf("x=(%g,%g,%g)\n",x(0),x(1),x(2));
+		printf("TB=%g, muB=%g, muBS=%g\n",x[0],x[1],x[2]);
+		printf("-----------------------------------------\n");
+		*/
+		if(dx(0)!=dx(0) || dx(1)!=dx(1) || dx(2)!=dx(2)){
+			printf("FAILURE, ntry=%d, dx!=dx\n",ntry);
+			printf("rho_target=(%g,%g,%g)\n",rho_target(0),rho_target(1),rho_target(2));
+			printf("rho=(%g,%g,%g)\n",rho(0),rho(1),rho(2));
+			printf("dx=(%g,%g,%g)\n",dx(0),dx(1),dx(2));
+			printf("x=(%g,%g,%g)\n",x(0),x(1),x(2));
+			printf("TB=%g, muB=%g, muBS=%g\n",x[0],x[1],x[2]);
+			printf("drhodx=\n");
+			cout << drhodx << endl;
+			exit(1);
+		}
+		
+		if(x(0)+dx(0)<0.3*T){
+			D=fabs(dx(0));
+			dx=dx*(0.3*T/D);
+		}
+		if(dx(0)>20.0){
+			D=fabs(dx(0));
+			dx=dx*20.0/D;
+		}
+		
+		double dxmax=1.0;
+		if(fabs(dx(1))>dxmax){
+			D=fabs(dx(1));
+			dx=dx*dxmax/D;
+		}
+		if(fabs(dx(2))>dxmax){
+			D=fabs(dx(2));
+			dx=dx*dxmax/D;
+		}
+
+		
+
+		//printf("----------------------------------------\n");
+		//printf("rho=(%g,%g,%g)\n",rho(0),rho(1),rho(2));
+		//printf("dx=(%g,%g,%g)\n",dx(0),dx(1),dx(2));
+		x=x+dx;
+		//printf("x=(%g,%g,%g)\n",x(0),x(1),x(2));
+
+		accuracy=0.001*drho[0]*drho[0]+drho[1]*drho[1]+drho[2]*drho[2];
+
+	}while(accuracy>1.0E-10 && ntry<nmax);
+	if(ntry==nmax || accuracy!=accuracy){
+		printf("FAILURE, ntry=nmax\n");
+		printf("rho_target=(%g,%g,%g)\n",rho_target(0),rho_target(1),rho_target(2));
+		printf("rho=(%g,%g,%g)\n",rho(0),rho(1),rho(2));
+		printf("dx=(%g,%g,%g)\n",dx(0),dx(1),dx(2));
+		printf("x=(%g,%g,%g)\n",x(0),x(1),x(2));
+		printf("TB=%g, muB=%g, muBS=%g\n",x[0],x[1],x[2]);
+		exit(1);
+	}
+	T=x[0];
+	muB=x[1];
+	muBS=x[2];
+	printf("ntry=%d, accuracy=%g\n",ntry,accuracy);
+	//printf("TB=%g, muB=%g, muBS=%g\n",T,muB,muBS);
 }
 
-void TestGetEpsilonU(double T00,double T0x,double T0y,double Txx,double Tyy,double Txy,
-double &Ux,double &Uy,double &epsilon){
-	double Qx,Qy,dQxdUx,dQxdUy,dQydUx,dQydUy;
-	double gamma,Det,dUx,dUy;
-	double A,B,C,dAdUx,dAdUy,dBdUx,dBdUy,dCdUx,dCdUy,dUmag;
-	bool success=false;
-	int ntry=0;
-	Ux=T0x/T00;
-	Uy=T0y/T00;
-	do{
-		gamma=sqrt(1.0+Ux*Ux+Uy*Uy);
-		A=-gamma*T00;
-		B=(1.0+gamma/(1.0+gamma))*(T0x*Ux+T0y*Uy);
-		C=-(1.0/(1.0+gamma))*(Ux*Txx*Ux+2.0*Ux*Txy*Uy+Uy*Tyy*Uy);
-		Qx=gamma*T0x-Ux*Txx-Uy*Txy+(A+B+C)*Ux;
-		Qy=gamma*T0y-Uy*Tyy-Ux*Txy+(A+B+C)*Uy;
-		//printf("--------------------\n");
-		//printf("Qx=%g, Qy=%g\n",Qx,Qy);
-		//printf("Ux=%g, Uy=%g\n",Ux,Uy);
-		if(Qx*Qx+Qy*Qy>1.0E-10){
-			dAdUx=A*Ux/(gamma*gamma);
-			dAdUy=A*Uy/(gamma*gamma);
-			dBdUx=(1.0+(gamma/(1.0+gamma)))*T0x+(Ux/(gamma*(1.0+gamma)*(1.0+gamma)))*(T0x*Ux+T0y*Uy);
-			dBdUy=(1.0+(gamma/(1.0+gamma)))*T0y+(Uy/(gamma*(1.0+gamma)*(1.0+gamma)))*(T0x*Ux+T0y*Uy);
-			dCdUx=-C*Ux/(gamma*(1.0+gamma))-(2.0/(1.0+gamma))*(Txx*Ux+Txy*Uy);
-			dCdUy=-C*Uy/(gamma*(1.0+gamma))-(2.0/(1.0+gamma))*(Tyy*Uy+Txy*Ux);
-			dQxdUx=-Txx+(Ux/gamma)*T0x+Ux*(dAdUx+dBdUx+dCdUx);
-			dQxdUy=-Txy+(Uy/gamma)*T0x+Ux*(dAdUy+dBdUy+dCdUy);
-			dQydUx=-Txy+(Ux/gamma)*T0y+Uy*(dAdUx+dBdUx+dCdUx);
-			dQydUy=-Tyy+(Uy/gamma)*T0y+Uy*(dAdUy+dBdUy+dCdUy);
-			dQxdUx+=(A+B+C);
-			dQydUy+=(A+B+C);
-			Det=dQxdUx*dQydUy-dQxdUy*dQydUx;
-			dUx=-(dQydUy*Qx-dQxdUy*Qy)/Det;
-			dUy=-(-dQydUx*Qx+dQxdUx*Qy)/Det;
-			if(fabs(dUx*dUx+dUy*dUy)>1.0){
-				dUmag=sqrt(dUx*dUx+dUy*dUy);
-				dUx*=1.0/dUmag;
-				dUy*=1.0/dUmag;
-			}
-			Ux+=dUx;
-			Uy+=dUy;
-			ntry+=1;
-		}
-		else
-			success=true;
-	}while(!success && ntry<50);
-	/*
-	if(success){
-		printf("SUCCESS!!!!! ntry=%d\n",ntry);
-		int alpha,beta;
-		double **Ttest,**Ttestboosted;
-	Ttest=new double *[4];
-	Ttestboosted=new double *[4];
-	for(alpha=0;alpha<4;alpha++){
-		Ttest[alpha]=new double[4];
-		Ttestboosted[alpha]=new double[4];
-	}
-	FourVector u;	
-		u[1]=Ux;
-		u[2]=Uy;
-		u[3]=0.0;
-		u[0]=sqrt(1.0+u[1]*u[1]+u[2]*u[2]);
-		for(alpha=0;alpha<3;alpha++){
-			for(beta=0;beta<3;beta++)
-				Ttest[alpha][beta]=Ttestboosted[alpha][beta]=0.0;
-		}
-		for(alpha=0;alpha<3;alpha++){
-			for(beta=0;beta<3;beta++)
-				Ttest[alpha][beta]=Ttestboosted[alpha][beta]=0.0;
-		}
-		Ttest[0][0]=T00;
-		Ttest[0][1]=Ttest[1][0]=T0x;
-		Ttest[0][2]=Ttest[2][0]=T0y;
-		Ttest[1][1]=Txx;
-		Ttest[2][2]=Tyy;
-		Ttest[1][2]=Ttest[2][1]=Txy;
-		BoostToCM(u,Ttest,Ttestboosted);
-		printf("SE tensor originally:\n");
-		for(alpha=0;alpha<3;alpha++){
-			for(beta=0;beta<3;beta++)
-				printf("%8.4f ",Ttest[alpha][beta]);
-			printf("\n");
-		}
-		printf("SE tensor boosted:\n");
-		for(alpha=0;alpha<3;alpha++){
-			for(beta=0;beta<3;beta++)
-				printf("%8.4f ",Ttestboosted[alpha][beta]);
-			printf("\n");
-		}
-
-	}
-	*/
-	gamma=sqrt(1.0+Ux*Ux+Uy*Uy);
-	epsilon=gamma*T00*gamma-2.0*gamma*T0x*Ux-2.0*gamma*T0y*Uy
-	+Ux*Txx*Ux+Uy*Tyy*Uy+2.0*Ux*Txy*Uy;
-}
 
 int main(){
-	int nparts=2000000;
-	double Ux,Uy,epsilon,rho=1.0,weight,pdotu,umag,degen=3.0;
-	CRandy *randy=new CRandy(time(NULL));
-	double mass=139.57,mu,T=100.0;
-	double T0x=0.0,T0y=0.0,T00=0.0;
-	double Txx=0.0,Txy=0.0,Tyy=0.0;
-	int ipart;
-	FourVector p,u;
-	u[1]=0.0;
-	u[2]=0.0;
-	u[3]=0.0;
-	printf("Enter ux, uy: ");
-	scanf("%lf %lf",&u[1],&u[2]);
-	umag=sqrt(u[1]*u[1]+u[2]*u[2]);
-	u[0]=sqrt(1.0+u[1]*u[1]+u[2]*u[2]);
-	for(ipart=0;ipart<nparts;ipart++){
-		randy->generate_boltzmann(mass,T,p);
-		
-		weight=(1.0+(u[1]*p[1]+u[2]*p[2])/(u[0]*p[0]));
-		if(weight<randy->ran()){
-			pdotu=p[1]*u[1]+p[2]*u[2];
-			double oldpmag=sqrt(p[1]*p[1]+p[2]*p[2]);
-			p[1]=p[1]-2.0*pdotu*u[1]/(umag*umag);
-			p[2]=p[2]-2.0*pdotu*u[2]/(umag*umag);
-			double newpmag=sqrt(p[1]*p[1]+p[2]*p[2]);
-			if(fabs(newpmag-oldpmag)>1.0E-4)
-				printf("newpmag=%g, oldpmag=%g\n",newpmag,oldpmag);
-		}
-		
-		Misc::Boost(u,p);
-		//printf("E=%g\n",p[0]);
-		T00+=p[0];
-		T0x+=p[1];
-		T0y+=p[2];
-		Txx+=p[1]*p[1]/p[0];
-		Tyy+=p[2]*p[2]/p[0];
-		Txy+=p[1]*p[2]/p[0];
+	double epsilon,T=100.0,muB,muBS,rhoB,rhoBS;
+	CRandy randy(1234);
+	for(int itest=0;itest<10000000;itest++){
+		rhoB=0.0+0.5*randy.ran();
+		rhoBS=0.5*rhoB*randy.ran();
+		epsilon=rhoB*(15.0+939.0+300*randy.ran())+rhoBS*177.0;
+		muB=muBS=0.0;
+		T=100.0;
+		TestGetMuT_Baryon(rhoB,rhoBS,epsilon,T,muB,muBS);
+		printf("%6d: T=%7.3f, muB=%5.3f, muBS=%5.3f\n",itest,T,muB,muBS);
 	}
-	T00*=u[0]*rho/double(nparts);
-	T0x*=u[0]*rho/double(nparts);
-	T0y*=u[0]*rho/double(nparts);
-	Txx*=u[0]*rho/double(nparts);
-	Tyy*=u[0]*rho/double(nparts);
-	Txy*=u[0]*rho/double(nparts);
-	TestGetEpsilonU(T00,T0x,T0y,Txx,Tyy,Txy,Ux,Uy,epsilon);
-	printf("epsilon=%g, Ux=%g, Uy=%g\n",epsilon,Ux,Uy);
-
-	double epsilon0,epsilon1,epsilon2,P,rho0,sigma2,dedT;
-	CResList::freegascalc_onespecies(mass,T-0.1,epsilon0,P,rho0,sigma2,dedT);
-	CResList::freegascalc_onespecies(mass,T+0.1,epsilon2,P,rho0,sigma2,dedT);
-	CResList::freegascalc_onespecies(mass,T+0.1,epsilon1,P,rho0,sigma2,dedT);
-	printf("dedT=%g =? %g\n",dedT,(epsilon2-epsilon0)/0.2);
-
-	mu=3.6;
-	TestGetMuT(mass,degen,rho,epsilon,T,mu);
-	printf("T=%g, mu=%g\n",T,mu);
 	return 0;
 }

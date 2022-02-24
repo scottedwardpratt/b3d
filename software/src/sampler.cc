@@ -57,8 +57,8 @@ int CSampler::GenHadronsFromHyperSurface(){
 		udotdOmegaSum+=hyper[ielement].udotdOmega;
 		nparts+=hyper[ielement].MakeParts();
 	}
-	sprintf(message,"Event %4d sampling: %d parts created from Hyper Surface\n",nevents-1,int(b3d->PartMap.size()));
-	CLog::Info(message);
+	//sprintf(message,"Event %4d sampling: %d parts created from Hyper Surface\n",nevents-1,int(b3d->PartMap.size()));
+	//CLog::Info(message);
 	return nparts;
 }
 

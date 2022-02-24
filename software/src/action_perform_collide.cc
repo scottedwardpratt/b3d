@@ -1,6 +1,3 @@
-#ifndef __ACTION_PERFORM_COLLIDE_CC__
-#define __ACTION_PERFORM_COLLIDE_CC__
-
 #include "b3d.h"
 #include "part.h"
 
@@ -81,5 +78,3 @@ void CAction::PerformCollide(){
 		}
 	}
 }
-
-#endif

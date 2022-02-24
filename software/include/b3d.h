@@ -131,8 +131,10 @@ public:
 	void ListFutureCollisions();
 	void PrintPartList();
 	void WriteMuTInfo();
+	void ReadMuTInfo();
 	void WriteWeights();
 	void IncrementWeightArrays();
+	int CountBaryons();
 
 	bool FindCollision(CPart *part1,CPart *part2,double &taucoll);
 	void Decay(CPart *mother,int &nbodies,array<CPart *,5> &daughter);
@@ -148,6 +150,7 @@ public:
 	bool Merge(CPart *part1,CPart *part2,CPart *part3,CResInfo *resinfo);
 	void InelasticScatter(CPart *part1, CPart *part2,CPart *part3,CPart *part4,CInelasticInfo inelinfo);
 	double GetAnnihilationSigma(CPart *part1,CPart *part2,double &vrel);
+	double GetAnnihilationSigma_Reduced(CPart *part1,CPart *part2,double &vrel);
 	int Annihilate(CPart *part1,CPart *part2,int &nproducts,array<CPart *,5> &product);
 
 	void CheckActions();

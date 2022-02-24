@@ -1,6 +1,3 @@
-#ifndef __PART_CC__
-#define __PART_CC__
-
 #include "part.h"
 #include "b3d.h"
 #include "balancearrays.h"
@@ -265,7 +262,7 @@ void CPart::Propagate(double tau){
 	CPartMap::iterator neighbor;
 	if(active==true){
 		eta=GetEta(tau);//y-asinh((tau0/tau)*sinh(y-eta));
-		if(currentmap==&(b3d->PartMap) && b3d->tau<b3d->TAUCOLLMAX && fabs(eta)>0.0001+b3d->ETAMAX && b3d->BJORKEN && b3d->COLLISIONS){
+		if(currentmap==&(b3d->PartMap) && b3d->tau<b3d->TAUCOLLMAX && fabs(eta)>0.01+b3d->ETAMAX && b3d->BJORKEN && b3d->COLLISIONS){
 			sprintf(message,"eta out of bounds after propagation,correcting, etai=%g, etaf=%g, taui=%g, tauf=%g\n",etai,eta,tau0,tau);
 			CLog::Info(message);
 			Print();
@@ -704,5 +701,3 @@ void CPart::CalcDCA(double *dca){
 		exit(1);
 	}
 }
-
-#endif

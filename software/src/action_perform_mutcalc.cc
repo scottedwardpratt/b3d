@@ -1,6 +1,3 @@
-#ifndef __ACTION_PERFORM_REGEN_CC__
-#define __ACTION_PERFORM_REGEN_CC__
-
 #include "b3d.h"
 #include "cell.h"
 #include "mutinfo.h"
@@ -16,5 +13,3 @@ void CAction::PerformMuTCalcUpdateNPE(){
 		}
 	}
 }
-
-#endif

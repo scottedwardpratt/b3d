@@ -1,6 +1,3 @@
-#ifndef __ACTION_PERFORM_COLLIDE_CC__
-#define __ACTION_PERFORM_COLLIDE_CC__
-
 #include "b3d.h"
 #include "part.h"
 #include "cell.h"
@@ -41,5 +38,3 @@ void CAction::PerformExitCell(){
 	b3d->nexit+=1;
 	
 }
-
-#endif

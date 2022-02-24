@@ -1,6 +1,3 @@
-#ifndef __DECAY_CC__
-#define __DECAY_CC__
-
 #include "b3d.h"
 #include "randy.h"
 #include "resonances.h"
@@ -65,5 +62,3 @@ void CB3D::Decay(CPart *mother,int &nbodies,array<CPart *,5> &daughter){
 		dptr->phi0=mother->phi0;
 	}
 }
-
-#endif

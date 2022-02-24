@@ -1,6 +1,3 @@
-#ifndef __COLLIDE_CC__
-#define __COLLIDE_CC__
-
 #include "b3d.h"
 #include "part.h"
 #include "resonances.h"
@@ -217,5 +214,3 @@ int CB3D::Collide(CPart *part1,CPart *part2,int &nproducts,array<CPart*,5> &prod
 	nproducts=0;
 	return 0;
 }
-
-#endif

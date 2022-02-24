@@ -1,6 +1,3 @@
-#ifndef __ACTION_CC__
-#define __ACTION_CC__
-
 #include "b3d.h"
 #include "part.h"
 #include "cell.h"
@@ -171,6 +168,3 @@ void CAction::PerformDensCalc(){
 void CAction::PerformSECalc(){
 	b3d->SEinfo->SECalc();
 }
-
-
-#endif

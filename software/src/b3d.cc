@@ -1,5 +1,3 @@
-#ifndef __B3D_CC__
-#define __B3D_CC__
 #include "b3d.h"
 #include <unordered_map>
 #include <unordered_set>
@@ -213,8 +211,9 @@ void CB3D::InitCascade(){
 			for(ix=0;ix<2*NXY;ix++)
 				muTinfo[itau][ix].resize(2*NXY);
 			for(ix=0;ix<2*NXY;ix++){
-				for(iy=0;iy<2*NXY;iy++)
+				for(iy=0;iy<2*NXY;iy++){
 					muTinfo[itau][ix][iy]=new CMuTInfo((itau+0.5)*CMuTInfo::DELTAU);
+				}
 			}
 		}
 		CResInfoMap::iterator rpos;
@@ -224,7 +223,6 @@ void CB3D::InitCascade(){
 			if(resinfo->baryon>0){
 				CMuTInfo::Bresinfo.push_back(resinfo);
 			}
-
 		}
 	}
 	if(SECALC){
@@ -262,7 +260,7 @@ void CB3D::Reset(){
 		ntau=lrint(TAUCOLLMAX/MUTCALC_DELTAU);
 		for(iitau=0;iitau<ntau;iitau++){
 			taucalc=(0.5+iitau)*MUTCALC_DELTAU;
-			AddAction_MuTCalc();
+			AddAction_MuTCalc_UpdateNPE(taucalc);
 		}
 		CMuTInfo::NETEVENTS+=NSAMPLE;
 	}
@@ -279,5 +277,3 @@ CB3D::~CB3D(){
 	if(oscarfile!=NULL)
 		fclose(oscarfile);
 }
-
-#endif

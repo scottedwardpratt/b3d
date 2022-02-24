@@ -1,6 +1,3 @@
-#ifndef __INELASTIC_CC__
-#define __INELASTIC_CC__
-
 #include "inelastic.h"
 #include "b3d.h"
 #include "resonances.h"
@@ -250,5 +247,3 @@ bool CInelasticList::AddToArrayCheck(CResInfo res1, CResInfo res2, CResInfo res3
 
 	return add;
 }
-
-#endif

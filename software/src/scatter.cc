@@ -1,6 +1,3 @@
-#ifndef __SCATTER_CC__
-#define __SCATTER_CC__
-
 #include "b3d.h"
 #include "misc.h"
 #include "randy.h"
@@ -142,5 +139,3 @@ bool CB3D::Merge(CPart *part1,CPart *part2,CPart *part3,CResInfo *resinfo){
 	}
 	return success;
 }
-
-#endif

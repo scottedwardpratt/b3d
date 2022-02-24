@@ -1,6 +1,3 @@
-#ifndef __B3DSUBS_CC__
-#define __B3DSUBS_CC__
-
 #include "b3d.h"
 #include "part.h"
 #include "misc.h"
@@ -162,57 +159,9 @@ void CB3D::CalcMuTU(){
 	for(iitau=0;iitau<CMuTInfo::NTAU;iitau++){
 		for(ix=0;ix<2*NXY;ix++){
 			for(iy=0;iy<2*NXY;iy++){
-				muTinfo[iitau][ix][iy]->CalcMuTU();
+				muTinfo[iitau][ix][iy]->CalcAllMuTU();
 			}
 		}
-	}
-}
-
-void CB3D::WriteMuTInfo(){
-	int ix,iy,iitau;
-	double tau_print,r;
-	char filename[50];
-	FILE *fptr;
-	CMuTInfo *mti;
-	iy=NXY;
-	for(iitau=0;iitau<CMuTInfo::NTAU;iitau++){
-		tau_print=(iitau+1)*MUTCALC_DELTAU;
-
-		sprintf(filename,"mucalc_results/mutinfo_pi_tau%g.txt",tau_print);
-		fptr=fopen(filename,"w");
-		fprintf(fptr,"#   r     Npi    Tpi     Uxpi       mupi\n");
-		for(ix=NXY;ix<2*NXY;ix++){
-			mti=muTinfo[itau][ix][iy];
-			mti->CalcMuTU();
-			r=DXY*(-NXY+ix+0.5);
-			printf("%7.4f %8d   %7.2f    %7.4f    %7.2f\n",
-				r,mti->Npi,mti->Tpi,mti->Uxpi,mti->mupi);
-		}
-		fclose(fptr);
-
-		sprintf(filename,"mucalc_results/mutinfo_K_tau%g.txt",tau_print);
-		fptr=fopen(filename,"w");
-		fprintf(fptr,"#   r     NK     TK      UxK       muK\n");
-		for(ix=NXY;ix<2*NXY;ix++){
-			mti=muTinfo[itau][ix][iy];
-			mti->CalcMuTU();
-			r=DXY*(-NXY+ix+0.5);
-			printf("%7.4f %8d   %7.2f    %7.4f    %7.2f\n",
-				r,mti->NK,mti->TK,mti->UxK,mti->muK);
-		}
-		fclose(fptr);
-
-		sprintf(filename,"mucalc_results/mutinfo_B_tau%g.txt",tau_print);
-		fptr=fopen(filename,"w");
-		fprintf(fptr,"#   r     NB0      NB1     NB2     NB3     TK      UxB       muB    muBS\n");
-		for(ix=NXY;ix<2*NXY;ix++){
-			mti=muTinfo[itau][ix][iy];
-			mti->CalcMuTU();
-			r=DXY*(-NXY+ix+0.5);
-			printf("%7.4f %8d   %8d   %7.2f    %7.4f    %7.2f    %7.2f\n",
-				r,mti->NB,mti->NBS,mti->TB,mti->UxB,mti->muB,mti->muBS);
-		}
-		fclose(fptr);
 	}
 }
 
@@ -441,8 +390,8 @@ CAction* CB3D::GetDeadAction(){
 	if(DeadActionMap.size()==0){
 		for(int iaction=0;iaction<DELNACTIONSTOT*NSAMPLE;iaction++)
 			new CAction(nactionstot);		
-		sprintf(message,"created %d new actions, nactionstot=%d\n",DELNACTIONSTOT*NSAMPLE,nactionstot);
-		CLog::Info(message);
+		//sprintf(message,"created %d new actions, nactionstot=%d\n",DELNACTIONSTOT*NSAMPLE,nactionstot);
+		//CLog::Info(message);
 	}
 	return DeadActionMap.begin()->second;
 }
@@ -460,5 +409,14 @@ void CB3D::CheckPartMap(){
 	}
 }
 
-
-#endif
+int CB3D::CountBaryons(){
+	CPartMap::iterator iter;
+	CPart *part;
+	nbaryons=0;
+	for(iter=PartMap.begin();iter!=PartMap.end();iter++){
+		part=iter->second;
+		if(part->resinfo->baryon!=0)
+			nbaryons+=1;
+	}
+	return nbaryons;
+}

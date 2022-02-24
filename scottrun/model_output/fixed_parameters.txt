@@ -58,7 +58,7 @@ B3D_OUTPUT_DATAROOT model_output # writes OSCAR info file in this directory
 B3D_SIGMADEFAULT 1.0 # all scatterings use this s-wave scatttering
 B3D_SIGMABF 2.0
 B3D_ANNIHILATION_SREDUCTION 1.0
-B3D_BARYON_ANNIHILATION false
+B3D_BARYON_ANNIHILATION true
 #parameters for inelastic 2<->2 scatterings
 B3D_INELASTIC false
 B3D_MUTCALC true
