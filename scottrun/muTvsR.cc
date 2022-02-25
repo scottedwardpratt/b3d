@@ -98,7 +98,7 @@ int main(){
 		}
 		fclose(output);
 
-		// Baryons
+		// Baryons and Hyperons
 
 		sprintf(filename,"mucalc_results/mutinfo_B_tau%g.txt",tau);
 		fptr=fopen(filename,"r");
