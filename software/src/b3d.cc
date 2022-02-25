@@ -200,7 +200,7 @@ void CB3D::InitCascade(){
 			annihilation_array[i]=0.0;
 		}
 	}
-	if(MUTCALC){
+	if(MUTCALC || BARYON_ANNIHILATION){
 		CMuTInfo::b3d=this;
 		CMuTInfo::DELTAU=MUTCALC_DELTAU;
 		CMuTInfo::NTAU=TAUCOLLMAX/MUTCALC_DELTAU;

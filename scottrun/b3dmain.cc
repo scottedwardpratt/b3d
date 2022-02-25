@@ -30,13 +30,11 @@ int main(int argc, char *argv[]){
 		sprintf(message,"_________________ iqual=%d, nevents=%d ________________\n",iqual,nevents);
 		CLog::Info(message);
 		b3d->sampler->ReadHyperElements2D_OSU();
-		b3d->ReadMuTInfo();
-		printf("check a\n");
+		//b3d->ReadMuTInfo();
 		for(ievent=ievent0;ievent<=ieventf;ievent++){
 			sprintf(message,"------ beginning, ievent=%d --------\n",ievent);
 			CLog::Info(message);
 			b3d->Reset();
-			b3d->randy->reset(ievent);
 			ninit+=b3d->sampler->GenHadronsFromHyperSurface(); // Generates particles from hypersurface
 			b3d->PerformAllActions();
 			ncolls+=b3d->nscatter+b3d->nmerge;
@@ -46,12 +44,12 @@ int main(int argc, char *argv[]){
 			nparts+=b3d->PartMap.size();
 			nbaryons+=b3d->CountBaryons();
 		}
-		b3d->WriteMuTInfo();
 		norm=nevents*b3d->NSAMPLE;
 		sprintf(message,"<Nparts>=%8.2f, initial<Nparts>=%8.2f\n",double(nparts)/norm,double(ninit)/norm);
 		sprintf(message,"%s<Ncolls>=%9.2f, <NB>=%7.3f, <Nannihilate>=%7.4f, <Nregen>=%7.4f\n",
 			message,double(ncolls)/norm,double(nbaryons)/norm,double(nannihilate)/norm,double(nregen)/norm);
 		CLog::Info(message);
+		b3d->WriteMuTInfo();
 	}
 	return 0;
 }

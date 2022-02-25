@@ -150,7 +150,7 @@ public:
 	bool Merge(CPart *part1,CPart *part2,CPart *part3,CResInfo *resinfo);
 	void InelasticScatter(CPart *part1, CPart *part2,CPart *part3,CPart *part4,CInelasticInfo inelinfo);
 	double GetAnnihilationSigma(CPart *part1,CPart *part2,double &vrel);
-	double GetAnnihilationSigma_Reduced(CPart *part1,CPart *part2,double &vrel);
+	bool CancelAnnihilation(CPart *part1,CPart *part2);
 	int Annihilate(CPart *part1,CPart *part2,int &nproducts,array<CPart *,5> &product);
 
 	void CheckActions();

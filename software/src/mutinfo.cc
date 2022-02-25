@@ -153,37 +153,6 @@ void CMuTInfo::CalcAllMuTU(){
 	}
 }
 
-/*void CMuTInfo::GetMuT(double mass,double degen,double rho_target,double epsilon_target,double &T,double &mu){
-	double x,rho,epsilon,P,sigma2,x;
-	double dT,dx,dedx,dedT,drhodx,drhodT;
-	do{
-		EqofState::fregascalc_onespecies(mass,T,P,epsilon,rho,sigma2,dedT);
-
-		epsilon*=degen;
-		dedx=epsilon;
-		epsilon*=x;
-
-		dedT*=degen;
-
-		rho*=degen;
-		drhodx=rho;
-		rho*=x;
-
-		drhodT=degen*epsilon/(T*T);
-		drhodT*=x;
-	}
-}*/
-
-/*void CMuTInfo::CalcMuTU(){
-	double E,volume,epsilon,U0,Ux,Uy,Pmag;
-	double Mxx,Mxy,Myy;
-	volume=b3d->DXY*b3d->DXY*tau*b3d->DETA;
-
-
-
-	printf("Inside CalcMuTU\n");
-}*/
-
 void CMuTInfo::GetEpsilonU(double T00,double T0x,double T0y,double Txx,double Tyy,double Txy,
 double &Ux,double &Uy,double &epsilon){
 	double Qx,Qy,dQxdUx,dQxdUy,dQydUx,dQydUy;
