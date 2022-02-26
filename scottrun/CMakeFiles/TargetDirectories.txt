@@ -1,6 +1,0 @@
-/home/scott/git/b3d/scottrun/CMakeFiles/rebuild_cache.dir
-/home/scott/git/b3d/scottrun/CMakeFiles/edit_cache.dir
-/home/scott/git/b3d/scottrun/CMakeFiles/crap.dir
-/home/scott/git/b3d/scottrun/CMakeFiles/b3dtest.dir
-/home/scott/git/b3d/scottrun/CMakeFiles/extern_commonutils.dir
-/home/scott/git/b3d/scottrun/CMakeFiles/extern_b3d.dir
