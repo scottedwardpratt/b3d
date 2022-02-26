@@ -8,13 +8,15 @@ using namespace std;
 int main(){
 	int ix,iy,itau,NR=20,ir;
 	double delR=1.5,DXY=1.5,x,y,tau,r;
-	double Ux,Uy,mu,T,muS;
+	double Ux,Uy,mu,T,muS,rho,epsilon;
 	int N,NS;
 	FILE *fptr,*output;
-	vector<double> muB,muBS,muK,mupi,Tpi,TK,TB,Upi,UK,UB;
+	vector<double> muB,muBS,muK,mupi,Tpi,TK,TB,Upi,UK,UB,rhopi,rhoK,rhoB,epi,eK,eB;
 	muB.resize(NR,0.0); muBS.resize(NR,0.0); muK.resize(NR,0.0); mupi.resize(NR,0.0);
 	TB.resize(NR,0.0); TK.resize(NR,0.0); Tpi.resize(NR,0.0);
 	Upi.resize(NR,0.0); UK.resize(NR,0.0); UB.resize(NR,0.0);
+	rhopi.resize(NR,0.0); rhoK.resize(NR,0.0); rhoB.resize(NR,0.0);
+	epi.resize(NR,0.0); eK.resize(NR,0.0); eB.resize(NR,0.0);
 	vector<int> npts;
 	npts.resize(NR,0);
 	char filename[200],dummy[200];
@@ -28,7 +30,7 @@ int main(){
 		fptr=fopen(filename,"r");
 		fgets(dummy,200,fptr);
 		do{
-			fscanf(fptr,"%d %d %d %lf %lf %lf %lf",&ix,&iy,&N,&T,&Ux,&Uy,&mu);
+			fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
 			if(!feof(fptr)){
 				x=-36.0+(0.5+ix)*DXY;
 				y=-36.0+(0.5+iy)*DXY;
@@ -39,12 +41,12 @@ int main(){
 					mupi[ir]+=mu;
 					Tpi[ir]+=T;
 					Upi[ir]+=sqrt(Ux*Ux+Uy*Uy);
+					rhopi[ir]=rho;
+					epi[ir]=epsilon;
 				}
 			}
 		}while(!feof(fptr));
 		fclose(fptr);
-
-
 
 		sprintf(filename,"mucalc_results/muTvsR_pi_tau%g.txt",tau);
 		output=fopen(filename,"w");
@@ -54,7 +56,7 @@ int main(){
 				Upi[ir]=Upi[ir]/double(npts[ir]);
 				Tpi[ir]=Tpi[ir]/double(npts[ir]);
 				r=(ir+0.5)*delR;
-				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f\n",r,npts[ir],Tpi[ir],Upi[ir],mupi[ir]);
+				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,npts[ir],Tpi[ir],Upi[ir],mupi[ir],rhopi[ir],epi[ir]);
 			}
 			npts[ir]=0;
 		}
@@ -66,7 +68,7 @@ int main(){
 		fptr=fopen(filename,"r");
 		fgets(dummy,200,fptr);
 		do{
-			fscanf(fptr,"%d %d %d %lf %lf %lf %lf",&ix,&iy,&N,&T,&Ux,&Uy,&mu);
+			fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
 			//printf("ix=%d, iy=%d\n",ix,iy);
 			if(!feof(fptr)){
 				x=-36.0+(0.5+ix)*DXY;
@@ -79,6 +81,8 @@ int main(){
 					muK[ir]+=mu;
 					TK[ir]+=T;
 					UK[ir]+=sqrt(Ux*Ux+Uy*Uy);
+					rhoK[ir]=rho;
+					eK[ir]=epsilon;
 				}
 			}
 		}while(!feof(fptr));
@@ -92,7 +96,7 @@ int main(){
 				UK[ir]=UK[ir]/double(npts[ir]);
 				TK[ir]=TK[ir]/double(npts[ir]);
 				r=(ir+0.5)*delR;
-				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f\n",r,npts[ir],TK[ir],UK[ir],muK[ir]);
+				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,npts[ir],TK[ir],UK[ir],muK[ir],rhoK[ir],eK[ir]);
 			}
 			npts[ir]=0;
 		}
@@ -104,7 +108,7 @@ int main(){
 		fptr=fopen(filename,"r");
 		fgets(dummy,200,fptr);
 		do{
-			fscanf(fptr,"%d %d %d %d %lf %lf %lf %lf %lf",&ix,&iy,&N,&NS,&T,&Ux,&Uy,&mu,&muS);
+			fscanf(fptr,"%d %d %d %d %lf %lf %lf %lf %lf %lf %lf",&ix,&iy,&N,&NS,&T,&Ux,&Uy,&mu,&muS,&rho,&epsilon);
 			if(!feof(fptr)){
 				x=-36.0+(0.5+ix)*DXY;
 				y=-36.0+(0.5+iy)*DXY;
@@ -116,6 +120,8 @@ int main(){
 					muBS[ir]+=muS;
 					TB[ir]+=T;
 					UB[ir]+=sqrt(Ux*Ux+Uy*Uy);
+					rhoB[ir]=rho;
+					eB[ir]=epsilon;
 				}
 			}
 		}while(!feof(fptr));
@@ -130,7 +136,7 @@ int main(){
 				TB[ir]=TB[ir]/double(npts[ir]);
 				UB[ir]=UB[ir]/double(npts[ir]);
 				r=(ir+0.5)*delR;
-				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f\n",r,npts[ir],TB[ir],UB[ir],muB[ir],muBS[ir]);
+				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f %7.4f\n",r,npts[ir],TB[ir],UB[ir],muB[ir],muBS[ir],rhoB[ir],eB[ir]);
 			}
 			npts[ir]=0;
 		}
