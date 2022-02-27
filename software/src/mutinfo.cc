@@ -297,19 +297,13 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 	double factor,dfactordxB,dfactordxBS;
 	double e,dedt,dedx1,dedx2;
 	double P,sigma2,epsilon0,rho0,dedt0,accuracy,D;
-	int ntry=0,ispecies,nmax=1000;
+	int ntry=0,ispecies,nmax=100;
 	bool success=false;
 
-	//T=0.75*(rho_target(0)-939.0-177.0*rho_target(2)/rho_target(1));
-	muB=muBS=0.0;
-	T=75.0;
 
+	T=100.0;
 	x(0)=T;
-	x(1)=exp(muB);
-	x(2)=exp(muBS);
-
-	printf("Initial T=%g\n",T);
-
+	x(1)=x(2)=0.0;
 
 	do{
 		ntry+=1;
@@ -324,12 +318,9 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 			nstrange=fabs(resinfo->strange);
 			CResList::freegascalc_onespecies(mass,T,epsilon0,P,rho0,sigma2,dedt0);
 
-			factor=degen*x(1)*pow(x(2),nstrange);
-			dfactordxB=degen*pow(x(2),nstrange);
-			if(nstrange!=0)
-				dfactordxBS=factor*x(1)*nstrange*pow(x(2),nstrange-1);
-			else
-				dfactordxBS=0.0;
+			factor=degen*exp(x(1)+nstrange*x(2));
+			dfactordxB=factor;
+			dfactordxBS=factor*nstrange;
 
 			e+=epsilon0*factor;
 			rho(1)+=rho0*factor;
@@ -363,19 +354,18 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 			sprintf(message,"%sTB=%g, muB=%g, muBS=%g\n",message,x[0],x[1],x[2]);
 			CLog::Fatal(message);
 		}
-		
 
-		double dxmax=0.9*T;
+		double dxmax=0.5*x(0);
 		if(fabs(dx(0))>dxmax){
 			D=fabs(dx(0));
 			dx=dx*dxmax/D;
 		}
-		dxmax=0.9*x(1);
+		dxmax=1.0;
 		if(fabs(dx(1))>dxmax){
 			D=fabs(dx(1));
 			dx=dx*dxmax/D;
 		}
-		dxmax=0.9*x(2);
+		dxmax=1.0;
 		if(fabs(dx(2))>dxmax){
 			D=fabs(dx(2));
 			dx=dx*dxmax/D;
@@ -387,7 +377,6 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 
 	}while(accuracy>1.0E-10 && ntry<nmax);
 	if(ntry<nmax){
-		printf("success\n");
 		success=true;
 	}
 	else{
@@ -400,7 +389,7 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 	}
 	
 	T=x(0);
-	muB=log(x(1));
-	muBS=log(x(2));
+	muB=x(1);
+	muBS=x(2);
 	return success;
 }
