@@ -295,23 +295,25 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 	rho_target(1)=rhoB_target;
 	rho_target(2)=rhoBS_target;
 	double factor,dfactordxB,dfactordxBS;
-	double xB,xBS,e,dedt,dedx1,dedx2;
+	double e,dedt,dedx1,dedx2;
 	double P,sigma2,epsilon0,rho0,dedt0,accuracy,D;
-	int ntry=0,ispecies,nmax=500;
+	int ntry=0,ispecies,nmax=1000;
 	bool success=false;
 
-	T=0.75*(rho_target(0)-177.0*rho_target(2)/rho_target(1));
+	//T=0.75*(rho_target(0)-939.0-177.0*rho_target(2)/rho_target(1));
 	muB=muBS=0.0;
+	T=75.0;
 
 	x(0)=T;
-	x(1)=muB;
-	x(2)=muBS;
+	x(1)=exp(muB);
+	x(2)=exp(muBS);
+
+	printf("Initial T=%g\n",T);
+
 
 	do{
 		ntry+=1;
 		T=x(0);
-		xB=x(1);
-		xBS=x(2);
 		rho.setZero();
 		drhodx.setZero();
 		e=dedt=dedx1=dedx2=0.0;
@@ -322,9 +324,12 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 			nstrange=fabs(resinfo->strange);
 			CResList::freegascalc_onespecies(mass,T,epsilon0,P,rho0,sigma2,dedt0);
 
-			factor=degen*exp(x(1))*exp(x(2)*nstrange);
-			dfactordxB=factor;
-			dfactordxBS=factor*nstrange;
+			factor=degen*x(1)*pow(x(2),nstrange);
+			dfactordxB=degen*pow(x(2),nstrange);
+			if(nstrange!=0)
+				dfactordxBS=factor*x(1)*nstrange*pow(x(2),nstrange-1);
+			else
+				dfactordxBS=0.0;
 
 			e+=epsilon0*factor;
 			rho(1)+=rho0*factor;
@@ -359,20 +364,18 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 			CLog::Fatal(message);
 		}
 		
-		if(x(0)+dx(0)<0.3*T){
+
+		double dxmax=0.9*T;
+		if(fabs(dx(0))>dxmax){
 			D=fabs(dx(0));
-			dx=dx*(0.3*T/D);
+			dx=dx*dxmax/D;
 		}
-		if(dx(0)>20.0){
-			D=fabs(dx(0));
-			dx=dx*20.0/D;
-		}
-		
-		double dxmax=1.0;
+		dxmax=0.9*x(1);
 		if(fabs(dx(1))>dxmax){
 			D=fabs(dx(1));
 			dx=dx*dxmax/D;
 		}
+		dxmax=0.9*x(2);
 		if(fabs(dx(2))>dxmax){
 			D=fabs(dx(2));
 			dx=dx*dxmax/D;
@@ -380,14 +383,24 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 
 		x=x+dx;
 
-		accuracy=0.001*drho[0]*drho[0]+drho[1]*drho[1]+drho[2]*drho[2];
+		accuracy=0.001*drho(0)*drho(0)+drho(1)*drho(1)+drho(2)*drho(2);
 
 	}while(accuracy>1.0E-10 && ntry<nmax);
-	if(ntry<nmax)
+	if(ntry<nmax){
+		printf("success\n");
 		success=true;
+	}
+	else{
+		printf("ntry=%d\n",ntry);
+		cout << "x=\n" << x << endl;
+		cout << "dx=\n" << dx << endl;
+		cout << "rho_target=\n" << rho_target << endl;
+		cout << "rho=\n" << rho << endl;
+		exit(1);
+	}
 	
-	T=x[0];
-	muB=x[1];
-	muBS=x[2];
+	T=x(0);
+	muB=log(x(1));
+	muBS=log(x(2));
 	return success;
 }
