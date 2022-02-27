@@ -285,6 +285,7 @@ void CMuTInfo::GetMuT(double mass,double degen,double rho_target,double epsilon_
 */
 
 bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsilon_target,double &T,double &muB,double &muBS){
+	char message[500];
 	CResInfo *resinfo;
 	Eigen::Vector3d rho,rho_target,x,dx,drho;
 	Eigen::Matrix3d drhodx;
@@ -299,11 +300,12 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 	int ntry=0,ispecies,nmax=500;
 	bool success=false;
 
+	T=0.75*(rho_target(0)-177.0*rho_target(2)/rho_target(1));
 	muB=muBS=0.0;
 
-	x[0]=T;
-	x[1]=muB;
-	x[2]=muBS;
+	x(0)=T;
+	x(1)=muB;
+	x(2)=muBS;
 
 	do{
 		ntry+=1;
@@ -349,16 +351,12 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 		dx=drhodx.colPivHouseholderQr().solve(drho);
 
 		if(dx(0)!=dx(0) || dx(1)!=dx(1) || dx(2)!=dx(2)){
-			printf("--------------------------------------------------\n");
-			printf("FAILURE in GetMuT_Baryon, ntry=%d, dx!=dx\n",ntry);
-			printf("rho_target=(%g,%g,%g)\n",rho_target(0),rho_target(1),rho_target(2));
-			printf("rho=(%g,%g,%g)\n",rho(0),rho(1),rho(2));
-			printf("dx=(%g,%g,%g)\n",dx(0),dx(1),dx(2));
-			printf("TB=%g, muB=%g, muBS=%g\n",x[0],x[1],x[2]);
-			printf("drhodx=\n");
-			//cout << drhodx << endl;
-			printf("-------------------------------------------------\n");
-			exit(1);
+			sprintf(message,"FAILURE in GetMuT_Baryon, ntry=%d, dx!=dx\n",ntry);
+			sprintf(message,"%srho_target=(%g,%g,%g)\n",message,rho_target(0),rho_target(1),rho_target(2));
+			sprintf(message,"%srho=(%g,%g,%g)\n",message,rho(0),rho(1),rho(2));
+			sprintf(message,"%sdx=(%g,%g,%g)\n",message,dx(0),dx(1),dx(2));
+			sprintf(message,"%sTB=%g, muB=%g, muBS=%g\n",message,x[0],x[1],x[2]);
+			CLog::Fatal(message);
 		}
 		
 		if(x(0)+dx(0)<0.3*T){
