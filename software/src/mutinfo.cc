@@ -297,7 +297,7 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 	double factor,dfactordxB,dfactordxBS;
 	double e,dedt,dedx1,dedx2;
 	double P,sigma2,epsilon0,rho0,dedt0,accuracy,D;
-	int ntry=0,ispecies,nmax=100;
+	int ntry=0,ispecies,nmax=1000;
 	bool success=false;
 
 
@@ -380,12 +380,10 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 		success=true;
 	}
 	else{
-		printf("ntry=%d\n",ntry);
-		cout << "x=\n" << x << endl;
-		cout << "dx=\n" << dx << endl;
-		cout << "rho_target=\n" << rho_target << endl;
-		cout << "rho=\n" << rho << endl;
-		exit(1);
+		sprintf(message,"In CMuTInfo::GetMuT_Baryon, ntry=%d\n",ntry);
+		sprintf(message,"%sT=%g, muB=%g, muBS=%g, E/rhoB=%g=?%g, rhoB=%g=?%g, rhoBS=%g=?%g\n",
+			message,T,muB,muBS,rho[0],rho_target[0],rho[1],rho_target[1],rho[2],rho_target[2]);
+		CLog::Info(message);
 	}
 	
 	T=x(0);
