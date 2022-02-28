@@ -64,7 +64,7 @@ void CMuTInfo::UpdateNPE(CB3DCell *cell){
 			NB+=1;
 			PxB+=part->p[1];
 			PyB+=part->p[2];
-			E=cosh(part->eta)*part->p[0]-sinh(part->eta)*part->p[3];
+			E=gamma*part->p[0]-gammav*part->p[3];
 			EB+=E;
 			S=abs(resinfo->strange);
 			NBS+=S;

@@ -21,7 +21,7 @@ int main(){
 	npts.resize(NR,0);
 	char filename[200],dummy[200];
 
-	for(itau=10;itau<61;itau+=10){
+	for(itau=1;itau<81;itau+=1){
 		tau=0.5*itau;
 
 		//Pions
