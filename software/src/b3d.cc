@@ -106,6 +106,8 @@ void CB3D::CopyParMapPars(){
 	DXY=XYMAX/double(NXY);
 	DETA=ETAMAX/double(NETA);
 	BALANCE_CALC=parmap.getB("B3D_BALANCE_CALC",false);
+	CMuTCalc::NXY=parmap.getI("B3D_MUTCALC_NXY",24);
+	CMuTCalc::DXY=parmap.getD("B3D_MuTCalc_DXY",1.0);
 }
 
 void CB3D::InitCascade(){
@@ -201,6 +203,7 @@ void CB3D::InitCascade(){
 		}
 	}
 	if(MUTCALC || BARYON_ANNIHILATION){
+		CMuTInfo::Init(this);
 		CMuTInfo::b3d=this;
 		CMuTInfo::DELTAU=MUTCALC_DELTAU;
 		CMuTInfo::NTAU=TAUCOLLMAX/MUTCALC_DELTAU;

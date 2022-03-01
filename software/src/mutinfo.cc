@@ -10,6 +10,9 @@ int CMuTInfo::NETEVENTS=0;
 int CMuTInfo::NTAU=0;
 int CMuTInfo::NMINCALC=10;
 double CMuTInfo::DELTAU=0.0;
+int CMuTInfo::NXY=0;
+int CMuTInfo::DXY=0.0;
+vector<vector<double>> CMuTInfo::taumin{};
 vector<CResInfo *> CMuTInfo::Bresinfo{};
 
 CMuTInfo::CMuTInfo(double tau_set){
@@ -24,6 +27,34 @@ CMuTInfo::CMuTInfo(double tau_set){
 	mupi=muK=muB=muBS=0.0;
 	sufficientN=false;
 }
+
+ void CMuTInfo::Init(CB3D *b3dset){
+ 	b3d=b3dset;
+ 	DELTAU=b3d->MUTCALC_DELTAU;
+ 	NT
+		CMuTInfo::DELTAU=MUTCALC_DELTAU;
+		CMuTInfo::NTAU=TAUCOLLMAX/MUTCALC_DELTAU;
+		CMuTInfo::NETEVENTS=0;
+		muTinfo.resize(CMuTInfo::NTAU);
+		for(itau=0;itau<CMuTInfo::NTAU;itau++){
+			muTinfo[itau].resize(2*NXY);
+			for(ix=0;ix<2*NXY;ix++)
+				muTinfo[itau][ix].resize(2*NXY);
+			for(ix=0;ix<2*NXY;ix++){
+				for(iy=0;iy<2*NXY;iy++){
+					muTinfo[itau][ix][iy]=new CMuTInfo((itau+0.5)*CMuTInfo::DELTAU);
+				}
+			}
+		}
+		CResInfoMap::iterator rpos;
+		CResInfo *resinfo;
+		for(rpos=reslist->resmap.begin();rpos!=reslist->resmap.end();++rpos){
+			resinfo=rpos->second;
+			if(resinfo->baryon>0){
+				CMuTInfo::Bresinfo.push_back(resinfo);
+			}
+		}
+ }
 
 void CMuTInfo::UpdateNPE(CB3DCell *cell){
 	CResInfo *resinfo;

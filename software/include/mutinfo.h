@@ -27,6 +27,7 @@ public:
 	static void GetEpsilonU(double T00,double T0x,double T0y,double Txx,double Tyy,double Txy,
 		double &Ux,double &Uy,double &epsilon);
 	void Print();
+	void GetIxIy;
 	//void MuTCalc_PionsWithBose();
 	static CB3D *b3d;
 	static double DELTAU;
@@ -34,6 +35,9 @@ public:
 	static int NETEVENTS;
 	static int NMINCALC;
 	static vector<CResInfo*> Bresinfo;
+	static vector<vector<double>> taumin;
+	static int NXY;
+	static double DXY;
 };
 
 #endif
