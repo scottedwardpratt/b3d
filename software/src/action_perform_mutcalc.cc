@@ -18,7 +18,6 @@ void CAction::PerformMuTCalcUpdateNPE(){
 	for(ppos=b3d->PartMap.begin();ppos!=b3d->PartMap.end();++ppos){
 		part=ppos->second;
 		resinfo=part->resinfo;
-		//part->Propagate(tau);
 		eta=part->GetEta(tau);
 		t=tau*cosh(eta);
 		x=part->r[1]+(t-part->r[0])*part->p[1]/part->p[0];

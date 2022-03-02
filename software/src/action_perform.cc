@@ -4,6 +4,7 @@
 void CAction::Perform(){
 	CPartMap::iterator ppos;
 	CPart *part;
+	CB3DCell *cell;
 
 	//sprintf(message,"Performing Action of type %d\n",type);
 	//CLog::Info(message);
@@ -21,6 +22,10 @@ void CAction::Perform(){
 			part->Print();
 			part->active=true;
 			part->ChangeMap(&(b3d->PartMap));
+			cell=part->FindCell();
+			if(part->cell!=cell){
+				part->ChangeCell(cell);
+			}
 		}
 	}
 	if(tau+1.0E-4<b3d->tau){
