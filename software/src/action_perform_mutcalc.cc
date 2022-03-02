@@ -13,27 +13,31 @@ void CAction::PerformMuTCalcUpdateNPE(){
 	CResInfo *resinfo;
 	CMuTInfo *mti;
 	int S;
-	double gamma,gammav,E,px,py;
+	double gamma,gammav,E,px,py,eta,t,x,y;
 
 	for(ppos=b3d->PartMap.begin();ppos!=b3d->PartMap.end();++ppos){
 		part=ppos->second;
-		part->Propagate(tau);
 		resinfo=part->resinfo;
-		CMuTInfo::GetIxIy(part->r[1],part->r[2],ix,iy);
+		//part->Propagate(tau);
+		eta=part->GetEta(tau);
+		t=tau*cosh(eta);
+		x=part->r[1]+(t-part->r[0])*part->p[1]/part->p[0];
+		y=part->r[2]+(t-part->r[0])*part->p[2]/part->p[0];
+		CMuTInfo::GetIxIy(x,y,ix,iy);
 		if(ix<CMuTInfo::NXY && iy<CMuTInfo::NXY){
 			if(b3d->tau>CMuTInfo::taumin[ix][iy]){
 				px=part->p[1];
 				py=part->p[2];
-				if(part->r[1]<0.0)
+				if(x<0.0)
 					px=-px;
-				if(part->r[2]<0.0)
+				if(y<0.0)
 					py=-py;
 				if(ix<CMuTInfo::NXY && iy<CMuTInfo::NXY){
 					mti=b3d->muTinfo[itau][ix][iy];
 
 					if(resinfo->code==111 || abs(resinfo->code)==211){
-						gamma=cosh(part->eta);
-						gammav=sinh(part->eta);
+						gamma=cosh(eta);
+						gammav=sinh(eta);
 						mti->Npi+=1;
 						mti->Pxpi+=px;
 						mti->Pypi+=py;
@@ -44,8 +48,8 @@ void CAction::PerformMuTCalcUpdateNPE(){
 						mti->Txypi+=px*py/E;
 					}
 					else if(abs(part->resinfo->code)==321 || abs(part->resinfo->code)==311){
-						gamma=cosh(part->eta);
-						gammav=sinh(part->eta);
+						gamma=cosh(eta);
+						gammav=sinh(eta);
 						mti->NK+=1;
 						mti->PxK+=px;
 						mti->PyK+=py;
@@ -56,8 +60,8 @@ void CAction::PerformMuTCalcUpdateNPE(){
 						mti->TxyK+=px*py/E;
 					}
 					else if(resinfo->baryon!=0){
-						gamma=cosh(part->eta);
-						gammav=sinh(part->eta);
+						gamma=cosh(eta);
+						gammav=sinh(eta);
 						mti->NB+=1;
 						mti->PxB+=px;
 						mti->PyB+=py;
@@ -73,5 +77,5 @@ void CAction::PerformMuTCalcUpdateNPE(){
 			}
 		}
 	}
-	b3d->FindAllCollisions();
+	//b3d->FindAllCollisions();
 }
