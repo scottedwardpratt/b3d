@@ -259,8 +259,8 @@ void CB3D::WriteDens(){
 	fprintf(densfile,"#ix iy  dens[itau=0] dens[itau=1]...\n");
 	double dxy;
 	int ix,iy,ieta,iitau;
-	for(ix=0;ix<2*NXY;ix++){
-		for(iy=0;iy<2*NXY;iy++){
+	for(ix=0;ix<CMuTInfo::NXY;ix++){
+		for(iy=0;iy<CMuTInfo::NXY;iy++){
 			fprintf(densfile,"%3d %3d",ix,iy);
 			for(iitau=0;iitau<DENSWRITE_NTAU;iitau++){
 				dxy=0.0;
@@ -277,16 +277,17 @@ void CB3D::WriteDens(){
 
 void CB3D::WriteMuTInfo(){
 	char dummy[500];
-	int ix,iy,iitau;
+	int ix,iy,iitau,ntau;
 	double tau_print;
 	char filename[50];
 	FILE *fptr;
 	CMuTInfo *mti;
 	CalcMuTU();
-	for(iitau=0;iitau<CMuTInfo::NTAU;iitau++){
+	ntau=lrint(TAUCOLLMAX/MUTCALC_DELTAU);
+	for(iitau=0;iitau<ntau;iitau++){
 		tau_print=(iitau+1)*MUTCALC_DELTAU;
-		for(ix=0;ix<2*NXY;ix++){
-			for(iy=0;iy<2*NXY;iy++){
+		for(ix=0;ix<CMuTInfo::NXY;ix++){
+			for(iy=0;iy<CMuTInfo::NXY;iy++){
 				mti=muTinfo[iitau][ix][iy];
 				mti->sufficientN=false;
 				if(mti->Npi>CMuTInfo::NMINCALC && mti->NK>CMuTInfo::NMINCALC
@@ -298,8 +299,8 @@ void CB3D::WriteMuTInfo(){
 		fptr=fopen(filename,"weight");
 		fgets(dummy,500,fptr);
 		fprintf(fptr,"#  ix    iy     Npi     E/N       Tpi    Uxpi    &Uypi     mupi     rho    epsilon\n");
-		for(ix=0;ix<2*NXY;ix++){
-			for(iy=0;iy<2*NXY;iy++){
+		for(ix=0;ix<CMuTInfo::NXY;ix++){
+			for(iy=0;iy<CMuTInfo::NXY;iy++){
 				mti=muTinfo[iitau][ix][iy];
 				if(mti->sufficientN){
 					fprintf(fptr,"%d %d %d %g %g %g %g %g %g\n",
@@ -313,8 +314,8 @@ void CB3D::WriteMuTInfo(){
 		fptr=fopen(filename,"weight");
 		fgets(dummy,500,fptr);
 		fprintf(fptr,"#  ix    iy     NK     E/N         TK    Uxpi    UyK      muK      rho      epsilon\n");
-		for(ix=0;ix<2*NXY;ix++){
-			for(iy=0;iy<2*NXY;iy++){
+		for(ix=0;ix<CMuTInfo::NXY;ix++){
+			for(iy=0;iy<CMuTInfo::NXY;iy++){
 				mti=muTinfo[iitau][ix][iy];
 				if(mti->sufficientN){
 					fprintf(fptr,"%d %d %d %g %g %g %g %g %g\n",
@@ -328,8 +329,8 @@ void CB3D::WriteMuTInfo(){
 		fptr=fopen(filename,"w");
 		fgets(dummy,500,fptr);
 		fprintf(fptr,"#  ix    iy     NB     NBS      E/N  TB    UxB       UyB       muB      muBS      rhoB     epsilonB\n");
-		for(ix=0;ix<2*NXY;ix++){
-			for(iy=0;iy<2*NXY;iy++){
+		for(ix=0;ix<CMuTInfo::NXY;ix++){
+			for(iy=0;iy<CMuTInfo::NXY;iy++){
 				mti=muTinfo[iitau][ix][iy];
 				if(mti->sufficientN)
 					fprintf(fptr,"%d %d %d %d %g %g %g %g %g %g %g\n",
@@ -343,14 +344,15 @@ void CB3D::WriteMuTInfo(){
 
 void CB3D::ReadMuTInfo(){
 	char dummy[500];
-	int ix,iy,iitau,N,NB,NBS;
+	int ix,iy,iitau,N,NB,NBS,ntau;
 	double T,Ux,Uy,mu,muB,muBS,rho,epsilon;
 	double tau_print;
 	char filename[60];
 	bool READN=false;
 	FILE *fptr;
 	CMuTInfo *mti;
-	for(iitau=0;iitau<CMuTInfo::NTAU;iitau++){
+	ntau=lrint(TAUCOLLMAX/MUTCALC_DELTAU);
+	for(iitau=0;iitau<ntau;iitau++){
 		tau_print=(iitau+1)*MUTCALC_DELTAU;
 		sprintf(filename,"mucalc_results/mutinfo_pi_tau%g.txt",tau_print);
 		fptr=fopen(filename,"r");

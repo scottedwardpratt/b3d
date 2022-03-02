@@ -54,6 +54,7 @@ bool CB3D::FindCollision(CPart *part1,CPart *part2,double &taucoll){
 		
 	denom=p1dotp2*p1dotp2-m1squared*m2squared;
 	pibsquared=PI*(-rsquared+(2.0*p1dotp2*p1dotr*p2dotr-p1dotr*p1dotr*m2squared-p2dotr*p2dotr*m1squared)/denom);
+
 	resinfo1=part1->resinfo;
 	resinfo2=part2->resinfo;
 	if(part1->balanceID<0 && part2->balanceID<0){
@@ -82,6 +83,7 @@ bool CB3D::FindCollision(CPart *part1,CPart *part2,double &taucoll){
 				tau1=sqrt(t1*t1-z1*z1);
 				tau2=sqrt(t2*t2-z2*z2);
 				taucoll=0.5*(tau1+tau2);
+				//printf("cell exit times are %g, %g\n",part1->tauexit,part2->tauexit);
 				if(taucoll>tau && taucoll<part1->tauexit && taucoll<part2->tauexit && taucoll<TAUCOLLMAX){
 					if(SECALC){
 						double r2bar=0.25*(x1+x2)*(x1+x2)+0.25*(y1+y2)*(y1+y2);
@@ -99,4 +101,40 @@ bool CB3D::FindCollision(CPart *part1,CPart *part2,double &taucoll){
 		}
 	}
 	return collide;
+}
+
+void CB3D::FindAllCollisions(){
+	double taucoll;
+	int nfound=0;
+	CPartMap::iterator ppos1,ppos2;
+	CPart *part1,*part2;
+	CActionMap::iterator epos;
+	for(ppos1=PartMap.begin();ppos1!=PartMap.end();++ppos1){
+		part1=ppos1->second;
+		part1->KillActions();
+		part1->active=true;
+		part1->ChangeCell(part1->FindCell());
+		if(part1->cell!=NULL){
+			part1->FindCellExit();
+		}
+		if(part1->resinfo->decay)
+			part1->FindDecay();
+	}
+	ppos2=PartMap.begin();
+	++ppos2;
+	while(ppos2!=PartMap.end()){
+		part2=ppos2->second;
+		ppos1=PartMap.begin();
+		while(ppos1!=ppos2){
+			part1=ppos1->second;
+			if(part1->balanceID<0 || part2->balanceID<0){
+				if(part1->cell!=NULL & part2->cell!=NULL){
+					if(FindCollision(part1,part2,taucoll))
+						nfound+=1;
+				}
+			}
+			++ppos1;
+		}
+		++ppos2;
+	}
 }

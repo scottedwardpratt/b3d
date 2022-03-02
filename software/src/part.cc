@@ -256,20 +256,20 @@ void CPart::Propagate(double tau){
 		sprintf(message,"eta screwy before propagation\n");
 		CLog::Info(message);
 		sprintf(message,"eta=%g\n",eta);
-		CLog::Fatal(message);
+		CLog::Info(message);
 	}
-	double t0,etai=eta;
+	double t0;
 	CPartMap::iterator neighbor;
 	if(active==true){
 		eta=GetEta(tau);//y-asinh((tau0/tau)*sinh(y-eta));
-		if(currentmap==&(b3d->PartMap) && b3d->tau<b3d->TAUCOLLMAX && fabs(eta)>0.01+b3d->ETAMAX && b3d->BJORKEN && b3d->COLLISIONS){
-			sprintf(message,"eta out of bounds after propagation,correcting, etai=%g, etaf=%g, taui=%g, tauf=%g\n",etai,eta,tau0,tau);
-			CLog::Info(message);
-			Print();
+		if(currentmap==&(b3d->PartMap) && b3d->tau<b3d->TAUCOLLMAX && fabs(eta)>b3d->ETAMAX && b3d->BJORKEN && b3d->COLLISIONS){
+			//sprintf(message,"eta out of bounds after propagation,correcting, etai=%g, etaf=%g, taui=%g, tauf=%g\n",etai,eta,tau0,tau);
+			//CLog::Info(message);
+			//Print();
 			if(eta>b3d->ETAMAX)
-				eta=b3d->ETAMAX;
+				eta-=2.0*b3d->ETAMAX;
 			if(eta<-b3d->ETAMAX)
-				eta=-b3d->ETAMAX;
+				eta+=2.0*b3d->ETAMAX;
 			r[0]=tau0*cosh(eta);
 			r[3]=tau0*sinh(eta);
 			//Misc::Pause();
@@ -393,7 +393,6 @@ void CPart::BjorkenTranslate(){
 			eta=-b3d->ETAMAX;
 		r[0]=tau0*cosh(eta);
 		r[3]=tau0*sinh(eta);
-		//exit(1);
 	}
 	double mt;
 	if(cell->ieta==0){
@@ -547,7 +546,6 @@ void CPart::FindCellExit(){
 			else
 				nextcell=cell->neighbor[1][1][2];
 		}
-
 		if(tauexit<b3d->TAUCOLLMAX)
 			b3d->AddAction_ExitCell(this);
 	}
@@ -581,7 +579,7 @@ void CPart::FindActions(){
 	if(currentmap!=&(b3d->PartMap)){
 		sprintf(message,"FindActions: part in wrong map\n");
 		Print();
-		exit(1);
+		CLog::Fatal(message);
 	}
 }
 
@@ -627,7 +625,7 @@ void CPart::RemoveFromCell(){
 			sprintf(message,"FATAL: In CPart::RemoveFromCell, can't find ppos!!!\n");
 			Print();
 			sprintf(message,"cell partmap has length %d\n",int(cell->partmap.size()));
-			exit(1);
+			CLog::Fatal(message);
 		}
 		else{
 			cell->partmap.erase(ppos);
@@ -642,7 +640,7 @@ void CPart::CheckCell(){
 			sprintf(message,"FATAL: In CPart::RemoveFromCell, can't find ppos!!!\n");
 			Print();
 			sprintf(message,"cell partmap has length %d\n",int(cell->partmap.size()));
-			exit(1);
+			CLog::Fatal(message);
 		}
 	}
 }
@@ -698,6 +696,6 @@ void CPart::CalcDCA(double *dca){
 		sprintf(message,"::: dca=(%g,%g,%g,%g)\n",dca[0],dca[1],dca[2],dca[3]);
 		sprintf(message,"::: r=(%g,%g,%g,%g)\n",r[0],r[1],r[2],r[3]);
 		sprintf(message,"::: p=(%g,%g,%g,%g)\n",r[0],r[1],r[2],r[3]);
-		exit(1);
+		CLog::Fatal(message);
 	}
 }

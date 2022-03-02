@@ -7,17 +7,14 @@
 
 CB3D *CMuTInfo::b3d=NULL;
 int CMuTInfo::NETEVENTS=0;
-int CMuTInfo::NTAU=0;
 int CMuTInfo::NMINCALC=10;
-double CMuTInfo::DELTAU=0.0;
 int CMuTInfo::NXY=0;
-int CMuTInfo::DXY=0.0;
+double CMuTInfo::DXY=0.0;
 vector<vector<double>> CMuTInfo::taumin{};
 vector<CResInfo *> CMuTInfo::Bresinfo{};
 
 CMuTInfo::CMuTInfo(double tau_set){
 	tau=tau_set;
-	volume=tau*2.0*b3d->ETAMAX*b3d->DXY*b3d->DXY;
 	Pxpi=Pypi=PxK=PyK=PxB=PyB=0.0;
 	Txxpi=Tyypi=Txypi=0.0;
 	TxxK=TyyK=TxyK=0.0;
@@ -26,84 +23,6 @@ CMuTInfo::CMuTInfo(double tau_set){
 	Tpi=TK=TB=145.0;
 	mupi=muK=muB=muBS=0.0;
 	sufficientN=false;
-}
-
- void CMuTInfo::Init(CB3D *b3dset){
- 	b3d=b3dset;
- 	DELTAU=b3d->MUTCALC_DELTAU;
- 	NT
-		CMuTInfo::DELTAU=MUTCALC_DELTAU;
-		CMuTInfo::NTAU=TAUCOLLMAX/MUTCALC_DELTAU;
-		CMuTInfo::NETEVENTS=0;
-		muTinfo.resize(CMuTInfo::NTAU);
-		for(itau=0;itau<CMuTInfo::NTAU;itau++){
-			muTinfo[itau].resize(2*NXY);
-			for(ix=0;ix<2*NXY;ix++)
-				muTinfo[itau][ix].resize(2*NXY);
-			for(ix=0;ix<2*NXY;ix++){
-				for(iy=0;iy<2*NXY;iy++){
-					muTinfo[itau][ix][iy]=new CMuTInfo((itau+0.5)*CMuTInfo::DELTAU);
-				}
-			}
-		}
-		CResInfoMap::iterator rpos;
-		CResInfo *resinfo;
-		for(rpos=reslist->resmap.begin();rpos!=reslist->resmap.end();++rpos){
-			resinfo=rpos->second;
-			if(resinfo->baryon>0){
-				CMuTInfo::Bresinfo.push_back(resinfo);
-			}
-		}
- }
-
-void CMuTInfo::UpdateNPE(CB3DCell *cell){
-	CResInfo *resinfo;
-	int S;
-	double gamma,gammav,E;
-	CPartMap::iterator ppos;
-	CPart *part;
-	for(ppos=cell->partmap.begin();ppos!=cell->partmap.end();ppos++){
-		part=ppos->second;
-		resinfo=part->resinfo;
-		if(resinfo->code==111 || abs(resinfo->code)==211){
-			gamma=cosh(part->eta);
-			gammav=sinh(part->eta);
-			Npi+=1;
-			Pxpi+=part->p[1];
-			Pypi+=part->p[2];
-			E=gamma*part->p[0]-gammav*part->p[3];
-			Epi+=E;
-			Txxpi+=part->p[1]*part->p[1]/E;
-			Tyypi+=part->p[2]*part->p[2]/E;
-			Txypi+=part->p[1]*part->p[2]/E;
-		}
-		else if(abs(part->resinfo->code)==321 || abs(part->resinfo->code)==311){
-			gamma=cosh(part->eta);
-			gammav=sinh(part->eta);
-			NK+=1;
-			PxK+=part->p[1];
-			PyK+=part->p[2];
-			E=gamma*part->p[0]-gammav*part->p[3];
-			EK+=E;
-			TxxK+=part->p[1]*part->p[1]/E;
-			TyyK+=part->p[2]*part->p[2]/E;
-			TxyK+=part->p[1]*part->p[2]/E;
-		}
-		else if(resinfo->baryon!=0){
-			gamma=cosh(part->eta);
-			gammav=sinh(part->eta);
-			NB+=1;
-			PxB+=part->p[1];
-			PyB+=part->p[2];
-			E=gamma*part->p[0]-gammav*part->p[3];
-			EB+=E;
-			S=abs(resinfo->strange);
-			NBS+=S;
-			TxxB+=part->p[1]*part->p[1]/E;
-			TyyB+=part->p[2]*part->p[2]/E;
-			TxyB+=part->p[1]*part->p[2]/E;
-		}
-	}
 }
 
 void CMuTInfo::Print(){
@@ -124,16 +43,17 @@ void CMuTInfo::CalcAllMuTU(){
 	char message[100];
 	bool success;
 	double Txx,Tyy,Txy,T00,T0x,T0y,gamma,degen;
+	double volume=4.0*tau*2.0*b3d->ETAMAX*DXY*DXY*double(NETEVENTS);   // factor or 4 due to combining quadrants
 	if(Npi>NMINCALC){
-		Txx=Txxpi/(volume*double(NETEVENTS));
-		Tyy=Tyypi/(volume*double(NETEVENTS));
-		Txy=Txypi/(volume*double(NETEVENTS));
-		T00=Epi/(volume*double(NETEVENTS));
-		T0x=Pxpi/(volume*double(NETEVENTS));
-		T0y=Pypi/(volume*double(NETEVENTS));
+		Txx=Txxpi/volume;
+		Tyy=Tyypi/volume;
+		Txy=Txypi/volume;
+		T00=Epi/volume;
+		T0x=Pxpi/volume;
+		T0y=Pypi/volume;
 		GetEpsilonU(T00,T0x,T0y,Txx,Tyy,Txy,Uxpi,Uypi,epsilonpi);
 		gamma=sqrt(1.0+Uxpi*Uxpi+Uypi*Uypi);
-		rhopi=double(Npi)/(gamma*volume*double(NETEVENTS));
+		rhopi=double(Npi)/(gamma*volume);
 		degen=3.0;
 		GetMuT(PionMass,degen,rhopi,epsilonpi,Tpi,mupi);
 	}
@@ -142,15 +62,15 @@ void CMuTInfo::CalcAllMuTU(){
 		mupi=0.0;
 	}
 	if(NK>NMINCALC){
-		Txx=TxxK/(volume*double(NETEVENTS));
-		Tyy=TyyK/(volume*double(NETEVENTS));
-		Txy=TxyK/(volume*double(NETEVENTS));
-		T00=EK/(volume*double(NETEVENTS));
-		T0x=PxK/(volume*double(NETEVENTS));
-		T0y=PyK/(volume*double(NETEVENTS));
+		Txx=TxxK/volume;
+		Tyy=TyyK/volume;
+		Txy=TxyK/volume;
+		T00=EK/volume;
+		T0x=PxK/volume;
+		T0y=PyK/volume;
 		GetEpsilonU(T00,T0x,T0y,Txx,Tyy,Txy,UxK,UyK,epsilonK);
 		gamma=sqrt(1.0+UxK*UxK+UyK*UyK);
-		rhoK=double(NK)/(gamma*volume*double(NETEVENTS));
+		rhoK=double(NK)/(gamma*volume);
 		degen=4.0;
 		GetMuT(KaonMass,degen,rhoK,epsilonK,TK,muK);
 	}
@@ -159,16 +79,16 @@ void CMuTInfo::CalcAllMuTU(){
 		muK=0.0;
 	}
 	if(NB>NMINCALC && NBS>0){ 
-		Txx=TxxB/(volume*double(NETEVENTS));
-		Tyy=TyyB/(volume*double(NETEVENTS));
-		Txy=TxyB/(volume*double(NETEVENTS));
-		T00=EB/(volume*double(NETEVENTS));
-		T0x=PxB/(volume*double(NETEVENTS));
-		T0y=PyB/(volume*double(NETEVENTS));
+		Txx=TxxB/volume;
+		Tyy=TyyB/volume;
+		Txy=TxyB/volume;
+		T00=EB/volume;
+		T0x=PxB/volume;
+		T0y=PyB/volume;
 		GetEpsilonU(T00,T0x,T0y,Txx,Tyy,Txy,UxB,UyB,epsilonB);
 		gamma=sqrt(1.0+UxB*UxB+UyB*UyB);
-		rhoB=double(NB)/(gamma*volume*double(NETEVENTS));
-		rhoBS=double(NBS)/(gamma*volume*double(NETEVENTS));
+		rhoB=double(NB)/(gamma*volume);
+		rhoBS=double(NBS)/(gamma*volume);
 		success=GetMuT_Baryon(rhoB,rhoBS,epsilonB,TB,muB,muBS);
 		if(!success){
 			sprintf(message,"GetMuT_Baryon Failed\n");
@@ -421,4 +341,9 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 	muB=x(1);
 	muBS=x(2);
 	return success;
+}
+
+void CMuTInfo::GetIxIy(double x,double y,int &ix,int &iy){
+	ix=lrint(floor(fabs(x)/DXY));
+	iy=lrint(floor(fabs(y)/DXY));
 }

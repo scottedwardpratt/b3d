@@ -177,6 +177,14 @@ void CSampler::ReadHyperElements2D_OSU(){
 			}
 			ielement+=1;
 			b3d->TotalVolume+=udotdOmega;
+			if(b3d->MUTCALC){
+				int ix,iy;
+				CMuTInfo::GetIxIy(elem->x,elem->y,ix,iy);
+				if(ix<CMuTInfo::NXY && iy<CMuTInfo::NXY){
+					if(elem->tau>CMuTInfo::taumin[ix][iy])
+						CMuTInfo::taumin[ix][iy]=elem->tau;
+				}
+			}
 		}
 	}
 	nelements=ielement;

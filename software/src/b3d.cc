@@ -106,8 +106,6 @@ void CB3D::CopyParMapPars(){
 	DXY=XYMAX/double(NXY);
 	DETA=ETAMAX/double(NETA);
 	BALANCE_CALC=parmap.getB("B3D_BALANCE_CALC",false);
-	CMuTCalc::NXY=parmap.getI("B3D_MUTCALC_NXY",24);
-	CMuTCalc::DXY=parmap.getD("B3D_MuTCalc_DXY",1.0);
 }
 
 void CB3D::InitCascade(){
@@ -203,30 +201,7 @@ void CB3D::InitCascade(){
 		}
 	}
 	if(MUTCALC || BARYON_ANNIHILATION){
-		CMuTInfo::Init(this);
-		CMuTInfo::b3d=this;
-		CMuTInfo::DELTAU=MUTCALC_DELTAU;
-		CMuTInfo::NTAU=TAUCOLLMAX/MUTCALC_DELTAU;
-		CMuTInfo::NETEVENTS=0;
-		muTinfo.resize(CMuTInfo::NTAU);
-		for(itau=0;itau<CMuTInfo::NTAU;itau++){
-			muTinfo[itau].resize(2*NXY);
-			for(ix=0;ix<2*NXY;ix++)
-				muTinfo[itau][ix].resize(2*NXY);
-			for(ix=0;ix<2*NXY;ix++){
-				for(iy=0;iy<2*NXY;iy++){
-					muTinfo[itau][ix][iy]=new CMuTInfo((itau+0.5)*CMuTInfo::DELTAU);
-				}
-			}
-		}
-		CResInfoMap::iterator rpos;
-		CResInfo *resinfo;
-		for(rpos=reslist->resmap.begin();rpos!=reslist->resmap.end();++rpos){
-			resinfo=rpos->second;
-			if(resinfo->baryon>0){
-				CMuTInfo::Bresinfo.push_back(resinfo);
-			}
-		}
+		InitMuTCalc();
 	}
 	if(SECALC){
 		SEinfo=new CSEInfo(this);
@@ -261,8 +236,8 @@ void CB3D::Reset(){
 	//npartstot=0;
 	if(MUTCALC){
 		ntau=lrint(TAUCOLLMAX/MUTCALC_DELTAU);
-		for(iitau=0;iitau<ntau;iitau++){
-			taucalc=(0.5+iitau)*MUTCALC_DELTAU;
+		for(iitau=1;iitau<ntau;iitau++){
+			taucalc=iitau*MUTCALC_DELTAU;
 			AddAction_MuTCalc_UpdateNPE(taucalc);
 		}
 		CMuTInfo::NETEVENTS+=NSAMPLE;

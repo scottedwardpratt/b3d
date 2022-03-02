@@ -135,6 +135,7 @@ public:
 	void WriteWeights();
 	void IncrementWeightArrays();
 	int CountBaryons();
+	void InitMuTCalc();
 
 	bool FindCollision(CPart *part1,CPart *part2,double &taucoll);
 	void Decay(CPart *mother,int &nbodies,array<CPart *,5> &daughter);

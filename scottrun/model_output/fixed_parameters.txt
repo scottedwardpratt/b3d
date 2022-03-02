@@ -41,7 +41,7 @@ HYDRO_OUTPUT_DATAROOT model_output
 B3D_COLLISIONS true
 B3D_NEVENTSMAX 10
 B3D_NSAMPLE 1 # oversampling ratio, 1=cascade, infty=Boltzmann
-B3D_TAUCOLLMAX 60.0 #no collisions beyond this tau
+B3D_TAUCOLLMAX 48.0 #no collisions beyond this tau
 B3D_BJORKEN true  # cyclic BC for |eta|>B3D_ETAMAX
 B3D_ETAMAX 1
 B3D_XYMAX 36.0 # extent of collision mesh in xy plane (fm)
@@ -62,7 +62,7 @@ B3D_BARYON_ANNIHILATION true
 #parameters for inelastic 2<->2 scatterings
 B3D_INELASTIC false
 B3D_MUTCALC true
-B3D_MUTCALC_DELTAU 0.5
+B3D_MUTCALC_DELTAU 1.0
 B3D_MUTCALC_DXY 1.0
 B3D_MUTCALC_NXY 24
 B3D_NBOSE 1;

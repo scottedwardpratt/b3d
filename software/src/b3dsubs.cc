@@ -65,7 +65,6 @@ void CB3D::KillAllParts(){
 			sprintf(message,"PartMap.size=%d, DeadPartMap.size=%d\n",int(PartMap.size()),int(DeadPartMap.size()));
 			part->currentmap=&PartMap;
 			CLog::Fatal(message);
-			exit(1);
 			//Misc::Pause();
 		}
 		part->Kill();
@@ -118,6 +117,7 @@ void CB3D::PrintActionMap(CActionMap *actionmap){
 	}
 }
 
+/*
 void CB3D::FindAllCollisions(){
 	double taucoll;
 	CPartMap::iterator ppos1,ppos2;
@@ -138,6 +138,7 @@ void CB3D::FindAllCollisions(){
 		++ppos2;
 	}
 }
+*/
 
 void CB3D::PrintPartList(){
 	CPartMap::iterator ppos2,ppos1=PartMap.begin();
@@ -152,17 +153,6 @@ void CB3D::PrintPartList(){
 	}
 	sprintf(message,"%s\n",message);
 	CLog::Info(message);
-}
-
-void CB3D::CalcMuTU(){
-	int ix,iy,iitau;
-	for(iitau=0;iitau<CMuTInfo::NTAU;iitau++){
-		for(ix=0;ix<2*NXY;ix++){
-			for(iy=0;iy<2*NXY;iy++){
-				muTinfo[iitau][ix][iy]->CalcAllMuTU();
-			}
-		}
-	}
 }
 
 void CB3D::ListFutureCollisions(){
@@ -419,4 +409,49 @@ int CB3D::CountBaryons(){
 			nbaryons+=1;
 	}
 	return nbaryons;
+}
+
+void CB3D::InitMuTCalc(){
+	int ix,iy,ntau;
+	CMuTInfo::b3d=this;
+	CMuTInfo::NXY=parmap.getI("B3D_MUTCALC_NXY",24);
+	CMuTInfo::DXY=parmap.getD("B3D_MuTCalc_DXY",1.0);
+	CMuTInfo::taumin.resize(NXY);
+	for(ix=0;ix<NXY;ix++){
+		CMuTInfo::taumin[ix].resize(NXY);
+		for(iy=0;iy<NXY;iy++)
+			CMuTInfo::taumin[ix][iy]=0.0;
+	}
+	CMuTInfo::NETEVENTS=0;
+	ntau=lrint(TAUCOLLMAX/MUTCALC_DELTAU);
+	muTinfo.resize(ntau);
+	for(itau=0;itau<ntau;itau++){
+		muTinfo[itau].resize(NXY);
+		for(ix=0;ix<NXY;ix++){
+			muTinfo[itau][ix].resize(NXY);
+			for(iy=0;iy<NXY;iy++)
+				muTinfo[itau][ix][iy]=new CMuTInfo((itau+0.5)*MUTCALC_DELTAU);
+		}
+	}
+	CResInfoMap::iterator rpos;
+	CResInfo *resinfo;
+	for(rpos=reslist->resmap.begin();rpos!=reslist->resmap.end();++rpos){
+		resinfo=rpos->second;
+		if(resinfo->baryon>0){
+			CMuTInfo::Bresinfo.push_back(resinfo);
+		}
+	}
+}
+
+
+void CB3D::CalcMuTU(){
+	int ix,iy,iitau,ntau;
+	ntau=lrint(TAUCOLLMAX/MUTCALC_DELTAU);
+	for(iitau=0;iitau<ntau;iitau++){
+		for(ix=0;ix<CMuTInfo::NXY;ix++){
+			for(iy=0;iy<CMuTInfo::NXY;iy++){
+				muTinfo[iitau][ix][iy]->CalcAllMuTU();
+			}
+		}
+	}
 }

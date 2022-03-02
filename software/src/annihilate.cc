@@ -226,10 +226,19 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 
 double CB3D::GetAnnihilationSigma(CPart *part1,CPart *part2,double &vrel){
 	const double g[4]={1,-1,-1,-1};
-	double Plab,p1dotp2,triangle,sigma_annihilation,rstrange;
-	int alpha;
+	double Plab,p1dotp2,triangle,sigma_annihilation,rstrange,m1squared,m2squared;
+	int alpha,ix,iy;
+	double taumin1,taumin2;
+	CMuTInfo::GetIxIy(part1->r[1],part1->r[2],ix,iy);
+	taumin1=CMuTInfo::taumin[ix][iy];
+	CMuTInfo::GetIxIy(part2->r[1],part2->r[2],ix,iy);
+	taumin2=CMuTInfo::taumin[ix][iy];
+	if(tau>taumin1 && tau>taumin2){
+		return 0.0;
+	}
 	part1->SetMass(); part2->SetMass();
-	double m1squared=part1->msquared,m2squared=part2->msquared;
+	m1squared=part1->msquared;
+	m2squared=part2->msquared;
 	p1dotp2=0.0;
 	for(alpha=0;alpha<4;alpha++){
 		p1dotp2+=part1->p[alpha]*part2->p[alpha]*g[alpha];
@@ -253,10 +262,10 @@ bool CB3D::CancelAnnihilation(CPart *part1,CPart *part2){
 	cell1=part1->cell;
 	cell2=part2->cell;
 	if(cell1!=NULL && cell2!=NULL){
-		unsigned int ix1,iy1,ix2,iy2,iitau;
-		ix1=cell1->ix; iy1=cell1->iy;
-		ix2=cell2->ix; iy2=cell2->iy;
-		iitau=lrint(tau/CMuTInfo::DELTAU);
+		int ix1,iy1,ix2,iy2,iitau;
+		CMuTInfo::GetIxIy(part1->r[1],part1->r[2],ix1,iy1);
+		CMuTInfo::GetIxIy(part1->r[1],part1->r[2],ix2,iy2);
+		iitau=lrint(tau/MUTCALC_DELTAU);
 		if(iitau<muTinfo.size()){
 			if(muTinfo[iitau][ix1][iy1]->sufficientN && muTinfo[iitau][ix2][iy2]->sufficientN){
 				mupi=0.5*(muTinfo[iitau][ix1][iy1]->mupi+muTinfo[iitau][ix2][iy2]->mupi);

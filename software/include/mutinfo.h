@@ -7,7 +7,7 @@ using namespace std;
 class CMuTInfo{
 public:
 	CMuTInfo(double tau_set);
-	double tau,volume;
+	double tau;
 	double Pxpi,Pypi,Epi,PxK,PyK,EK,PxB,PyB,EB;
 	double epsilonpi,epsilonK,epsilonB,rhopi,rhoK,rhoB,rhoBS;
 	double Tpi,TK,TB,mupi,muK,muB,muBS;
@@ -27,17 +27,15 @@ public:
 	static void GetEpsilonU(double T00,double T0x,double T0y,double Txx,double Tyy,double Txy,
 		double &Ux,double &Uy,double &epsilon);
 	void Print();
-	void GetIxIy;
+	static void GetIxIy(double x,double y,int &ix,int &iy);
 	//void MuTCalc_PionsWithBose();
-	static CB3D *b3d;
-	static double DELTAU;
-	static int NTAU;
 	static int NETEVENTS;
 	static int NMINCALC;
 	static vector<CResInfo*> Bresinfo;
 	static vector<vector<double>> taumin;
 	static int NXY;
 	static double DXY;
+	static CB3D *b3d;
 };
 
 #endif

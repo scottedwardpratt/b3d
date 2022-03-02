@@ -6,8 +6,8 @@
 using namespace std;
 
 int main(){
-	int ix,iy,itau,NR=20,ir;
-	double delR=1.5,DXY=1.5,x,y,tau,r;
+	int ix,iy,NR=30,ir;
+	double delR=1.0,DXY=1.0,x,y,tau,r;
 	double Ux,Uy,mu,T,muS,rho,epsilon;
 	int N,NS;
 	FILE *fptr,*output;
@@ -21,10 +21,14 @@ int main(){
 	npts.resize(NR,0);
 	char filename[200],dummy[200];
 
-	for(itau=1;itau<81;itau+=1){
-		tau=0.5*itau;
+	for(tau=2;tau<50;tau+=2){
+		
 
 		//Pions
+		for(ir=0;ir<NR;ir++){
+			npts[ir]=0;
+			mupi[ir]=Tpi[ir]=Upi[ir]=rhopi[ir]=epi[ir]=0.0;
+		}
 
 		sprintf(filename,"mucalc_results/mutinfo_pi_tau%g.txt",tau);
 		fptr=fopen(filename,"r");
@@ -32,10 +36,10 @@ int main(){
 		do{
 			fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
 			if(!feof(fptr)){
-				x=-36.0+(0.5+ix)*DXY;
-				y=-36.0+(0.5+iy)*DXY;
+				x=(ix+0.5)*DXY;
+				y=(iy+0.5)*DXY;
 				r=sqrt(x*x+y*y);
-				ir=lrint(r/delR);
+				ir=lrint(floor(r/delR));
 				if(ir<NR){
 					npts[ir]+=1;
 					mupi[ir]+=mu;
@@ -63,6 +67,10 @@ int main(){
 		fclose(output);
 
 		// Kaons
+		for(ir=0;ir<NR;ir++){
+			npts[ir]=0;
+			muK[ir]=TK[ir]=UK[ir]=rhoK[ir]=eK[ir]=0.0;
+		}
 		
 		sprintf(filename,"mucalc_results/mutinfo_K_tau%g.txt",tau);
 		fptr=fopen(filename,"r");
@@ -71,10 +79,10 @@ int main(){
 			fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
 			//printf("ix=%d, iy=%d\n",ix,iy);
 			if(!feof(fptr)){
-				x=-36.0+(0.5+ix)*DXY;
-				y=-36.0+(0.5+iy)*DXY;
+				x=(ix+0.5)*DXY;
+				y=(iy+0.5)*DXY;
 				r=sqrt(x*x+y*y);
-				ir=lrint(r/delR);
+				ir=lrint(floor(r/delR));
 				if(ir<NR){
 					//printf("ir=%d\n",ir);
 					npts[ir]+=1;
@@ -103,6 +111,10 @@ int main(){
 		fclose(output);
 
 		// Baryons and Hyperons
+		for(ir=0;ir<NR;ir++){
+			npts[ir]=0;
+			muB[ir]=muBS[ir]=TB[ir]=UB[ir]=rhoB[ir]=eB[ir]=0.0;
+		}
 
 		sprintf(filename,"mucalc_results/mutinfo_B_tau%g.txt",tau);
 		fptr=fopen(filename,"r");
@@ -110,10 +122,10 @@ int main(){
 		do{
 			fscanf(fptr,"%d %d %d %d %lf %lf %lf %lf %lf %lf %lf",&ix,&iy,&N,&NS,&T,&Ux,&Uy,&mu,&muS,&rho,&epsilon);
 			if(!feof(fptr)){
-				x=-36.0+(0.5+ix)*DXY;
-				y=-36.0+(0.5+iy)*DXY;
+				x=(ix+0.5)*DXY;
+				y=(iy+0.5)*DXY;
 				r=sqrt(x*x+y*y);
-				ir=lrint(r/delR);
+				ir=lrint(floor(r/delR));
 				if(ir<NR){
 					npts[ir]+=1;
 					muB[ir]+=mu;
