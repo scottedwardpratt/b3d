@@ -52,5 +52,6 @@ void CAction::Perform(){
 		sprintf(message,"FATAL: action type = %d is unknown, exiting\n",type);
 		CLog::Fatal(message);
 	}
+
 	
 }
