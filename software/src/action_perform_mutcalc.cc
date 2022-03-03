@@ -6,7 +6,7 @@
 #include "resonances.h"
 
 void CAction::PerformMuTCalcUpdateNPE(){
-	int ix,iy,itau,itype,pid;
+	int ix,iy,itau,btype,pid;
 	itau=lrint(floor(tau/b3d->MUTCALC_DELTAU));
 	CPartMap::iterator ppos;
 	CPart *part;
@@ -19,8 +19,8 @@ void CAction::PerformMuTCalcUpdateNPE(){
 		part=ppos->second;
 		resinfo=part->resinfo;
 		pid=abs(resinfo->code);
-		itype=CMuTInfo::GetBtype(pid);
-		if(pid==111 || pid==211 || pid==311 || pid==321 || itype>0){
+		btype=CMuTInfo::GetBtype(pid);
+		if(pid==111 || pid==211 || pid==311 || pid==321 || btype>=0){
 			eta=part->GetEta(tau);
 			t=tau*cosh(eta);
 			x=part->r[1]+(t-part->r[0])*part->p[1]/part->p[0];
@@ -61,18 +61,18 @@ void CAction::PerformMuTCalcUpdateNPE(){
 							mti->TyyK+=py*py/E;
 							mti->TxyK+=px*py/E;
 						}
-						else if(resinfo->baryon!=0){
+						else if(btype>=0){
 							gamma=cosh(eta);
 							gammav=sinh(eta);
-							mti->NB[itype]+=1;
-							mti->PxB[itype]+=px;
-							mti->PyB[itype]+=py;
+							mti->NB[btype]+=1;
+							mti->PxB[btype]+=px;
+							mti->PyB[btype]+=py;
 							E=gamma*part->p[0]-gammav*part->p[3];
-							mti->EB[itype]+=E;
+							mti->EB[btype]+=E;
 							S=abs(resinfo->strange);
-							mti->TxxB[itype]+=px*px/E;
-							mti->TyyB[itype]+=py*py/E;
-							mti->TxyB[itype]+=px*py/E;
+							mti->TxxB[btype]+=px*px/E;
+							mti->TyyB[btype]+=py*py/E;
+							mti->TxyB[btype]+=px*py/E;
 						}
 					}
 				}

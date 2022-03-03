@@ -6,13 +6,12 @@
 using namespace std;
 
 int main(){
-	int ix,iy,NR=30,ir;
+	int ix,iy,NR=30,ir,N;
 	double delR=1.0,DXY=1.0,x,y,tau,r;
-	double Ux,Uy,mu,T,muS,rho,epsilon;
-	int N,NS;
+	double Ux,Uy,mu,T,rho,epsilon;
 	FILE *fptr,*output;
-	vector<double> muB,muBS,muK,mupi,Tpi,TK,TB,Upi,UK,UB,rhopi,rhoK,rhoB,epi,eK,eB;
-	muB.resize(NR,0.0); muBS.resize(NR,0.0); muK.resize(NR,0.0); mupi.resize(NR,0.0);
+	vector<double> muB,muK,mupi,Tpi,TK,TB,Upi,UK,UB,rhopi,rhoK,rhoB,epi,eK,eB;
+	muB.resize(NR,0.0); muK.resize(NR,0.0); mupi.resize(NR,0.0);
 	TB.resize(NR,0.0); TK.resize(NR,0.0); Tpi.resize(NR,0.0);
 	Upi.resize(NR,0.0); UK.resize(NR,0.0); UB.resize(NR,0.0);
 	rhopi.resize(NR,0.0); rhoK.resize(NR,0.0); rhoB.resize(NR,0.0);
@@ -113,46 +112,47 @@ int main(){
 		// Baryons and Hyperons
 		for(ir=0;ir<NR;ir++){
 			npts[ir]=0;
-			muB[ir]=muBS[ir]=TB[ir]=UB[ir]=rhoB[ir]=eB[ir]=0.0;
+			muB[ir]=TB[ir]=UB[ir]=rhoB[ir]=eB[ir]=0.0;
 		}
 
-		sprintf(filename,"mucalc_results/mutinfo_B_tau%g.txt",tau);
-		fptr=fopen(filename,"r");
-		fgets(dummy,200,fptr);
-		do{
-			fscanf(fptr,"%d %d %d %d %lf %lf %lf %lf %lf %lf %lf",&ix,&iy,&N,&NS,&T,&Ux,&Uy,&mu,&muS,&rho,&epsilon);
-			if(!feof(fptr)){
-				x=(ix+0.5)*DXY;
-				y=(iy+0.5)*DXY;
-				r=sqrt(x*x+y*y);
-				ir=lrint(floor(r/delR));
-				if(ir<NR){
-					npts[ir]+=1;
-					muB[ir]+=mu;
-					muBS[ir]+=muS;
-					TB[ir]+=T;
-					UB[ir]+=sqrt(Ux*Ux+Uy*Uy);
-					rhoB[ir]=rho;
-					eB[ir]=epsilon;
+		for(int btype=0;btype<8;btype++){
+			sprintf(filename,"mucalc_results/mutinfo_B%d_tau%g.txt",btype,tau);
+			fptr=fopen(filename,"r");
+			fgets(dummy,200,fptr);
+			do{
+				fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
+				if(!feof(fptr)){
+					x=(ix+0.5)*DXY;
+					y=(iy+0.5)*DXY;
+					r=sqrt(x*x+y*y);
+					ir=lrint(floor(r/delR));
+					if(ir<NR){
+						npts[ir]+=1;
+						muB[ir]+=mu;
+						TB[ir]+=T;
+						UB[ir]+=sqrt(Ux*Ux+Uy*Uy);
+						rhoB[ir]=rho;
+						eB[ir]=epsilon;
+					}
 				}
-			}
-		}while(!feof(fptr));
-		fclose(fptr);
+			}while(!feof(fptr));
+			fclose(fptr);
 
-		sprintf(filename,"mucalc_results/muTvsR_B_tau%g.txt",tau);
-		output=fopen(filename,"w");
-		for(ir=0;ir<NR;ir++){
-			if(npts[ir]>0){
-				muB[ir]=muB[ir]/double(npts[ir]);
-				muBS[ir]=muBS[ir]/double(npts[ir]);
-				TB[ir]=TB[ir]/double(npts[ir]);
-				UB[ir]=UB[ir]/double(npts[ir]);
-				r=(ir+0.5)*delR;
-				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f %7.4f\n",r,npts[ir],TB[ir],UB[ir],muB[ir],muBS[ir],rhoB[ir],eB[ir]);
+
+			sprintf(filename,"mucalc_results/muTvsR_B%d_tau%g.txt",btype,tau);
+			output=fopen(filename,"w");
+			for(ir=0;ir<NR;ir++){
+				if(npts[ir]>0){
+					muB[ir]=muB[ir]/double(npts[ir]);
+					TB[ir]=TB[ir]/double(npts[ir]);
+					UB[ir]=UB[ir]/double(npts[ir]);
+					r=(ir+0.5)*delR;
+					fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,npts[ir],TB[ir],UB[ir],muB[ir],rhoB[ir],eB[ir]);
+				}
+				npts[ir]=0;
 			}
-			npts[ir]=0;
+			fclose(output);
 		}
-		fclose(output);
 
 	}
 	return 0;
