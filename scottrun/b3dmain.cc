@@ -30,8 +30,7 @@ int main(int argc, char *argv[]){
 		sprintf(message,"_________________ iqual=%d, nevents=%d ________________\n",iqual,nevents);
 		CLog::Info(message);
 		b3d->sampler->ReadHyperElements2D_OSU();
-		if(run_name!="default_0")
-			b3d->ReadMuTInfo();
+		b3d->ReadMuTInfo();
 		for(ievent=ievent0;ievent<=ieventf;ievent++){
 			sprintf(message,"------ beginning, ievent=%d --------\n",ievent);
 			CLog::Info(message);

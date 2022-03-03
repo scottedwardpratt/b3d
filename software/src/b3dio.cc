@@ -375,59 +375,65 @@ void CB3D::ReadMuTInfo(){
 		tau_print=(iitau+1)*MUTCALC_DELTAU;
 		sprintf(filename,"mucalc_results/mutinfo_pi_tau%g.txt",tau_print);
 		fptr=fopen(filename,"r");
-		fgets(dummy,500,fptr);
-		fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
-		while(!feof(fptr)){
-			mti=muTinfo[iitau][ix][iy];
-			mti->sufficientN=true;
-			mti->Tpi=T;
-			mti->mupi=mu;
-			if(READN){
-				mti->Npi=N;
-				mti->Uxpi=Ux;
-				mti->Uypi=Uy;
-				mti->epsilonpi=epsilon;
-			}
+		if(fptr){
+			fgets(dummy,500,fptr);
 			fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
+			while(!feof(fptr)){
+				mti=muTinfo[iitau][ix][iy];
+				mti->sufficientN=true;
+				mti->Tpi=T;
+				mti->mupi=mu;
+				if(READN){
+					mti->Npi=N;
+					mti->Uxpi=Ux;
+					mti->Uypi=Uy;
+					mti->epsilonpi=epsilon;
+				}
+				fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
+			}
+			fclose(fptr);
 		}
-		fclose(fptr);
 
 		sprintf(filename,"mucalc_results/mutinfo_K_tau%g.txt",tau_print);
 		fptr=fopen(filename,"r");
-		fgets(dummy,500,fptr);
-		fscanf(fptr,"%d %d %d  %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
-		while(!feof(fptr)){
-			mti=muTinfo[iitau][ix][iy];
-			mti->TK=T;
-			mti->muK=mu;
-			if(READN){
-				mti->NK=N;
-				mti->UxK=Ux;
-				mti->UyK=Uy;
-				mti->epsilonK=epsilon;
+		if(fptr){
+			fgets(dummy,500,fptr);
+			fscanf(fptr,"%d %d %d  %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
+			while(!feof(fptr)){
+				mti=muTinfo[iitau][ix][iy];
+				mti->TK=T;
+				mti->muK=mu;
+				if(READN){
+					mti->NK=N;
+					mti->UxK=Ux;
+					mti->UyK=Uy;
+					mti->epsilonK=epsilon;
+				}
+				fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
 			}
-			fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
+			fclose(fptr);
 		}
-		fclose(fptr);
 
 		for(jtype=0;jtype<8;jtype++){
 			sprintf(filename,"mucalc_results/mutinfo_B%d_tau%g.txt",jtype,tau_print);
 			fptr=fopen(filename,"r");
-			fgets(dummy,500,fptr);
-			fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&NB,&T,&Ux,&Uy,&mu,&rho,&epsilon);
-			while(!feof(fptr)){
-				mti=muTinfo[iitau][ix][iy];
-				mti->TB[jtype]=T;
-				mti->muB[jtype]=mu;
-				if(READN){
-					mti->NB[jtype]=NB;
-					mti->UxB[jtype]=Ux;
-					mti->UyB[jtype]=Uy;
-					mti->epsilonB[jtype]=epsilon;
-				}
+			if(fptr){
+				fgets(dummy,500,fptr);
 				fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&NB,&T,&Ux,&Uy,&mu,&rho,&epsilon);
+				while(!feof(fptr)){
+					mti=muTinfo[iitau][ix][iy];
+					mti->TB[jtype]=T;
+					mti->muB[jtype]=mu;
+					if(READN){
+						mti->NB[jtype]=NB;
+						mti->UxB[jtype]=Ux;
+						mti->UyB[jtype]=Uy;
+						mti->epsilonB[jtype]=epsilon;
+					}
+					fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&NB,&T,&Ux,&Uy,&mu,&rho,&epsilon);
+				}
+				fclose(fptr);
 			}
-			fclose(fptr);
 		}
 
 	}
