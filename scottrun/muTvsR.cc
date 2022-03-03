@@ -39,7 +39,7 @@ int main(){
 				y=(iy+0.5)*DXY;
 				r=sqrt(x*x+y*y);
 				ir=lrint(floor(r/delR));
-				if(ir<NR){
+				if(ir<NR && N>0){
 					npts[ir]+=1;
 					mupi[ir]+=mu;
 					Tpi[ir]+=T;
@@ -60,6 +60,10 @@ int main(){
 				Tpi[ir]=Tpi[ir]/double(npts[ir]);
 				r=(ir+0.5)*delR;
 				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,npts[ir],Tpi[ir],Upi[ir],mupi[ir],rhopi[ir],epi[ir]);
+			}
+			else{
+				r=(ir+0.5)*delR;
+				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,0,0.0,0.0,0.0,0.0,0.0);
 			}
 			npts[ir]=0;
 		}
@@ -82,7 +86,7 @@ int main(){
 				y=(iy+0.5)*DXY;
 				r=sqrt(x*x+y*y);
 				ir=lrint(floor(r/delR));
-				if(ir<NR){
+				if(ir<NR && N>0){
 					//printf("ir=%d\n",ir);
 					npts[ir]+=1;
 					muK[ir]+=mu;
@@ -105,6 +109,10 @@ int main(){
 				r=(ir+0.5)*delR;
 				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,npts[ir],TK[ir],UK[ir],muK[ir],rhoK[ir],eK[ir]);
 			}
+			else{
+				r=(ir+0.5)*delR;
+				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,0,0.0,0.0,0.0,0.0,0.0);
+			}
 			npts[ir]=0;
 		}
 		fclose(output);
@@ -126,7 +134,7 @@ int main(){
 					y=(iy+0.5)*DXY;
 					r=sqrt(x*x+y*y);
 					ir=lrint(floor(r/delR));
-					if(ir<NR){
+					if(ir<NR && N>0){
 						npts[ir]+=1;
 						muB[ir]+=mu;
 						TB[ir]+=T;
@@ -148,6 +156,10 @@ int main(){
 					UB[ir]=UB[ir]/double(npts[ir]);
 					r=(ir+0.5)*delR;
 					fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,npts[ir],TB[ir],UB[ir],muB[ir],rhoB[ir],eB[ir]);
+				}
+				else{
+					r=(ir+0.5)*delR;
+					fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,0,0.0,0.0,0.0,0.0,0.0);
 				}
 				npts[ir]=0;
 			}

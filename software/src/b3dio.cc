@@ -280,6 +280,7 @@ void CB3D::WriteMuTInfo(){
 	int ix,iy,iitau,ntau,btype;
 	double tau_print;
 	char filename[50];
+	bool sufficientN;
 	FILE *fptr;
 	CMuTInfo *mti;
 	CalcMuTU();
@@ -289,14 +290,6 @@ void CB3D::WriteMuTInfo(){
 		for(ix=0;ix<CMuTInfo::NXY;ix++){
 			for(iy=0;iy<CMuTInfo::NXY;iy++){
 				mti=muTinfo[iitau][ix][iy];
-				mti->sufficientN=true;
-				if(mti->Npi<CMuTInfo::NMINCALC || mti->NK<CMuTInfo::NMINCALC)
-					mti->sufficientN=false;
-				for(btype=0;btype<8;btype++){
-					if(mti->NB[btype]<CMuTInfo::NMINCALC){
-						mti->sufficientN=false;
-					}
-				}
 			}
 		}
 		sprintf(filename,"mucalc_results/mutinfo_pi_tau%g.txt",tau_print);
@@ -306,9 +299,15 @@ void CB3D::WriteMuTInfo(){
 		for(ix=0;ix<CMuTInfo::NXY;ix++){
 			for(iy=0;iy<CMuTInfo::NXY;iy++){
 				mti=muTinfo[iitau][ix][iy];
-				if(mti->sufficientN){
+				sufficientN=true;
+				if(mti->Npi<CMuTInfo::NMINCALC)
+					sufficientN=false;
+				if(sufficientN){
 					fprintf(fptr,"%d %d %d %g %g %g %g %g %g\n",
 						ix,iy,mti->Npi,mti->Tpi,mti->Uxpi,mti->Uypi,mti->mupi,mti->rhopi,mti->epsilonpi);
+				}
+				else{
+					fprintf(fptr,"%d %d %d %g %g %g %g %g %g\n",ix,iy,0,0.0,0.0,0.0,0.0,0.0,0.0);
 				}
 			}
 		}
@@ -321,9 +320,15 @@ void CB3D::WriteMuTInfo(){
 		for(ix=0;ix<CMuTInfo::NXY;ix++){
 			for(iy=0;iy<CMuTInfo::NXY;iy++){
 				mti=muTinfo[iitau][ix][iy];
-				if(mti->sufficientN){
+				sufficientN=true;
+				if(mti->NK<CMuTInfo::NMINCALC)
+					sufficientN=false;
+				if(sufficientN){
 					fprintf(fptr,"%d %d %d %g %g %g %g %g %g\n",
 						ix,iy,mti->NK,mti->TK,mti->UxK,mti->UyK,mti->muK,mti->rhoK,mti->epsilonK);
+				}
+				else{
+					fprintf(fptr,"%d %d %d %g %g %g %g %g %g\n",ix,iy,0,0.0,0.0,0.0,0.0,0.0,0.0);
 				}
 			}
 		}
@@ -337,10 +342,17 @@ void CB3D::WriteMuTInfo(){
 			for(ix=0;ix<CMuTInfo::NXY;ix++){
 				for(iy=0;iy<CMuTInfo::NXY;iy++){
 					mti=muTinfo[iitau][ix][iy];
-					if(mti->sufficientN)
+					sufficientN=true;
+					if(mti->NB[btype]<CMuTInfo::NMINCALC)
+						sufficientN=false;
+					if(sufficientN){
 						fprintf(fptr,"%d %d %d %g %g %g %g %g %g\n",
 							ix,iy,mti->NB[btype],mti->TB[btype],mti->UxB[btype],mti->UyB[btype],mti->muB[btype],
 							mti->rhoB[btype],mti->epsilonB[btype]);
+					}
+					else{
+						fprintf(fptr,"%d %d %d %g %g %g %g %g %g\n",ix,iy,0,0.0,0.0,0.0,0.0,0.0,0.0);
+					}
 				}
 			}
 			fclose(fptr);

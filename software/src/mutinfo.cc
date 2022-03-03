@@ -7,7 +7,7 @@
 
 CB3D *CMuTInfo::b3d=NULL;
 int CMuTInfo::NETEVENTS=0;
-int CMuTInfo::NMINCALC=2;
+int CMuTInfo::NMINCALC=5;
 int CMuTInfo::NXY=0;
 double CMuTInfo::DXY=0.0;
 vector<vector<double>> CMuTInfo::taumin{};
@@ -76,9 +76,10 @@ void CMuTInfo::Print(){
 void CMuTInfo::CalcAllMuTU(){
 	double Txx,Tyy,Txy,T00,T0x,T0y,gamma,degen;
 	int btype;
+	char message[200];
 
 	double volume=4.0*tau*2.0*b3d->ETAMAX*DXY*DXY*double(NETEVENTS);   // factor or 4 due to combining quadrants
-	if(Npi>NMINCALC){
+	if(Npi>=NMINCALC){
 		Txx=Txxpi/volume;
 		Tyy=Tyypi/volume;
 		Txy=Txypi/volume;
@@ -96,7 +97,7 @@ void CMuTInfo::CalcAllMuTU(){
 		mupi=0.0;
 	}
 
-	if(NK>NMINCALC){
+	if(NK>=NMINCALC){
 		Txx=TxxK/volume;
 		Tyy=TyyK/volume;
 		Txy=TxyK/volume;
@@ -114,7 +115,7 @@ void CMuTInfo::CalcAllMuTU(){
 		muK=0.0;
 	}
 	for(btype=0;btype<8;btype++){
-		if(NB[btype]>NMINCALC){
+		if(NB[btype]>=NMINCALC){
 			Txx=TxxB[btype]/volume;
 			Tyy=TyyB[btype]/volume;
 			Txy=TxyB[btype]/volume;
@@ -125,6 +126,12 @@ void CMuTInfo::CalcAllMuTU(){
 			gamma=sqrt(1.0+UxB[btype]*UxB[btype]+UyB[btype]*UyB[btype]);
 			rhoB[btype]=double(NB[btype])/(gamma*volume);
 			GetMuT(massB[btype],degenB[btype],rhoB[btype],epsilonB[btype],TB[btype],muB[btype]);
+			if(TB[btype]!=TB[btype] || muB[btype]!=muB[btype]){
+				sprintf(message,"btype=%d: Disaster, m=%g, rho=%g, degen=%g, epsilon=%g\n",btype,massB[btype],rhoB[btype],degenB[btype],epsilonB[btype]);
+				CLog::Info(message);
+				sprintf(message,"NB=%d, T00/rho=%g, epsilon/rho=%g, EB/NB=%g, TB=%g, muB=%g\n",NB[btype],T00/rhoB[btype],epsilonB[btype]/rhoB[btype],EB[btype]/NB[btype],TB[btype],muB[btype]);
+				CLog::Info(message);
+			}
 		}
 		else{
 			TB[btype]=-1.0;
@@ -150,7 +157,7 @@ double &Ux,double &Uy,double &epsilon){
 		C=-(1.0/(1.0+gamma))*(Ux*Txx*Ux+2.0*Ux*Txy*Uy+Uy*Tyy*Uy);
 		Qx=gamma*T0x-Ux*Txx-Uy*Txy+(A+B+C)*Ux;
 		Qy=gamma*T0y-Uy*Tyy-Ux*Txy+(A+B+C)*Uy;
-		if(Qx*Qx+Qy*Qy>1.0E-10){
+		if(Qx*Qx+Qy*Qy>1.0E-14){
 			dAdUx=A*Ux/(gamma*gamma);
 			dAdUy=A*Uy/(gamma*gamma);
 			dBdUx=(1.0+(gamma/(1.0+gamma)))*T0x+(Ux/(gamma*(1.0+gamma)*(1.0+gamma)))*(T0x*Ux+T0y*Uy);
@@ -195,22 +202,28 @@ void CMuTInfo::GetMuT(double mass,double degen,double rho_target,double epsilon_
 	double E,dEdT,ETarget=epsilon_target/rho_target,epsilon0,dedT,sigma2,P,rho0,dT;
 	int ntry=0;
 	char message[100];
-	do{
-		ntry+=1;
-		CResList::freegascalc_onespecies(mass,T,epsilon0,P,rho0,sigma2,dedT);
-		E=epsilon0/rho0;
-		dEdT=dedT/rho0-epsilon0*epsilon0/(rho0*rho0*T*T);
-		dT=(ETarget-E)/dEdT;
-		if(fabs(dT)>0.6*T)
-			dT=0.6*T*dT/fabs(dT);
-		T+=dT;
-	}while(fabs(dT)>1.0E-5 && ntry<20);
-	if(ntry==20){
-		sprintf(message,"CMuTInfo::GetMuT did not converge!!!, T=%g, dT=%g\n",T,dT);
-		CLog::Info(message);
+	if(ETarget<mass+10.0){
+		T=5.0;
+		mu=ETarget/T;
 	}
-	CResList::freegascalc_onespecies(mass,T,epsilon0,P,rho0,sigma2,dedT);
-	mu=log(rho_target/(rho0*degen));
+	else{
+		do{
+			ntry+=1;
+			CResList::freegascalc_onespecies(mass,T,epsilon0,P,rho0,sigma2,dedT);
+			E=epsilon0/rho0;
+			dEdT=dedT/rho0-epsilon0*epsilon0/(rho0*rho0*T*T);
+			dT=(ETarget-E)/dEdT;
+			if(fabs(dT)>0.6*T)
+				dT=0.6*T*dT/fabs(dT);
+			T+=dT;
+		}while(fabs(dT)>1.0E-5 && ntry<30);
+		if(ntry==30){
+			sprintf(message,"CMuTInfo::GetMuT did not converge!!!, T=%g, dT=%g\n",T,dT);
+			CLog::Info(message);
+		}
+		CResList::freegascalc_onespecies(mass,T,epsilon0,P,rho0,sigma2,dedT);
+		mu=log(rho_target/(rho0*degen));
+	}
 }
 
 void CMuTInfo::GetIxIy(double x,double y,int &ix,int &iy){
