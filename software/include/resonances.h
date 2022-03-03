@@ -42,6 +42,7 @@ public:
 	int q[3];
 	int up,down;
 	int G_Parity;
+	int Btype;
 	bool decay; //false if stable, true if can decay. check if true
 	CBranchList branchlist;
 	CBranchList finalproductslist;
@@ -60,6 +61,7 @@ public:
 	double ChiInt(double T,double vmax); // Integral used by ChiOmega
 	double ChiTilde(double T,double vmax); // Integral used by ChiOmega
 	CResInfo();
+	void SetBtype();
 	static char *message;
 	static CRandy *randy;
 	static CResList *reslist;

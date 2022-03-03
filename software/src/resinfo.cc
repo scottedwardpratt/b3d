@@ -344,3 +344,19 @@ void CResInfo::PrintFinalProducts(){
 	sprintf(message,"%s---- NET BRANCHING=%g =? 1.0 ----\n",message,netbranching);
 	CLog::Info(message);
 }
+
+void CResInfo::SetBtype(){
+	Btype=-1;
+	if(abs(baryon)!=0){
+		Btype=abs(strange);
+		if(spin>1.0)
+			Btype+=4;
+		if(Btype==1){
+			if(name[0]=='L')
+				Btype=3;
+		}
+		//if(Btype==4){
+		//	printf("%2d:%s\n",Btype,name.c_str());
+		//}
+	}
+}

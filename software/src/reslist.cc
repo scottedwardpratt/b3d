@@ -171,12 +171,15 @@ void CResList::ReadResInfo(){
 		resinfoptr->q[1]=2.0*resinfoptr->baryon+resinfoptr->strange-resinfoptr->charge;
 		resinfoptr->q[2]=-resinfoptr->strange;
 		resinfoptr->netchi0+=resinfoptr->charge*resinfoptr->charge;
+		resinfoptr->Btype=-1;
 		if(!resinfoptr->decay)
 			resinfoptr->netchi+=abs(resinfoptr->charge);
-		
 		fgets(cname,100,resinfofile);
 		cname[int(strlen(cname))-1]='\0';
 		resinfoptr->name=cname;
+		resinfoptr->name.erase(0,resinfoptr->name.find_first_not_of(' '));
+		resinfoptr->name.erase(resinfoptr->name.find_last_not_of(' ')+1);
+		resinfoptr->SetBtype();
 		resinfoptr->decay=bool(decay);
 		if(!RESONANCE_DECAYS)
 			resinfoptr->decay=false;

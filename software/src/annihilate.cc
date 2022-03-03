@@ -227,16 +227,7 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 double CB3D::GetAnnihilationSigma(CPart *part1,CPart *part2,double &vrel){
 	const double g[4]={1,-1,-1,-1};
 	double Plab,p1dotp2,triangle,sigma_annihilation,rstrange,m1squared,m2squared;
-	int alpha,ix1,iy1,ix2,iy2;
-	double taumin1,taumin2;
-	CMuTInfo::GetIxIy(part1->r[1],part1->r[2],ix1,iy1);
-	CMuTInfo::GetIxIy(part2->r[1],part2->r[2],ix2,iy2);
-	if(ix1>=CMuTInfo::NXY || ix2>=CMuTInfo::NXY || iy1>=CMuTInfo::NXY || iy2>=CMuTInfo::NXY)
-		return 0.0;
-	taumin1=CMuTInfo::taumin[ix1][iy1];
-	taumin2=CMuTInfo::taumin[ix2][iy2];
-	if(tau>taumin1 && tau>taumin2)
-		return 0.0;
+	int alpha;
 	part1->SetMass(); part2->SetMass();
 	m1squared=part1->msquared;
 	m2squared=part2->msquared;
@@ -258,33 +249,41 @@ double CB3D::GetAnnihilationSigma(CPart *part1,CPart *part2,double &vrel){
 
 bool CB3D::CancelAnnihilation(CPart *part1,CPart *part2){
 	double mupi,muK,muB,muBS,mutot,netS;
+	double taumin1,taumin2;
 	double reduction_factor=1.0;
-	CB3DCell *cell1,*cell2;
-	cell1=part1->cell;
-	cell2=part2->cell;
-	if(cell1!=NULL && cell2!=NULL){
-		int ix1,iy1,ix2,iy2;
-		unsigned int iitau;
-		CMuTInfo::GetIxIy(part1->r[1],part1->r[2],ix1,iy1);
-		CMuTInfo::GetIxIy(part1->r[1],part1->r[2],ix2,iy2);
-		if(ix1>=NXY || ix2>=NXY || iy1>=NXY || iy2>=NXY)
-			return false;
-		iitau=lrint(tau/MUTCALC_DELTAU);
-		if(iitau<muTinfo.size()){
-			if(muTinfo[iitau][ix1][iy1]->sufficientN && muTinfo[iitau][ix2][iy2]->sufficientN){
-				mupi=0.5*(muTinfo[iitau][ix1][iy1]->mupi+muTinfo[iitau][ix2][iy2]->mupi);
-				muK=0.5*(muTinfo[iitau][ix1][iy1]->muK+muTinfo[iitau][ix2][iy2]->muK);
-				muB=0.5*(muTinfo[iitau][ix1][iy1]->muB+muTinfo[iitau][ix2][iy2]->muB);
-				muBS=0.5*(muTinfo[iitau][ix1][iy1]->muK+muTinfo[iitau][ix2][iy2]->muBS);
-				netS=fabs(part1->resinfo->strange+part2->resinfo->strange);
-				mutot=(5.0-netS)*mupi+netS*muK-2.0*muB-netS*muBS;
-				reduction_factor=1.0-exp(mutot);
-				if(randy->ran()>reduction_factor){
-					return false;
-				}
-				else{
-					return true;
-				}
+	int btype1,btype2;
+	int ix1,iy1,ix2,iy2;
+	unsigned int iitau;
+
+	btype1=part1->resinfo->Btype;
+	btype2=part2->resinfo->Btype;
+
+
+	CMuTInfo::GetIxIy(part1->r[1],part1->r[2],ix1,iy1);
+	CMuTInfo::GetIxIy(part1->r[1],part1->r[2],ix2,iy2);
+	if(ix1>=NXY || ix2>=NXY || iy1>=NXY || iy2>=NXY)
+		return false;
+	taumin1=CMuTInfo::taumin[ix1][iy1];
+	taumin2=CMuTInfo::taumin[ix2][iy2];
+	if(tau<taumin1 || tau<taumin2){
+		return true;
+	}
+
+	iitau=lrint(tau/MUTCALC_DELTAU);
+	if(iitau<muTinfo.size()){
+		if(muTinfo[iitau][ix1][iy1]->sufficientN && muTinfo[iitau][ix2][iy2]->sufficientN){
+			mupi=0.5*(muTinfo[iitau][ix1][iy1]->mupi+muTinfo[iitau][ix2][iy2]->mupi);
+			muK=0.5*(muTinfo[iitau][ix1][iy1]->muK+muTinfo[iitau][ix2][iy2]->muK);
+
+			muB=muTinfo[iitau][ix1][iy1]->muB[btype1]+muTinfo[iitau][ix2][iy2]->muB[btype2];
+			netS=fabs(part1->resinfo->strange+part2->resinfo->strange);
+			mutot=(5.0-netS)*mupi+netS*muK-muB;
+			reduction_factor=1.0-exp(mutot);
+			if(randy->ran()>reduction_factor){
+				return false;
+			}
+			else{
+				return true;
 			}
 		}
 	}

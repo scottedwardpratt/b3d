@@ -417,6 +417,8 @@ void CB3D::InitMuTCalc(){
 	CMuTInfo::NXY=parmap.getI("B3D_MUTCALC_NXY",24);
 	CMuTInfo::DXY=parmap.getD("B3D_MuTCalc_DXY",1.0);
 	CMuTInfo::taumin.resize(NXY);
+	//CMuTInfo::massB.resize(8);
+	//CMuTInfo::degenB.resize(8);
 	for(ix=0;ix<NXY;ix++){
 		CMuTInfo::taumin[ix].resize(NXY);
 		for(iy=0;iy<NXY;iy++)
@@ -441,8 +443,8 @@ void CB3D::InitMuTCalc(){
 			CMuTInfo::Bresinfo.push_back(resinfo);
 		}
 	}
+	CMuTInfo::massB[0]=939.0;
 }
-
 
 void CB3D::CalcMuTU(){
 	int ix,iy,iitau,ntau;

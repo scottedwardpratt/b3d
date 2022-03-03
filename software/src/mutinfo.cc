@@ -7,42 +7,76 @@
 
 CB3D *CMuTInfo::b3d=NULL;
 int CMuTInfo::NETEVENTS=0;
-int CMuTInfo::NMINCALC=10;
+int CMuTInfo::NMINCALC=2;
 int CMuTInfo::NXY=0;
 double CMuTInfo::DXY=0.0;
 vector<vector<double>> CMuTInfo::taumin{};
 vector<CResInfo *> CMuTInfo::Bresinfo{};
+vector<double> CMuTInfo::massB{938.27,1189.37,1314.83,1115.68,1232.0,1385,1530,1672.43};
+vector<double> CMuTInfo::degenB{8,12,8,4,16,12,8,4};
 
 CMuTInfo::CMuTInfo(double tau_set){
 	tau=tau_set;
-	Pxpi=Pypi=PxK=PyK=PxB=PyB=0.0;
+	Epi=EK=0.0;
+	Pxpi=Pypi=PxK=PyK=0.0;
 	Txxpi=Tyypi=Txypi=0.0;
 	TxxK=TyyK=TxyK=0.0;
-	TxxB=TyyB=TxyB=0.0;
-	Npi=NK=NBS=0;
-	Tpi=TK=TB=145.0;
-	mupi=muK=muB=muBS=0.0;
+	Npi=NK;
+	Tpi=TK=145.0;
+
+	NB.resize(8);
+	TB.resize(8);
+	muB.resize(8);
+	TxxB.resize(8);
+	TyyB.resize(8);
+	TxyB.resize(8);
+	PxB.resize(8);
+	PyB.resize(8);
+	EB.resize(8);
+	epsilonB.resize(8);
+	rhoB.resize(8);
+	UxB.resize(8);
+	UyB.resize(8);
+
+	for(int btype=0;btype<8;btype++){
+		NB[btype]=0;
+		EB[btype]=PxB[btype]=PyB[btype]=0.0;
+		TxxB[btype]=TyyB[btype]=TxyB[btype]=0.0;
+		muB[btype]=0.0;
+		TB[btype]=100.0;
+		epsilonB[btype]=0.0;
+	}
 	sufficientN=false;
 }
 
 void CMuTInfo::Print(){
 	char message[500];
 	sprintf(message,"-------- MuT Info, tau=%g ----------\n",tau);
+
 	sprintf(message,"%sNpi=%d, Epi/N=%g, Pxpi/Npi=%g, Pypi/Npi=%g\n",
-	message,Npi,Epi/Npi,Pxpi/Npi,Pypi/Npi);
+		message,Npi,Epi/Npi,Pxpi/Npi,Pypi/Npi);
+	sprintf(message,"%sTpi=%g, mupi=%g\n",message,Tpi,mupi);
+
 	sprintf(message,"%sNK=%d, EK/NK=%g, PxK/NK=%g, PyK/NK=%g\n",
-	message,NK,EK/NK,PxK/NK,PyK/NK);
-	sprintf(message,"%sNB=%d, NBS=%d, EB/NB=%g, PxB/NB=%g, PyB/NB=%g\n",
-	message,NB,NBS,EB/NB,PxB/NB,PyB/NB);
-	sprintf(message,"%sTpi=%g, TK=%g, TB=%g\nmupi=%g, muK=%g, muB=%g, muBS=%g\n",
-		message,Tpi,TK,TB,mupi,muK,muB,muBS);
+		message,NK,EK/NK,PxK/NK,PyK/NK);
+	sprintf(message,"%sTK=%g, muK=%g\n",message,TK,muK);
+
 	CLog::Info(message);
+
+	for(int btype=0;btype<8;btype++){
+		sprintf(message,"btype=%d\n",btype);
+		sprintf(message,"%sNB=%d, EK/NK=%g, PxK/NK=%g, PyK/NK=%g\n",
+			message,NB[btype],EB[btype]/NB[btype],PxB[btype]/NB[btype],PyB[btype]/NB[btype]);
+		sprintf(message,"%sTK=%g, muK=%g\n",message,TB[btype],muB[btype]);
+		CLog::Info(message);
+	}
+
 }
 
 void CMuTInfo::CalcAllMuTU(){
-	char message[100];
-	bool success;
 	double Txx,Tyy,Txy,T00,T0x,T0y,gamma,degen;
+	int btype;
+
 	double volume=4.0*tau*2.0*b3d->ETAMAX*DXY*DXY*double(NETEVENTS);   // factor or 4 due to combining quadrants
 	if(Npi>NMINCALC){
 		Txx=Txxpi/volume;
@@ -61,6 +95,7 @@ void CMuTInfo::CalcAllMuTU(){
 		Tpi=-1.0;
 		mupi=0.0;
 	}
+
 	if(NK>NMINCALC){
 		Txx=TxxK/volume;
 		Tyy=TyyK/volume;
@@ -75,32 +110,26 @@ void CMuTInfo::CalcAllMuTU(){
 		GetMuT(KaonMass,degen,rhoK,epsilonK,TK,muK);
 	}
 	else{
-		TxxK=-1.0;
+		TK=-1.0;
 		muK=0.0;
 	}
-	if(NB>NMINCALC && NBS>0){ 
-		Txx=TxxB/volume;
-		Tyy=TyyB/volume;
-		Txy=TxyB/volume;
-		T00=EB/volume;
-		T0x=PxB/volume;
-		T0y=PyB/volume;
-		GetEpsilonU(T00,T0x,T0y,Txx,Tyy,Txy,UxB,UyB,epsilonB);
-		gamma=sqrt(1.0+UxB*UxB+UyB*UyB);
-		rhoB=double(NB)/(gamma*volume);
-		rhoBS=double(NBS)/(gamma*volume);
-		success=GetMuT_Baryon(rhoB,rhoBS,epsilonB,TB,muB,muBS);
-		if(!success){
-			sprintf(message,"GetMuT_Baryon Failed\n");
-			CLog::Info(message);
-			Print();
+	for(btype=0;btype<8;btype++){
+		if(NB[btype]>NMINCALC){
+			Txx=TxxB[btype]/volume;
+			Tyy=TyyB[btype]/volume;
+			Txy=TxyB[btype]/volume;
+			T00=EB[btype]/volume;
+			T0x=PxB[btype]/volume;
+			T0y=PyB[btype]/volume;
+			GetEpsilonU(T00,T0x,T0y,Txx,Tyy,Txy,UxB[btype],UyB[btype],epsilonB[btype]);
+			gamma=sqrt(1.0+UxB[btype]*UxB[btype]+UyB[btype]*UyB[btype]);
+			rhoB[btype]=double(NB[btype])/(gamma*volume);
+			GetMuT(massB[btype],degenB[btype],rhoB[btype],epsilonB[btype],TB[btype],muB[btype]);
 		}
-
-	}
-	else{
-		TB=-1.0;
-		muB=0.0;
-		muBS=0.0;
+		else{
+			TB[btype]=-1.0;
+			muB[btype]=0.0;
+		}
 	}
 }
 
@@ -182,59 +211,9 @@ void CMuTInfo::GetMuT(double mass,double degen,double rho_target,double epsilon_
 	}
 	CResList::freegascalc_onespecies(mass,T,epsilon0,P,rho0,sigma2,dedT);
 	mu=log(rho_target/(rho0*degen));
-
 }
 
 /*
-void CMuTInfo::GetMuT(double mass,double degen,double rho_target,double epsilon_target,double &T,double &mu){
-	double x,rho,epsilon,P,sigma2,depsilon,drho,epsilon0,rho0;
-	double dT,dmu,dedmu,dedT,drhodmu,drhodT,accuracy;
-	bool success=false;
-	int ntry=0;
-	double Det;
-	T=0.5*((epsilon_target/rho_target)-135.0);
-	mu=0.0;
-	x=exp(mu);
-	do{
-		ntry+=1;
-		CResList::freegascalc_onespecies(mass,T,epsilon0,P,rho0,sigma2,dedT);
-		epsilon=epsilon0*degen*x;
-		rho=rho0*degen*x;
-		accuracy=pow((rho-rho_target)/rho_target,2)+pow((epsilon-epsilon_target)/epsilon_target,2);
-		if(accuracy>1.0E-8){
-			dedmu=epsilon;
-			dedT*=degen*x;
-			drhodT=epsilon/(T*T);
-			drhodmu=rho;
-			Det=dedT*drhodmu-dedmu*drhodT;
-			depsilon=epsilon_target-epsilon;
-			drho=rho_target-rho;
-
-			dT=(drhodmu*depsilon-dedmu*drho)/Det;
-			dmu=-(drhodT*depsilon-dedT*drho)/Det;
-
-			if(fabs(dT)>0.5*T){
-				dmu=(0.5*T/fabs(dT))*dmu;
-				dT=(0.5*T/fabs(dT))*dT;
-			}
-			if(fabs(dmu)>1.0){
-				dT=(1.0/fabs(dmu))*dT;
-				dmu=(1.0/fabs(dmu))*dmu;
-			}
-
-			T+=dT;
-			mu+=dmu;
-			
-		}
-		else
-			success=true;
-	}while(!success && ntry<40);
-	if(ntry==40){
-		printf("failure, accuracy=%g\n",accuracy);
-	}
-}
-*/
-
 bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsilon_target,double &T,double &muB,double &muBS){
 	char message[500];
 	CResInfo *resinfo;
@@ -342,8 +321,31 @@ bool CMuTInfo::GetMuT_Baryon(double rhoB_target,double rhoBS_target,double epsil
 	muBS=x(2);
 	return success;
 }
+*/
 
 void CMuTInfo::GetIxIy(double x,double y,int &ix,int &iy){
 	ix=lrint(floor(fabs(x)/DXY));
 	iy=lrint(floor(fabs(y)/DXY));
+}
+
+int CMuTInfo::GetBtype(int pid){
+	int btype=-1;
+	pid=abs(pid);
+	if(pid==2122 || pid==2112)
+		btype=0;
+	else if(pid==3222 || pid==3212 || pid==3112)
+		btype=1;
+	else if(pid==3322 || pid==3312)
+		btype=2;
+	else if(pid==3112)
+		btype=3;
+	else if(pid==2224 || pid==2214 || pid==2114 || pid==1114)
+		btype=4;
+	else if(pid==3224 || pid==3214 || pid==3114)
+		btype=5;
+	else if(pid==3324 || pid==3314)
+		btype=6;
+	else if(pid==3334)
+		btype=7;
+	return btype;
 }

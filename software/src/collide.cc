@@ -84,16 +84,16 @@ int CB3D::Collide(CPart *part1,CPart *part2,int &nproducts,array<CPart*,5> &prod
 		sigma_annihilation=GetAnnihilationSigma(part1,part2,vrel);
 		sigma+=sigma_annihilation;
 		if(pibsquared<sigma && tau<TAUCOLLMAX){
-			if(!CancelAnnihilation(part1,part2)){
-				Annihilate(part1,part2,nproducts,product);
-				return 4;
-			}
-			else{
+			if(CancelAnnihilation(part1,part2)){
 				if(bjtranslate)
 					part1->BjorkenUnTranslate();
 				nregenerate+=1;
 				nproducts=0;
 				return 0;
+			}
+			else{
+				Annihilate(part1,part2,nproducts,product);
+				return 4;
 			}
 		}
 	}
