@@ -289,20 +289,20 @@ void CB3D::WriteMuTInfo(){
 		for(ix=0;ix<CMuTInfo::NXY;ix++){
 			for(iy=0;iy<CMuTInfo::NXY;iy++){
 				mti=muTinfo[iitau][ix][iy];
-				mti->sufficientN=false;
-				if(mti->Npi>CMuTInfo::NMINCALC && mti->NK>CMuTInfo::NMINCALC)
-					mti->sufficientN=true;
+				mti->sufficientN=true;
+				if(mti->Npi<CMuTInfo::NMINCALC || mti->NK<CMuTInfo::NMINCALC)
+					mti->sufficientN=false;
 				for(btype=0;btype<8;btype++){
-					if(mti->NB[btype]>CMuTInfo::NMINCALC){
-						mti->sufficientN=true;
+					if(mti->NB[btype]<CMuTInfo::NMINCALC){
+						mti->sufficientN=false;
 					}
 				}
 			}
 		}
 		sprintf(filename,"mucalc_results/mutinfo_pi_tau%g.txt",tau_print);
-		fptr=fopen(filename,"weight");
+		fptr=fopen(filename,"w");
 		fgets(dummy,500,fptr);
-		fprintf(fptr,"#  ix    iy     Npi     E/N       Tpi    Uxpi    &Uypi     mupi     rho    epsilon\n");
+		fprintf(fptr,"#  ix    iy     Npi     E/N       Tpi    Uxpi    Uypi     mupi     rho    epsilon\n");
 		for(ix=0;ix<CMuTInfo::NXY;ix++){
 			for(iy=0;iy<CMuTInfo::NXY;iy++){
 				mti=muTinfo[iitau][ix][iy];
@@ -315,7 +315,7 @@ void CB3D::WriteMuTInfo(){
 		fclose(fptr);
 
 		sprintf(filename,"mucalc_results/mutinfo_K_tau%g.txt",tau_print);
-		fptr=fopen(filename,"weight");
+		fptr=fopen(filename,"w");
 		fgets(dummy,500,fptr);
 		fprintf(fptr,"#  ix    iy     NK     E/N         TK    Uxpi    UyK      muK      rho      epsilon\n");
 		for(ix=0;ix<CMuTInfo::NXY;ix++){
@@ -333,7 +333,7 @@ void CB3D::WriteMuTInfo(){
 			sprintf(filename,"mucalc_results/mutinfo_B%d_tau%g.txt",btype,tau_print);
 			fptr=fopen(filename,"w");
 			fgets(dummy,500,fptr);
-			fprintf(fptr,"#  ix    iy     NB       E/N    TB    UxB       UyB       muB      muBS      rhoB     epsilonB\n");
+			fprintf(fptr,"#  ix    iy     NB       E/N    TB    UxB       UyB       muB       rhoB     epsilonB\n");
 			for(ix=0;ix<CMuTInfo::NXY;ix++){
 				for(iy=0;iy<CMuTInfo::NXY;iy++){
 					mti=muTinfo[iitau][ix][iy];
