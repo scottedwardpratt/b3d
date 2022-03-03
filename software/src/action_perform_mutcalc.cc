@@ -12,7 +12,6 @@ void CAction::PerformMuTCalcUpdateNPE(){
 	CPart *part;
 	CResInfo *resinfo;
 	CMuTInfo *mti;
-	int S;
 	double gamma,gammav,E,px,py,eta,t,x,y;
 
 	for(ppos=b3d->PartMap.begin();ppos!=b3d->PartMap.end();++ppos){
@@ -69,7 +68,6 @@ void CAction::PerformMuTCalcUpdateNPE(){
 							mti->PyB[btype]+=py;
 							E=gamma*part->p[0]-gammav*part->p[3];
 							mti->EB[btype]+=E;
-							S=abs(resinfo->strange);
 							mti->TxxB[btype]+=px*px/E;
 							mti->TyyB[btype]+=py*py/E;
 							mti->TxyB[btype]+=px*py/E;
