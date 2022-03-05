@@ -242,7 +242,7 @@ int CMuTInfo::GetBtype(int pid){
 		btype=1;
 	else if(pid==3322 || pid==3312)
 		btype=2;
-	else if(pid==3112)
+	else if(pid==3122)
 		btype=3;
 	else if(pid==2224 || pid==2214 || pid==2114 || pid==1114)
 		btype=4;
