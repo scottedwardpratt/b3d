@@ -8,6 +8,193 @@
 
 int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &daughter){
 	CPart *dptr;
+	int i,alpha,ibody,netq,nets,nK0bar,nK0,nKplus,nKminus,npi0,npiplus,npiminus;
+	int nu,nubar,nd,ndbar,ns,nsbar,nbodies=5;
+	FourVector u;
+	bool bjtranslate=false;
+	double etabar,rbar[4]={0.0};
+	CB3DCell *newcell;
+	FourVector P,pprime;
+	//
+	ndaughters=nbodies;
+	vector<double> mass(6);
+	vector<FourVector> p(5);
+
+	if(BJORKEN && fabs(part1->eta)>ETAMAX)
+		bjtranslate=true;
+
+	CResInfo *resinfo1=part1->resinfo,*resinfo2=part2->resinfo,*resinfo;
+	if(resinfo1->baryon<0){
+		resinfo=resinfo2;
+		resinfo2=resinfo1;
+		resinfo1=resinfo;
+	}
+	netq=resinfo1->charge+resinfo2->charge;
+	nets=resinfo1->strange+resinfo2->strange;
+	// resinfo 1 = baryon, resinfo2 = antibaryon
+	nu=resinfo1->charge+1;
+	ns=-resinfo1->strange;
+	nd=3-nu-ns;
+	nubar=-resinfo2->charge+1;
+	nsbar=resinfo2->strange;
+	ndbar=3-nubar-nsbar;
+
+	vector<int> quark(nbodies);
+	vector<int> antiq(nbodies);
+
+	for(i=0;i<nu;i++)
+		quark[i]=1;
+	for(i=nu;i<nu+nd;i++)
+		quark[i]=-1;
+	for(i=nu+nd;i<3;i++){
+		quark[i]=0;
+	}
+
+	for(i=nbodies-1;i>nbodies-1-nubar;i--)
+		antiq[i]=1;
+	for(i=nbodies-1-nubar;i>nbodies-1-nubar-ndbar;i--)
+		antiq[i]=-1;
+	for(i=nbodies-1-nubar-ndbar;i>1;i--)
+		antiq[i]=0;
+
+	if(randy->ran()<0.5){
+		quark[3]=1;
+		antiq[1]=1;
+	}
+	else{
+		quark[3]=-1;
+		antiq[1]=-1;
+	}
+	if(randy->ran()<0.5){
+		quark[nbodies-1]=1;
+		antiq[0]=1;
+	}
+	else{
+		quark[nbodies-1]=-1;
+		antiq[0]=-1;
+	}
+
+	nKplus=nKminus=nK0bar=nK0=npiplus=npiminus=npi0=0;
+	for(i=0;i<nbodies;i++){
+		if(quark[i]==1 && antiq[i]==1){
+			npi0+=1;
+			daughter[i]->resinfo=reslist->GetResInfoPtr(111);
+		}
+		else if(quark[i]==1 && antiq[i]==-1){
+			npiplus+=1;
+			daughter[i]->resinfo=reslist->GetResInfoPtr(211);
+		}
+		else if(quark[i]==-1 && antiq[i]==1){
+			npiminus+=1;
+			daughter[i]->resinfo=reslist->GetResInfoPtr(-211);
+		}
+		else if(quark[i]==-1 && antiq[i]==-1){
+			npi0+=1;
+			daughter[i]->resinfo=reslist->GetResInfoPtr(111);
+		}
+		else if(quark[i]==0 && antiq[i]==0){
+			npi0+=1; // only happens for Omega-AntiOmega annihilation
+			daughter[i]->resinfo=reslist->GetResInfoPtr(111);
+		}
+		else if(quark[i]==1 && antiq[i]==0){
+			nKplus+=1;
+			daughter[i]->resinfo=daughter[i]->resinfo=reslist->GetResInfoPtr(321);
+		}
+		else if(quark[i]==0 && antiq[i]==1){
+			nKminus+=1;
+			daughter[i]->resinfo=reslist->GetResInfoPtr(-321);
+		}
+		else if(quark[i]==0 && antiq[i]==-1){
+			nK0bar+=1;
+			daughter[i]->resinfo=reslist->GetResInfoPtr(311);
+		}
+		else if(quark[i]==-1 && antiq[i]==0){
+			nK0+=1;
+			daughter[i]->resinfo=reslist->GetResInfoPtr(-311);
+		}
+	}
+
+	if(netq!= nKplus+npiplus-nKminus-npiminus){
+		sprintf(message,"charges don't add up\n");
+		CLog::Fatal(message);
+	}
+	if(nets!= nKplus+nK0-nKminus-nK0bar){
+		sprintf(message,"charges don't add up\n");
+		CLog::Fatal(message);
+	}
+
+	for(i=1;i<=nbodies;i++)
+		mass[i]=daughter[i-1]->resinfo->mass;
+	mass[0]=0.0;
+	for(alpha=0;alpha<4;alpha++){
+		P[alpha]=part1->p[alpha]+part2->p[alpha];
+	}
+	mass[0]=sqrt(P[0]*P[0]-P[1]*P[1]-P[2]*P[2]-P[3]*P[3]);
+
+	decay_nbody->SetMasses(nbodies,mass);
+	decay_nbody->GenerateMomenta(p);
+	
+	rbar[1]=0.5*(part1->r[1]+part2->r[1]);
+	rbar[2]=0.5*(part1->r[2]+part2->r[2]);
+	etabar=0.5*(part1->eta+part2->eta);
+	rbar[0]=tau*cosh(etabar);
+	rbar[3]=tau*sinh(etabar);
+	for(alpha=0;alpha<4;alpha++)
+		u[alpha]=P[alpha]/mass[0];
+	for(ibody=0;ibody<nbodies;ibody++){
+		dptr=daughter[ibody];
+		Misc::lorentz(u,p[ibody],pprime);
+		dptr->active=true;
+		for(alpha=0;alpha<4;alpha++){
+			dptr->p[alpha]=pprime[alpha];
+			dptr->r[alpha]=rbar[alpha];
+		}
+		//dptr->msquared=pow(dptr->resinfo->mass,2);
+		dptr->SetMass();
+		dptr->Setp0();
+		dptr->SetY();
+		dptr->tau0=tau;
+		dptr->eta=etabar;
+		dptr->eta0=etabar;
+		dptr->phi0=atan2(dptr->r[2],dptr->r[1]);
+
+		dptr->active=true;
+		if(bjtranslate)
+			dptr->CyclicReset();
+		newcell=dptr->FindCell();
+		dptr->ChangeCell(newcell);
+
+		dptr->ChangeMap(&PartMap);
+		if(fabs(dptr->eta)>ETAMAX){
+			sprintf(message,"eta out of range\n");
+			CLog::Fatal(message);
+		}
+		if(dptr->p[0]<0.0){
+			sprintf(message,"dptr->p[0]=%g\n",dptr->p[0]);
+			CLog::Fatal(message);
+		}
+	}
+/*
+	for(alpha=0;alpha<4;alpha++)
+		P[alpha]=0.0;
+	double Mtot=0.0;
+	for(ibody=0;ibody<nbodies;ibody++){
+		dptr=daughter[ibody];
+		Mtot+=dptr->resinfo->mass;
+		for(alpha=0;alpha<4;alpha++)
+			P[alpha]+=dptr->p[alpha];
+	}
+	double Minv=sqrt(P[0]*P[0]-P[1]*P[1]-P[2]*P[2]-P[3]*P[3]);
+	printf("Minv=%g =? %g, Mtot=%g\n",Minv,mass[0],Mtot);
+	if(Mtot>Minv)
+		exit(1);
+		*/
+	return ndaughters;
+}
+
+/*
+int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &daughter){
+	CPart *dptr;
 	int netq,nets,nK0bar,nK0,nKplus,nKminus,npi0,npiplus,npiminus,npions,nkaons,npaircheck,qpions;
 	FourVector *pa,*pb,pc,u;
 	double ma,mb,q,cthet,sthet,phi;
@@ -223,6 +410,8 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 	}
 	return ndaughters;
 }
+*/
+
 
 double CB3D::GetAnnihilationSigma(CPart *part1,CPart *part2,double &vrel){
 	const double g[4]={1,-1,-1,-1};
@@ -248,7 +437,7 @@ double CB3D::GetAnnihilationSigma(CPart *part1,CPart *part2,double &vrel){
 }
 
 bool CB3D::CancelAnnihilation(CPart *part1,CPart *part2){
-	double mupi,muK,muB,muBS,mutot,netS;
+	double mupi,muK,muB,mutot,netS;
 	double taumin1,taumin2;
 	double reduction_factor=1.0;
 	int btype1,btype2;
@@ -257,7 +446,6 @@ bool CB3D::CancelAnnihilation(CPart *part1,CPart *part2){
 
 	btype1=part1->resinfo->Btype;
 	btype2=part2->resinfo->Btype;
-
 
 	CMuTInfo::GetIxIy(part1->r[1],part1->r[2],ix1,iy1);
 	CMuTInfo::GetIxIy(part1->r[1],part1->r[2],ix2,iy2);

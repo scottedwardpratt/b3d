@@ -127,10 +127,11 @@ void CMuTInfo::CalcAllMuTU(){
 			rhoB[btype]=double(NB[btype])/(gamma*volume);
 			GetMuT(massB[btype],degenB[btype],rhoB[btype],epsilonB[btype],TB[btype],muB[btype]);
 			if(TB[btype]!=TB[btype] || muB[btype]!=muB[btype]){
-				sprintf(message,"btype=%d: Disaster, m=%g, rho=%g, degen=%g, epsilon=%g\n",btype,massB[btype],rhoB[btype],degenB[btype],epsilonB[btype]);
+				sprintf(message,"btype=%d: Disaster, m=%g, rho=%g, degen=%g, epsilon=%g\n",
+					btype,massB[btype],rhoB[btype],degenB[btype],epsilonB[btype]);
 				CLog::Info(message);
 				sprintf(message,"NB=%d, T00/rho=%g, epsilon/rho=%g, EB/NB=%g, TB=%g, muB=%g\n",NB[btype],T00/rhoB[btype],epsilonB[btype]/rhoB[btype],EB[btype]/NB[btype],TB[btype],muB[btype]);
-				CLog::Info(message);
+				CLog::Fatal(message);
 			}
 		}
 		else{
@@ -207,6 +208,7 @@ void CMuTInfo::GetMuT(double mass,double degen,double rho_target,double epsilon_
 		mu=ETarget/T;
 	}
 	else{
+		T=90.0;
 		do{
 			ntry+=1;
 			CResList::freegascalc_onespecies(mass,T,epsilon0,P,rho0,sigma2,dedT);
