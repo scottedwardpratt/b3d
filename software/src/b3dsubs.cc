@@ -5,6 +5,7 @@
 #include "cell.h"
 #include "constants.h"
 #include "randy.h"
+#include "action.h"
 
 void CB3D::WriteAnnihilationData(){
 	if(BARYON_ANNIHILATION){
@@ -29,7 +30,7 @@ void CB3D::PerformAllActions(){
 	}
 	CAction *action;
 	nscatter=nbscatter=ndecay=npass=nmerge=nswallow=nexit=nactivate=ninelastic=ncheck=nactionkills=nbaryons=0;
-	ncollisions=nannihilate=nregenerate=0;
+	ncollisions=oldncollisions=nannihilate=nregenerate=0;
 	tau=0.0;
 	nactions=0;	
 	CActionMap::iterator epos=ActionMap.begin();

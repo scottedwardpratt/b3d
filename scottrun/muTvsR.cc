@@ -118,12 +118,12 @@ int main(){
 		fclose(output);
 
 		// Baryons and Hyperons
-		for(ir=0;ir<NR;ir++){
-			npts[ir]=0;
-			muB[ir]=TB[ir]=UB[ir]=rhoB[ir]=eB[ir]=0.0;
-		}
 
 		for(int btype=0;btype<8;btype++){
+			for(ir=0;ir<NR;ir++){
+				npts[ir]=0;
+				muB[ir]=TB[ir]=UB[ir]=rhoB[ir]=eB[ir]=0.0;
+			}
 			sprintf(filename,"mucalc_results/mutinfo_B%d_tau%g.txt",btype,tau);
 			fptr=fopen(filename,"r");
 			fgets(dummy,200,fptr);

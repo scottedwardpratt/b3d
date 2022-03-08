@@ -1,7 +1,5 @@
-#include "b3d.h"
-#include "part.h"
-#include "cell.h"
-#include "seinfo.h"
+#include  "b3d.h"
+#include "action.h"
 
 CB3D *CAction::b3d=NULL;
 char *CAction::message=new char[500];

@@ -155,7 +155,7 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 		dptr->SetY();
 		dptr->tau0=tau;
 		dptr->eta=etabar;
-		dptr->eta0=etabar;
+		//dptr->eta0=etabar;
 		dptr->phi0=atan2(dptr->r[2],dptr->r[1]);
 
 		dptr->active=true;

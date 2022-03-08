@@ -1,4 +1,4 @@
-#include "b3d.h"
+#include "action.h"
 #include "part.h"
 
 void CAction::PerformCollide(){
@@ -10,8 +10,6 @@ void CAction::PerformCollide(){
 	part1=ppos->second;
 	++ppos;
 	part2=ppos->second;
-	part1->actionmother=b3d->nactions;
-	part2->actionmother=b3d->nactions;
 	b3d->GetDeadParts(product);
 	colltype=b3d->Collide(part1,part2,nproducts,product,pibsquared);
 	if((part1->balanceID<0 && part2->balanceID>=0) || (part1->balanceID>=0 && part2->balanceID<0)){
@@ -21,6 +19,8 @@ void CAction::PerformCollide(){
 		b3d->npass+=1;
 		return;
 	}
+	part1->actionmother=b3d->nactions;
+	part2->actionmother=b3d->nactions;
 	if(colltype==1)
 		b3d->nmerge+=1;
 	if(colltype==2)

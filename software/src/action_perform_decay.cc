@@ -1,4 +1,4 @@
-#include "b3d.h"
+#include "action.h"
 #include "part.h"
 #include "cell.h"
 #include "resonances.h"
@@ -57,20 +57,11 @@ void CAction::PerformDecay(){
 	for(ibody=0;ibody<nbodies;ibody++){
 		product[ibody]->resinfo=daughterresinfo[ibody];
 	}
-	// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	for(alpha=0;alpha<4;alpha++)
-		Ptot[alpha]=mother->p[alpha];
 	
 	b3d->Decay(mother,nbodies,product);
 	
-	for(alpha=0;alpha<4;alpha++){
-		for(ibody=0;ibody<nbodies;ibody++){
-			Ptot[alpha]-=product[ibody]->p[alpha];
-		}
-	}
 	// %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-	mother->actionmother=b3d->nactions;
 	for(ibody=0;ibody<nbodies;ibody++){
 		dptr=product[ibody];
 		dptr->active=true;

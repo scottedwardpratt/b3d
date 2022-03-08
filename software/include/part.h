@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include "commondefs.h"
 #include "log.h"
+#include "action.h"
 
 using namespace std;
 //using namespace boost;

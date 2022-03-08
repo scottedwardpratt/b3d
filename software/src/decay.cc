@@ -53,12 +53,18 @@ void CB3D::Decay(CPart *mother,int &nbodies,array<CPart *,5> &daughter){
 		dptr->active=true;
 		for(alpha=0;alpha<4;alpha++)
 			dptr->p[alpha]=pprime[alpha];
-		dptr->CopyPositionInfo(mother);
+		//dptr->CopyPositionInfo(mother);
+		dptr->r[1]=mother->r[1];
+		dptr->r[2]=mother->r[2];
+		dptr->eta=mother->eta;
+		dptr->tau0=tau;
+		dptr->r[0]=tau*cosh(dptr->eta);
+		dptr->r[3]=tau*sinh(dptr->eta);
 		//dptr->msquared=pow(dptr->resinfo->mass,2);
 		dptr->SetMass();
 		//dptr->Setp0();
 		dptr->SetY();
-		dptr->eta0=mother->eta0;
+		//dptr->eta0=mother->eta0;
 		dptr->phi0=mother->phi0;
 	}
 }

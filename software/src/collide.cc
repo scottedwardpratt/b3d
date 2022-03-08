@@ -36,6 +36,7 @@ int CB3D::Collide(CPart *part1,CPart *part2,int &nproducts,array<CPart*,5> &prod
 		bjtranslate=true;
 		part1->BjorkenTranslate();
 	}
+	
 	merge=reslist->MergeArray[ir1][ir2];
 	if(merge!=NULL || (BARYON_ANNIHILATION && (part1->resinfo->baryon*part2->resinfo->baryon)<0) || INELASTIC){
 		p1dotp2=0.0;

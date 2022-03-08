@@ -1,8 +1,7 @@
-#include "b3d.h"
+#include "action.h"
 #include "cell.h"
 #include "mutinfo.h"
 #include "part.h"
-#include "mutinfo.h"
 #include "resonances.h"
 
 void CAction::PerformMuTCalcUpdateNPE(){
@@ -14,8 +13,52 @@ void CAction::PerformMuTCalcUpdateNPE(){
 	CMuTInfo *mti;
 	double gamma,gammav,E,px,py,eta,t,x,y;
 
+	/*
+	b3d->ncollisions=b3d->nmerge+b3d->nscatter;
+	printf("tau=%g, dNcollisions=%lld, ncollisions=%lld\n",
+		tau,b3d->ncollisions-b3d->oldncollisions,b3d->ncollisions);
+	b3d->oldncollisions=b3d->ncollisions;
+
+	int ncell,ncheck=0;
+	double rho,volume,rho2V=0.0;
+	for(int ieta=0;ieta<2*b3d->NETA;ieta++){
+		for(ix=0;ix<2*b3d->NXY;ix++){
+			for(iy=0;iy<2*b3d->NXY;iy++){
+				ncell=b3d->cell[ix][iy][ieta]->partmap.size();
+				volume=b3d->tau*b3d->DETA*b3d->DXY*b3d->DXY;
+				rho=double(ncell)/volume;
+				rho2V+=rho*rho*volume;
+				ncheck+=ncell;
+			}
+		}
+	}
+	printf("ncheck=%d, rho^2*Volume=%g\n",ncheck,rho2V);
+	ncheck=0;
+	*/
+
 	for(ppos=b3d->PartMap.begin();ppos!=b3d->PartMap.end();++ppos){
 		part=ppos->second;
+		/*
+		if(part->active)
+			ncheck+=1;
+		if(!part->active && part->tau0<b3d->tau){
+			if(fabs(part->r[1])<10.0 && fabs(part->r[2])<10.0){
+				printf("dead particle!\n");
+				printf("tau=%g, part->actionmother=%d\n",b3d->tau,part->actionmother);
+				part->Print();
+				exit(1);
+			}
+			if(part->actionmap.size()<1){
+				printf("actionmap size=%lu\n ",part->actionmap.size());
+				exit(1);
+			}
+			if(part->balanceID>=0){
+				printf("Yikes, bID=%d\n",part->balanceID);
+				exit(1);
+			}
+		}
+		*/
+
 		resinfo=part->resinfo;
 		pid=abs(resinfo->code);
 		btype=CMuTInfo::GetBtype(pid);
@@ -77,5 +120,6 @@ void CAction::PerformMuTCalcUpdateNPE(){
 			}
 		}
 	}
+	//printf("ncheck=%d\n",ncheck);
 	//b3d->FindAllCollisions();
 }

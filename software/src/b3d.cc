@@ -13,6 +13,7 @@
 #include "randy.h"
 #include "seinfo.h"
 #include "hyper.h"
+#include "action.h"
 
 CB3D::CB3D(){
 };

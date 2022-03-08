@@ -65,6 +65,8 @@ bool CB3D::FindCollision(CPart *part1,CPart *part2,double &taucoll){
 	}
 	if(BARYON_ANNIHILATION && resinfo1->baryon*resinfo2->baryon<0)
 		sigmamax+=30.0; // cuts off annihilation Xsection at 300 mb
+
+
 	if(pibsquared<sigmamax/double(NSAMPLE)){
 		
 		t1=p1[0]*(p1dotr*m2squared-p2dotr*p1dotp2)/denom;
@@ -79,11 +81,22 @@ bool CB3D::FindCollision(CPart *part1,CPart *part2,double &taucoll){
 			y2=r2[2]+(p2[2]/p2[0])*t2;
 			t1+=r1[0];
 			t2+=r2[0];
+			/*
+			if(pibsquared<sigmamax && tau<20){
+				printf("b=%g, tau1=%g, tau2=%g actionmother1=%d actiomother2=%d\n",
+					sqrt(pibsquared/PI),part1->tau0,part2->tau0,part1->actionmother, part2->actionmother);
+				printf("bmax=%g\n",sqrt(sigmamax/PI));
+			}
+			*/
 			if(fabs(z1)<t1 && fabs(z2)<t2){
 				tau1=sqrt(t1*t1-z1*z1);
 				tau2=sqrt(t2*t2-z2*z2);
 				taucoll=0.5*(tau1+tau2);
-				//printf("cell exit times are %g, %g\n",part1->tauexit,part2->tauexit);
+				/*
+				if(tau<20)
+				printf("-----------------\ntau=%g, taucoll=%g\ncell exit times are %g, %g\n",
+					tau,taucoll,part1->tauexit,part2->tauexit);
+					*/
 				if(taucoll>tau && taucoll<part1->tauexit && taucoll<part2->tauexit && taucoll<TAUCOLLMAX){
 					if(SECALC){
 						double r2bar=0.25*(x1+x2)*(x1+x2)+0.25*(y1+y2)*(y1+y2);
@@ -94,6 +107,8 @@ bool CB3D::FindCollision(CPart *part1,CPart *part2,double &taucoll){
 					}
 					else{
 						AddAction_Collision(part1,part2,taucoll,pibsquared);
+						//if(tau<20)
+						//printf("XXXXXX found one\n");
 						collide=true;
 					}
 				}

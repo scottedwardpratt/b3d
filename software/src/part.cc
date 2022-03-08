@@ -63,7 +63,7 @@ void CPart::Copy(CPart *part){  //copies all info except actionmap
 	resinfo=part->resinfo;
 	balanceID=part->balanceID;
 	bweight=part->bweight;
-	eta0=part->eta0;
+	//eta0=part->eta0;
 	phi0=part->phi0;
 }
 
@@ -103,7 +103,7 @@ void CPart::Init(int IDset,double rxset,double ryset,double tauset,double etaset
 	}
 	p[1]=pxset; p[2]=pyset; msquared=mset*mset; y=rapidityset;
 	r[1]=rxset; r[2]=ryset; tau0=tauset; eta=etaset;
-	eta0=eta;
+	//eta0=eta;
 	phi0=atan2(r[2],r[1]);
 	tau_lastint=tau0-1.0E-6;
 	nscatt=0;
@@ -244,7 +244,8 @@ void CPart::AddToMap(CPartMap::iterator guess,CPartMap *newmap){
 
 void CPart::SubtractAction(CAction *action){
 	CActionMap::iterator epos=action->GetPos(&actionmap);
-	if(epos!=actionmap.end()) actionmap.erase(epos);
+	if(epos!=actionmap.end())
+		actionmap.erase(epos);
 }
 
 void CPart::AddAction(CAction *action){
@@ -435,6 +436,7 @@ void CPart::FindCollisions(){
 	CPart *part2,*part1=this;
 	CPartMap::iterator ppos;
 	CB3DCell *cell2;
+
 	for(ix=0;ix<3;ix++){
 		for(iy=0;iy<3;iy++){
 			for(ieta=0;ieta<3;ieta++){
@@ -552,6 +554,7 @@ void CPart::FindCellExit(){
 }
 
 void CPart::FindActions(){
+	KillActions();
 	if(active!=true){
 		sprintf(message,"CPart::FindActions(), trying to Reset Inactive particle\n");
 		CLog::Info(message);

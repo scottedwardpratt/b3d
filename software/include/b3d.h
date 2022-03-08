@@ -159,7 +159,7 @@ public:
 
 	long long int nscatter,nbscatter,n,nmerge,nswallow,npass,nexit;
 	long long int nactivate,nannihilate,nregenerate,nactionkills;
-	long long int nactions,ninelastic, ncollisions,ndecay,ncheck;
+	long long int nactions,ninelastic, ncollisions,oldncollisions,ndecay,ncheck;
 
 	void freegascalc_onespecies(double m,double t,double &p,double &e,double &dens,double &sigma2,double &dedt);
 	
@@ -193,58 +193,6 @@ public:
 	void DeleteCharges();
 	double TotalVolume;
 	Eigen::Matrix3d chitotQ,chitotH;
-};
-//!An action in the CB3D model.
-/*!
-\version 1.0
-\author Scott Pratt
-\date March 2011
-
-This class handles any actions that the model takes during execution. Examples of "actions" that the model takes are a resonance decaying, a particle crossing a cell boundary, a collision, new particles being generated, etc. In this way, a complex system of interacting particles is reduced to a scheduled list of actions. Scheduling is handled using a C++ map container of CAction objects, keyed by the boost-invariant time tau (\f$\tau\f$) at which they are scheduled to occur. Note that this map is revised consistently, as future actions often change dramatically as a result of the current action.
-
-Actions are allocated and are moved from the map of future actions (CB3D::ActionMap) to the list of completed actions (CB3D::DeadActionMap) once they have been performed.
-*/
-class CAction{
-public:
-	double tau;
-	double pibsquared;
-	int listid;
-	double key;
-	int type; // =0 for activation, 1 for decay, 2 for collision, ....  6 for ExitCell
-	// These are the particles in the action
-	CPartMap partmap;
-
-	void Kill();
-	void AddPart(CPart *partptr);
-	void Print();
-
-	void Perform();
-	void PerformDensCalc();
-	void PerformMuTCalcUpdateNPE();
-	void PerformSECalc();
-	void PerformActivate();
-	void PerformExitCell();
-	void PerformDecay();
-	void PerformCollide();
-	void PerformCollide_BALANCE();
-	void PerformResetCollisions();
-	array <CResInfo *,5> daughterresinfo;
-	//void PerformSwallowParticles();
-	CAction();
-	CAction(int keyset);
-	~CAction();
-
-	static CB3D *b3d;
-	static char *message;
-
-	CActionMap::iterator GetPos(CActionMap *actionmap);
-	void MoveToActionMap();
-	void RemoveFromActionMap();
-	void AddToMap(CActionMap *newmap);
-	void AddToMap(CActionMap::iterator guess,CActionMap *newmap);
-	void CheckPartList();
-	CActionMap *currentmap;
-	array<CPart *,5> product;
 };
 
 #endif

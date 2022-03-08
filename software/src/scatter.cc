@@ -131,7 +131,7 @@ bool CB3D::Merge(CPart *part1,CPart *part2,CPart *part3,CResInfo *resinfo){
 		part3->SetY();
 		success=true;
 		part3->balanceID=-1;
-		part3->eta0=part1->eta0;
+		//part3->eta0=part1->eta0;
 		part3->phi0=part1->phi0;
 	}
 	else{

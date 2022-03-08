@@ -14,7 +14,7 @@ int main(int argc, char *argv[]){
   }
   char message[500];
 	long long int nparts,ninit;
-	long long int ncolls,nannihilate,nregen,nbaryons,norm;
+	long long int ncolls,nannihilate,nregen,nbaryons,norm,npass;
 	int ievent,iqual,nevents;
 	string run_name=argv[1];
 	int ievent0=atoi(argv[2]),ieventf=atoi(argv[3]);
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
 	CQualifiers qualifiers;
 	qualifiers.Read("qualifiers.txt");
 	for(iqual=0;iqual<qualifiers.nqualifiers;iqual++){
-		ncolls=nparts=ninit=nannihilate=nregen=nbaryons=0;
+		ncolls=nparts=ninit=nannihilate=nregen=nbaryons=npass=0;
 		b3d->SetQualifier(qualifiers.qualifier[iqual]->qualname);
 		qualifiers.SetPars(&(b3d->parmap),iqual);
 		sprintf(message,"_________________ iqual=%d, nevents=%d ________________\n",iqual,nevents);
@@ -41,6 +41,7 @@ int main(int argc, char *argv[]){
 			nbaryons+=b3d->nbaryons;
 			nannihilate+=b3d->nannihilate;
 			nregen+=b3d->nregenerate;
+			npass+=b3d->npass;
 			nparts+=b3d->PartMap.size();
 			nbaryons+=b3d->CountBaryons();
 		}
@@ -48,6 +49,8 @@ int main(int argc, char *argv[]){
 		sprintf(message,"<Nparts>=%8.2f, initial<Nparts>=%8.2f\n",double(nparts)/norm,double(ninit)/norm);
 		sprintf(message,"%s<Ncolls>=%9.2f, <NB>=%7.3f, <Nannihilate>=%7.4f, <Nregen>=%7.4f\n",
 			message,double(ncolls)/norm,double(nbaryons)/norm,double(nannihilate)/norm,double(nregen)/norm);
+		CLog::Info(message);
+		sprintf(message,"Npass=%g\n",double(npass)/norm);
 		CLog::Info(message);
 		b3d->WriteMuTInfo();
 	}

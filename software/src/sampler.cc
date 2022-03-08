@@ -188,6 +188,7 @@ void CSampler::ReadHyperElements2D_OSU(){
 		}
 	}
 	nelements=ielement;
-	sprintf(message,"Exiting ReadHyperElements2D_OSU() happily, TotalVolume=%g\n",b3d->TotalVolume);
+	sprintf(message,"Exiting ReadHyperElements2D_OSU() happily, TotalVolume=%g\n",
+		b3d->TotalVolume);
 	CLog::Info(message);
 }
