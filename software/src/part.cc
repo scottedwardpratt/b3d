@@ -414,7 +414,7 @@ void CPart::BjorkenTranslate(){
 
 void CPart::BjorkenUnTranslate(){
 	double mt;
-	if(eta>b3d->ETAMAX){
+	if(eta>b3d->ETAMAX-1.0E-10){
 		eta-=2.0*b3d->ETAMAX;
 		y-=2.0*b3d->ETAMAX;
 	}

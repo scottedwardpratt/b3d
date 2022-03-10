@@ -11,7 +11,6 @@
 #include "sampler.h"
 #include "balancearrays.h"
 #include "randy.h"
-#include "seinfo.h"
 #include "hyper.h"
 #include "action.h"
 
@@ -98,7 +97,6 @@ void CB3D::CopyParMapPars(){
 	MUTCALC=parmap.getB("B3D_MUTCALC",false);
 	MUTCALC_DELTAU=parmap.getD("B3D_MUTCALC_DELTAU",0.5);
 	ANNIHILATION_SREDUCTION=parmap.getD("B3D_ANNIHILATION_SREDUCTION",1.0);
-	SECALC=parmap.getB("B3D_SECALC",false);
 	RESONANCE_DECAYS=parmap.getB("B3D_RESONANCE_DECAYS",true);
 	SIGMAMAX=SIGMAMAX/double(NSAMPLE);
 	SIGMABF=parmap.getD("B3D_SIGMABF",2.3);
@@ -204,9 +202,6 @@ void CB3D::InitCascade(){
 	if(MUTCALC || BARYON_ANNIHILATION){
 		InitMuTCalc();
 	}
-	if(SECALC){
-		SEinfo=new CSEInfo(this);
-	}
 }
 
 void CB3D::SetQualifier(string qualifier_set){
@@ -219,8 +214,6 @@ void CB3D::SetQualifier(string qualifier_set){
 		fclose(oscarfile);
 		oscarfile=NULL;
 	}
-	if(SECALC)
-		SEinfo->Zero();
 	if(BFCALC){
 		balancearrays->SetQualifier(qualifier);
 	}
@@ -242,13 +235,6 @@ void CB3D::Reset(){
 			AddAction_MuTCalc_UpdateNPE(taucalc);
 		}
 		CMuTInfo::NETEVENTS+=NSAMPLE;
-	}
-	if(SECALC){
-		SEinfo->NETEVENTS+=NSAMPLE;
-		SEinfo->ETAOVERS=parmap.getD("SEINFO_ETAOVERS",0.3);
-		for(iitau=0;iitau<=SEinfo->NTAU;iitau++){
-			AddAction_SECalc(SEinfo->TAU0+SEinfo->DELTAU*iitau);
-		}
 	}
 }
 

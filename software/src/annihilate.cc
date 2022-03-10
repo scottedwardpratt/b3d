@@ -11,7 +11,6 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 	int i,alpha,ibody,netq,nets,nK0bar,nK0,nKplus,nKminus,npi0,npiplus,npiminus;
 	int nu,nubar,nd,ndbar,ns,nsbar,nbodies=5;
 	FourVector u;
-	bool bjtranslate=false;
 	double etabar,rbar[4]={0.0};
 	CB3DCell *newcell;
 	FourVector P,pprime;
@@ -19,9 +18,6 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 	ndaughters=nbodies;
 	vector<double> mass(6);
 	vector<FourVector> p(5);
-
-	if(BJORKEN && fabs(part1->eta)>ETAMAX)
-		bjtranslate=true;
 
 	CResInfo *resinfo1=part1->resinfo,*resinfo2=part2->resinfo,*resinfo;
 	if(resinfo1->baryon<0){
@@ -155,18 +151,17 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 		dptr->SetY();
 		dptr->tau0=tau;
 		dptr->eta=etabar;
+		if(fabs(dptr->eta)>ETAMAX)
+			dptr->CyclicReset();
 		//dptr->eta0=etabar;
 		dptr->phi0=atan2(dptr->r[2],dptr->r[1]);
-
 		dptr->active=true;
-		if(bjtranslate)
-			dptr->CyclicReset();
 		newcell=dptr->FindCell();
 		dptr->ChangeCell(newcell);
 
 		dptr->ChangeMap(&PartMap);
 		if(fabs(dptr->eta)>ETAMAX){
-			sprintf(message,"eta out of range\n");
+			sprintf(message,"eta out of range in Annihilate\n");
 			CLog::Fatal(message);
 		}
 		if(dptr->p[0]<0.0){
@@ -417,9 +412,11 @@ double CB3D::GetAnnihilationSigma(CPart *part1,CPart *part2,double &vrel){
 	const double g[4]={1,-1,-1,-1};
 	double Plab,p1dotp2,triangle,sigma_annihilation,rstrange,m1squared,m2squared;
 	int alpha;
-	part1->SetMass(); part2->SetMass();
-	m1squared=part1->msquared;
-	m2squared=part2->msquared;
+	//part1->SetMass(); part2->SetMass();
+	m1squared=part1->p[0]*part1->p[0]-part1->p[1]*part1->p[1]-part1->p[2]*part1->p[2]
+	-part1->p[3]*part1->p[3];
+	m2squared=part2->p[0]*part2->p[0]-part2->p[1]*part2->p[1]-part2->p[2]*part2->p[2]
+	-part2->p[3]*part2->p[3];
 	p1dotp2=0.0;
 	for(alpha=0;alpha<4;alpha++){
 		p1dotp2+=part1->p[alpha]*part2->p[alpha]*g[alpha];

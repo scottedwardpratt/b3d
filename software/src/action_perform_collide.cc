@@ -3,6 +3,7 @@
 
 void CAction::PerformCollide(){
 	int colltype,iproduct,nproducts;
+	double sigmatot;
 	CPart *part1,*part2,*part;
 	CPartMap::iterator ppos;
 	CB3DCell *cell;
@@ -11,28 +12,38 @@ void CAction::PerformCollide(){
 	++ppos;
 	part2=ppos->second;
 	b3d->GetDeadParts(product);
-	colltype=b3d->Collide(part1,part2,nproducts,product,pibsquared);
+
+	sigmatot=sigma_scatter+sigma_merge+sigma_annihilation+sigma_inel;
+	double r=b3d->randy->ran();
+	if(r<sigma_scatter/sigmatot){
+		colltype=b3d->Collide_Scatter(part1,part2,nproducts,product);
+	}
+	else if(r<(sigma_scatter+sigma_merge)/sigmatot){
+		colltype=b3d->Collide_Merge(part1,part2,sigma_merge,dsigma_merge,nproducts,product);
+	}
+	else if(r<(sigma_scatter+sigma_merge+sigma_annihilation)/sigmatot){
+		colltype=b3d->Collide_Annihilate(part1,part2,nproducts,product);
+	}
+	else{
+		if(!b3d->INELASTIC){
+			sprintf(message,"In PeformCollide: Trying to Perform Inelastic Collision???");
+			CLog::Fatal(message);
+		}
+		colltype=b3d->Collide_Inelastic(part1,part2,nproducts,product);
+	}
+
+	//colltype=b3d->Collide(part1,part2,nproducts,product,pibsquared);
+
 	if((part1->balanceID<0 && part2->balanceID>=0) || (part1->balanceID>=0 && part2->balanceID<0)){
 		colltype=-2;
 	}
+
 	if(colltype==0 || nproducts==0){
 		b3d->npass+=1;
-		return;
+		part1->actionmother=b3d->nactions;
+		part2->actionmother=b3d->nactions;
 	}
-	part1->actionmother=b3d->nactions;
-	part2->actionmother=b3d->nactions;
-	if(colltype==1)
-		b3d->nmerge+=1;
-	if(colltype==2)
-		b3d->nscatter+=1;
-	if(colltype==-2)
-		b3d->nbscatter+=1;
-	if(colltype==3)
-		b3d->ninelastic+=1;
-	if(colltype==4)
-		b3d->nannihilate+=1;
-	
-	if(colltype==-2){
+	else if(colltype==-2){
 		if(part1->balanceID>=0 && part2->balanceID<0){
 			part1->CopyMomentumInfo(product[0]);
 			part1->SetMass();
@@ -57,9 +68,6 @@ void CAction::PerformCollide(){
 	else{
 		part1->Kill();
 		part2->Kill();
-	}
-
-	if(colltype!=-2){
 		for(iproduct=0;iproduct<nproducts;iproduct++){
 			part=product[iproduct];
 			part->SetMass();

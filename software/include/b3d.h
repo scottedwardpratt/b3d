@@ -7,6 +7,7 @@
 #include "mutinfo.h"
 #include "decay_nbody.h"
 #include "acceptance.h"
+#include "resonances.h"
 #include "log.h"
 
 using namespace std;
@@ -47,7 +48,6 @@ public:
 	vector<vector<vector<CB3DCell *> > > cell;
 	vector<vector<vector<CMuTInfo *>>> muTinfo;
 	vector<double> annihilation_array;
-	CSEInfo *SEinfo;
 	CDecay_NBody *decay_nbody;
 	
 	void ReadCharges(int ichargefile);
@@ -119,7 +119,9 @@ public:
 
 	void AddAction_Activate(CPart *part);
 	void AddAction_Decay(CPart *part,double taudecay);
-	void AddAction_Collision(CPart *part1,CPart *part2,double tau,double pibsquared);
+	void AddAction_Collision(CPart *part1,CPart *part2,double tau,double pibsquared,
+						double sigma_scatter,double sigma_merge,double sigma_annihilation,
+						double sigma_inel,vector<double> dsigma_merge);
 	void AddAction_ResetCollisions(double taureset);
 	//void AddAction_SwallowParticles(double tau_breakup);
 	void AddAction_ExitCell(CPart *part);
@@ -138,6 +140,9 @@ public:
 	void InitMuTCalc();
 
 	bool FindCollision(CPart *part1,CPart *part2,double &taucoll);
+	double GetSigma(CPart *part1,CPart *part2,
+		double &sigma_scatter,double &sigma_merge,double &sigma_annihilation,
+		double &sigma_inel,vector<double> &dsigma_merge);
 	void Decay(CPart *mother,int &nbodies,array<CPart *,5> &daughter);
 	double CalcSigma(CPart *part1,CPart *part2);
 
@@ -145,8 +150,16 @@ public:
 
 	void PrintActionMap(CActionMap *actionmap);
 
-	double GetPiBsquared(CPart *part1,CPart *part2);
+	double GetPiBSquared(CPart *part1,CPart *part2);
 	int Collide(CPart *part1,CPart *part2,int &nproducts,array<CPart*,5> &product,double pibsquared); // will collide if sigma>scompare
+
+	int Collide_Scatter(CPart *part1,CPart *part2,int &nproducts,array<CPart*,5> &product);
+	int Collide_Merge(CPart *part1,CPart *part2,double sigma_merge,vector<double> &dsigma_merge,
+		int &nproducts,array<CPart*,5> &product);
+	int Collide_Annihilate(CPart *part1,CPart *part2,int &nproducts,array<CPart*,5> &product);
+	int Collide_Inelastic(CPart *part1,CPart *part2,int &nproducts,array<CPart*,5> &product);
+
+
 	void Scatter(CPart *part1,CPart *part2,CPart *part3,CPart *part4);
 	bool Merge(CPart *part1,CPart *part2,CPart *part3,CResInfo *resinfo);
 	void InelasticScatter(CPart *part1, CPart *part2,CPart *part3,CPart *part4,CInelasticInfo inelinfo);

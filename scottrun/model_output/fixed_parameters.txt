@@ -43,7 +43,7 @@ B3D_NEVENTSMAX 10
 B3D_NSAMPLE 1 # oversampling ratio, 1=cascade, infty=Boltzmann
 B3D_TAUCOLLMAX 48.0 #no collisions beyond this tau
 B3D_BJORKEN true  # cyclic BC for |eta|>B3D_ETAMAX
-B3D_ETAMAX 1
+B3D_ETAMAX 1.0
 B3D_XYMAX 36.0 # extent of collision mesh in xy plane (fm)
 B3D_NXY 24 # number of cells in XY direction = 2*NXY, cell size = XYMAX/NXY
 B3D_NETA 4 # number of cells in eta direction = 2*NETA

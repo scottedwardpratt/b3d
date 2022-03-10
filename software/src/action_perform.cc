@@ -50,9 +50,6 @@ void CAction::Perform(){
 	else if(type==5){
 		PerformMuTCalcUpdateNPE();
 	}
-	else if(type==7){
-		PerformSECalc();
-	}
 	else{
 		sprintf(message,"FATAL: action type = %d is unknown, exiting\n",type);
 		CLog::Fatal(message);

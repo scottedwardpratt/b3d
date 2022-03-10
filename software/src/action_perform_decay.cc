@@ -6,10 +6,9 @@
 void CAction::PerformDecay(){
 	CPart *mother,*dptr;
 	CPartMap::iterator ppos;
-	int ibody,nbodies,alpha;
+	int ibody,nbodies;
 	double mtot,mt,etamax=b3d->ETAMAX,mothermass;
 	double deleta;
-	FourVector Ptot;
 	ppos=partmap.begin();
 	mother=ppos->second;
 	b3d->GetDeadParts(product);

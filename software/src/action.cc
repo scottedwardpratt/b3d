@@ -163,6 +163,3 @@ void CAction::PerformDensCalc(){
 	}
 }
 
-void CAction::PerformSECalc(){
-	b3d->SEinfo->SECalc();
-}

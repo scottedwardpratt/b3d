@@ -120,7 +120,7 @@ void CB3D::PrintActionMap(CActionMap *actionmap){
 
 /*
 void CB3D::FindAllCollisions(){
-	double taucoll;
+	double taucoll,sigma_scatter,sigma_merge,sigma_annihilation,sigma_inel;
 	CPartMap::iterator ppos1,ppos2;
 	CPart *part1,*part2;
 	CActionMap::iterator epos;

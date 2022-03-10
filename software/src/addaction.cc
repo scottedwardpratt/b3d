@@ -62,11 +62,18 @@ void CB3D::AddAction_ExitCell(CPart *part){
 	}
 }
 
-void CB3D::AddAction_Collision(CPart *part1,CPart *part2,double taucoll,double pibsquared){
+void CB3D::AddAction_Collision(CPart *part1,CPart *part2,double taucoll,double pibsquared,
+	double sigma_scatter,double sigma_merge,double sigma_annihilation,
+	double sigma_inel,vector<double> dsigma_merge){
 	CAction *action=GetDeadAction();
 	action->type=2;
 	action->tau=taucoll;
 	action->pibsquared=pibsquared;
+	action->sigma_scatter=sigma_scatter;
+	action->sigma_merge=sigma_merge;
+	action->sigma_annihilation=sigma_annihilation;
+	action->sigma_inel=sigma_inel;
+	action->dsigma_merge=dsigma_merge;
 	action->MoveToActionMap();
 	if(action->tau<tau){
 		action->Print();
@@ -98,20 +105,6 @@ void CB3D::AddAction_MuTCalc_UpdateNPE(double taucalc){
 	CAction *action;
 	action=GetDeadAction();
 	action->type=5;
-	action->tau=taucalc;
-	action->MoveToActionMap();
-	action->partmap.clear(); 
-	if(action->tau<tau){
-		action->Print();
-		sprintf(message,"trying to AddAction_MuTCalc at earler time!!!  tau=%g\n",tau);
-		CLog::Fatal(message);
-	}
-}
-
-void CB3D::AddAction_SECalc(double taucalc){
-	CAction *action;
-	action=GetDeadAction();
-	action->type=7;
 	action->tau=taucalc;
 	action->MoveToActionMap();
 	action->partmap.clear(); 
