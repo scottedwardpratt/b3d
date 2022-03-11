@@ -140,17 +140,17 @@ public:
 	void InitMuTCalc();
 
 	bool FindCollision(CPart *part1,CPart *part2,double &taucoll);
-	double GetSigma(CPart *part1,CPart *part2,
-		double &sigma_scatter,double &sigma_merge,double &sigma_annihilation,
-		double &sigma_inel,vector<double> &dsigma_merge);
 	void Decay(CPart *mother,int &nbodies,array<CPart *,5> &daughter);
-	double CalcSigma(CPart *part1,CPart *part2);
+	double GetSigma(CPart *part1,CPart *part2,double Minv2,
+		double &sigma_scatter,double &sigma_merge,double &sigma_annihilation,double &sigma_inel,
+		vector<double> &dsigma_merge);
 
 	CRandy *randy;
 
 	void PrintActionMap(CActionMap *actionmap);
 
-	double GetPiBSquared(CPart *part1,CPart *part2);
+	bool CheckKinematics(CPart *part1,CPart *part2,double &Minv2,
+		double &pibsquared,double &taucoll);
 	int Collide(CPart *part1,CPart *part2,int &nproducts,array<CPart*,5> &product,double pibsquared); // will collide if sigma>scompare
 
 	int Collide_Scatter(CPart *part1,CPart *part2,int &nproducts,array<CPart*,5> &product);
@@ -163,7 +163,7 @@ public:
 	void Scatter(CPart *part1,CPart *part2,CPart *part3,CPart *part4);
 	bool Merge(CPart *part1,CPart *part2,CPart *part3,CResInfo *resinfo);
 	void InelasticScatter(CPart *part1, CPart *part2,CPart *part3,CPart *part4,CInelasticInfo inelinfo);
-	double GetAnnihilationSigma(CPart *part1,CPart *part2,double &vrel);
+	double GetAnnihilationSigma(CPart *part1,CPart *part2);
 	bool CancelAnnihilation(CPart *part1,CPart *part2);
 	int Annihilate(CPart *part1,CPart *part2,int &nproducts,array<CPart *,5> &product);
 

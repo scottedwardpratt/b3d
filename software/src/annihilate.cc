@@ -408,7 +408,7 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 */
 
 
-double CB3D::GetAnnihilationSigma(CPart *part1,CPart *part2,double &vrel){
+double CB3D::GetAnnihilationSigma(CPart *part1,CPart *part2){
 	const double g[4]={1,-1,-1,-1};
 	double Plab,p1dotp2,triangle,sigma_annihilation,rstrange,m1squared,m2squared;
 	int alpha;
@@ -429,7 +429,6 @@ double CB3D::GetAnnihilationSigma(CPart *part1,CPart *part2,double &vrel){
 	rstrange=0.5*sqrt(sigma_annihilation);
 	rstrange*=pow(ANNIHILATION_SREDUCTION,abs(part1->resinfo->strange))+pow(ANNIHILATION_SREDUCTION,abs(part2->resinfo->strange));
 	sigma_annihilation=rstrange*rstrange;
-	vrel=sqrt(triangle)/(part1->p[0]*part2->p[0]);
 	return sigma_annihilation;
 }
 
