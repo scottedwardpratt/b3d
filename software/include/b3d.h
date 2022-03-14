@@ -39,7 +39,7 @@ public:
 	double XYMAX,ETAMAX,DXY,DETA;
 	CSampler *sampler;
 	CHYDROtoB3D *hydrotob3d;
-	bool BJORKEN,COLLISIONS,INELASTIC,HYDRO_PURE_BJORKEN,DENSWRITE,BARYON_ANNIHILATION,MUTCALC,SECALC;
+	bool BJORKEN,COLLISIONS,INELASTIC,HYDRO_PURE_BJORKEN,DENSWRITE,BARYON_ANNIHILATION,MUTCALC;
 	double ANNIHILATION_SREDUCTION;  // reduces annihilation cross section based on amount of strangeness
 	int DENSWRITE_NTAU;
 	int NBOSE;
@@ -128,7 +128,6 @@ public:
 	void AddAction_DensCalc(double tauwrite);
 	void AddAction_MuTCalc_UpdateNPE(double taucalc);
 	void AddAction_MuTCalc();
-	void AddAction_SECalc(double taucalc);
 
 	void ListFutureCollisions();
 	void PrintPartList();
@@ -172,7 +171,7 @@ public:
 
 	long long int nscatter,nbscatter,n,nmerge,nswallow,npass,nexit;
 	long long int nactivate,nannihilate,nregenerate,nactionkills;
-	long long int nactions,ninelastic, ncollisions,oldncollisions,ndecay,ncheck;
+	long long int nactions,ninelastic, ncollisions,oldncollisions,ndecay,ncheck,ncheck1,ncheck2;
 
 	void freegascalc_onespecies(double m,double t,double &p,double &e,double &dens,double &sigma2,double &dedt);
 	

@@ -29,7 +29,8 @@ void CB3D::PerformAllActions(){
 		}
 	}
 	CAction *action;
-	nscatter=nbscatter=ndecay=npass=nmerge=nswallow=nexit=nactivate=ninelastic=ncheck=nactionkills=nbaryons=0;
+	nscatter=nbscatter=ndecay=npass=nmerge=nswallow=nexit=nactivate=0;
+	ninelastic=ncheck=nactionkills=nbaryons=ncheck1=ncheck2=0;
 	ncollisions=oldncollisions=nannihilate=nregenerate=0;
 	tau=0.0;
 	nactions=0;	

@@ -38,9 +38,12 @@ void CAction::PerformMuTCalcUpdateNPE(){
 
 	for(ppos=b3d->PartMap.begin();ppos!=b3d->PartMap.end();++ppos){
 		part=ppos->second;
+		
 		/*
-		if(part->active)
-			ncheck+=1;
+		if(fabs(part->r[1])<b3d->XYMAX-0.01 && fabs(part->r[2])<b3d->XYMAX-0.01 && part->tauexit<b3d->tau && part->active){
+			printf("tauexit=%g, tau=%g ???\n",part->tauexit,b3d->tau);
+			printf("x=%g, y=%g, XYMAX=%g\n",part->r[1],part->r[2],b3d->XYMAX);
+		}
 		if(!part->active && part->tau0<b3d->tau){
 			if(fabs(part->r[1])<10.0 && fabs(part->r[2])<10.0){
 				printf("dead particle!\n");
@@ -58,6 +61,8 @@ void CAction::PerformMuTCalcUpdateNPE(){
 			}
 		}
 		*/
+
+		
 
 		resinfo=part->resinfo;
 		pid=abs(resinfo->code);
