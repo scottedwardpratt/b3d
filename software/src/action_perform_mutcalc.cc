@@ -19,20 +19,21 @@ void CAction::PerformMuTCalcUpdateNPE(){
 		tau,b3d->ncollisions-b3d->oldncollisions,b3d->ncollisions);
 	b3d->oldncollisions=b3d->ncollisions;
 
-	int ncell,ncheck=0;
+
+	int ncell,np=0;
 	double rho,volume,rho2V=0.0;
 	for(int ieta=0;ieta<2*b3d->NETA;ieta++){
 		for(ix=0;ix<2*b3d->NXY;ix++){
 			for(iy=0;iy<2*b3d->NXY;iy++){
 				ncell=b3d->cell[ix][iy][ieta]->partmap.size();
 				volume=b3d->tau*b3d->DETA*b3d->DXY*b3d->DXY;
-				rho=double(ncell)/volume;
+				rho=double(ncell)/(b3d->NSAMPLE*volume);
 				rho2V+=rho*rho*volume;
-				ncheck+=ncell;
+				np+=ncell;
 			}
 		}
 	}
-	printf("ncheck=%d, rho^2*Volume=%g\n",ncheck,rho2V);
+	printf("nparts=%d, rho^2*Volume=%g\n",np,rho2V);
 	ncheck=0;
 	*/
 

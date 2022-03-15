@@ -9,7 +9,8 @@ bool CB3D::CheckKinematics(CPart *part1,CPart *part2,
 	
 	double p1dotp2=0.0,m1squared,m2squared,rsquared=0.0;
 	double t1,t2,z1,z2,tau1,tau2,denom,p1dotr=0.0,p2dotr=0.0;
-	FourVector r,r1,r2,p1,p2;
+	double dtau1overm1,dtau2overm2;
+	FourVector r;
 
 	const int g[4]={1,-1,-1,-1};
 	int alpha;
@@ -36,23 +37,14 @@ bool CB3D::CheckKinematics(CPart *part1,CPart *part2,
 	denom=p1dotp2*p1dotp2-m1squared*m2squared;
 
 	pibsquared=PI*(-rsquared+(2.0*p1dotp2*p1dotr*p2dotr-p1dotr*p1dotr*m2squared-p2dotr*p2dotr*m1squared)/denom);
-	
 
 
-	for(alpha=0;alpha<4;alpha++){
-		p1[alpha]=part1->p[alpha];
-		p2[alpha]=part2->p[alpha];
-		r1[alpha]=part1->r[alpha];
-		r2[alpha]=part2->r[alpha];
-	}
-
-
-	t1=p1[0]*(p1dotr*m2squared-p2dotr*p1dotp2)/denom;
-	t2=-p2[0]*(p2dotr*m1squared-p1dotr*p1dotp2)/denom;
-	z1=r1[3]+(p1[3]/p1[0])*t1;
-	z2=r2[3]+(p2[3]/p2[0])*t2;
-	t1+=r1[0];
-	t2+=r2[0];
+	dtau1overm1=(p1dotr*m2squared-p2dotr*p1dotp2)/denom;
+	dtau2overm2=-(p2dotr*m1squared-p1dotr*p1dotp2)/denom;
+	t1=part1->r[0]+dtau1overm1*part1->p[0];
+	t2=part2->r[0]+dtau2overm2*part2->p[0];
+	z1=part1->r[3]+dtau1overm1*part1->p[3];
+	z2=part2->r[3]+dtau2overm2*part2->p[3];
 
 			/*
 			if(pibsquared<sigmamax && tau<20){
@@ -65,8 +57,10 @@ bool CB3D::CheckKinematics(CPart *part1,CPart *part2,
 		tau1=sqrt(t1*t1-z1*z1);
 		tau2=sqrt(t2*t2-z2*z2);
 		taucoll=0.5*(tau1+tau2);
-		if(taucoll>part1->tau0 && taucoll>part2->tau0 && taucoll<part1->tauexit && taucoll<part2->tauexit)
-			possible=true;
+		if(taucoll>part1->tau0 && taucoll>part2->tau0){
+			if(taucoll<part1->tauexit && taucoll<part2->tauexit)
+				possible=true;
+		}
 	}
 
 	if(bjtranslate)
@@ -142,8 +136,8 @@ bool CB3D::FindCollision(CPart *part1,CPart *part2,double &taucoll){
 	double pibsquared,Minv2,sigmatot;
 	dsigma_merge.clear();
 
-	checkpossible=CheckKinematics(part1,part2,Minv2,pibsquared,taucoll);
 	ncheck+=1;
+	checkpossible=CheckKinematics(part1,part2,Minv2,pibsquared,taucoll);
 	if(checkpossible){
 		ncheck1+=1;
 		sigmatot=GetSigma(part1,part2,Minv2,sigma_scatter,sigma_merge,sigma_annihilation,sigma_inel,
