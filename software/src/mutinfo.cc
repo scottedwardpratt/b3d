@@ -236,7 +236,7 @@ void CMuTInfo::GetIxIy(double x,double y,int &ix,int &iy){
 int CMuTInfo::GetBtype(int pid){
 	int btype=-1;
 	pid=abs(pid);
-	if(pid==2122 || pid==2112)
+	if(pid==2122 || pid==2212)
 		btype=0;
 	else if(pid==3222 || pid==3212 || pid==3112)
 		btype=1;
