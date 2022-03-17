@@ -433,12 +433,15 @@ double CB3D::GetAnnihilationSigma(CPart *part1,CPart *part2){
 }
 
 bool CB3D::CancelAnnihilation(CPart *part1,CPart *part2){
-	double mupi,muK,muB,mutot,netS;
+	double mupi,muK,muB,muQtot,betaEtot,netK,netpi;
 	double taumin1,taumin2;
+	double betaB,betameson,EB,Emeson;
 	double reduction_factor=1.0;
+	FourVector P,UB,Umeson;
 	int btype1,btype2;
 	int ix1,iy1,ix2,iy2;
 	unsigned int iitau;
+	CMuTInfo *mut1,*mut2;
 
 	btype1=part1->resinfo->Btype;
 	btype2=part2->resinfo->Btype;
@@ -455,14 +458,47 @@ bool CB3D::CancelAnnihilation(CPart *part1,CPart *part2){
 
 	iitau=lrint(tau/MUTCALC_DELTAU);
 	if(iitau<muTinfo.size()){
-		if(muTinfo[iitau][ix1][iy1]->sufficientN && muTinfo[iitau][ix2][iy2]->sufficientN){
-			mupi=0.5*(muTinfo[iitau][ix1][iy1]->mupi+muTinfo[iitau][ix2][iy2]->mupi);
-			muK=0.5*(muTinfo[iitau][ix1][iy1]->muK+muTinfo[iitau][ix2][iy2]->muK);
+		mut1=muTinfo[iitau][ix1][iy1];
+		mut2=muTinfo[iitau][ix2][iy2];
 
-			muB=muTinfo[iitau][ix1][iy1]->muB[btype1]+muTinfo[iitau][ix2][iy2]->muB[btype2];
-			netS=fabs(part1->resinfo->strange+part2->resinfo->strange);
-			mutot=(5.0-netS)*mupi+netS*muK-muB;
-			reduction_factor=1.0-exp(mutot);
+		if(mut1->sufficientN && mut2->sufficientN){
+			netK=fabs(part1->resinfo->strange+part2->resinfo->strange);
+			if(netK>5)
+				netK=4;
+			netpi=5.0-netK;
+
+			mupi=0.5*(mut1->mupi+mut2->mupi);
+			muK=0.5*(mut1->muK+mut2->muK);
+			muB=mut1->muB[btype1]+mut2->muB[btype2];
+
+			muQtot=netpi*mupi+netK*muK-muB;
+
+			for(int alpha=0;alpha<4;alpha++){
+				P[alpha]=part1->p[alpha]+part2->p[alpha];
+			}
+
+			UB[1]=0.5*(mut1->UxB[btype1]+mut2->UxB[btype2]);
+			UB[2]=0.5*(mut1->UyB[btype1]+mut2->UyB[btype2]);
+			UB[3]=asinh(0.5*(part1->eta+part2->eta));
+			UB[0]=sqrt(1.0+UB[1]*UB[1]+UB[2]*UB[2]+UB[3]*UB[3]);
+			EB=DotProduct(UB,P);
+
+			Umeson[1]=((mut1->Uxpi+mut2->Uxpi)*netpi+(mut1->UxK+mut2->UxK)*netK)/10.0;
+			Umeson[2]=((mut1->Uypi+mut2->Uypi)*netpi+(mut1->UyK+mut2->UyK)*netK)/10.0;
+			Umeson[3]=UB[3];
+			Umeson[0]=sqrt(1.0+Umeson[1]*Umeson[1]+Umeson[2]*Umeson[2]+Umeson[3]*Umeson[3]);
+			Emeson=DotProduct(Umeson,P);
+
+			betaB=0.5*(mut1->TB[btype1]+mut2->TB[btype2]);
+			betaB=1.0/betaB;
+
+			betameson=(netpi*(mut1->Tpi+mut2->Tpi)+netK*(mut1->TK+mut2->TK))/10.0;
+			betameson=1.0/betameson;
+
+			betaEtot=Emeson*betameson-EB*betaB;
+
+			reduction_factor=1.0-exp(muQtot-betaEtot);
+
 			if(randy->ran()>reduction_factor){
 				return false;
 			}

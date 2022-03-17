@@ -70,7 +70,6 @@ void CMuTInfo::Print(){
 		sprintf(message,"%sTK=%g, muK=%g\n",message,TB[btype],muB[btype]);
 		CLog::Info(message);
 	}
-
 }
 
 void CMuTInfo::CalcAllMuTU(){
