@@ -16,8 +16,9 @@ int main(){
 	Upi.resize(NR,0.0); UK.resize(NR,0.0); UB.resize(NR,0.0);
 	rhopi.resize(NR,0.0); rhoK.resize(NR,0.0); rhoB.resize(NR,0.0);
 	epi.resize(NR,0.0); eK.resize(NR,0.0); eB.resize(NR,0.0);
-	vector<int> npts;
+	vector<int> npts,Nparts;
 	npts.resize(NR,0);
+	Nparts.resize(NR,0);
 	char filename[200],dummy[200];
 
 	for(tau=1;tau<47.88888;tau+=1){
@@ -26,6 +27,7 @@ int main(){
 		//Pions
 		for(ir=0;ir<NR;ir++){
 			npts[ir]=0;
+			Nparts[ir]=0;
 			mupi[ir]=Tpi[ir]=Upi[ir]=rhopi[ir]=epi[ir]=0.0;
 		}
 
@@ -46,6 +48,7 @@ int main(){
 					Upi[ir]+=sqrt(Ux*Ux+Uy*Uy);
 					rhopi[ir]=rho;
 					epi[ir]=epsilon;
+					Nparts[ir]+=N;
 				}
 			}
 		}while(!feof(fptr));
@@ -59,7 +62,7 @@ int main(){
 				Upi[ir]=Upi[ir]/double(npts[ir]);
 				Tpi[ir]=Tpi[ir]/double(npts[ir]);
 				r=(ir+0.5)*delR;
-				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,npts[ir],Tpi[ir],Upi[ir],mupi[ir],rhopi[ir],epi[ir]);
+				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,Nparts[ir],Tpi[ir],Upi[ir],mupi[ir],rhopi[ir],epi[ir]);
 			}
 			else{
 				r=(ir+0.5)*delR;
@@ -72,6 +75,7 @@ int main(){
 		// Kaons
 		for(ir=0;ir<NR;ir++){
 			npts[ir]=0;
+			Nparts[ir]=0;
 			muK[ir]=TK[ir]=UK[ir]=rhoK[ir]=eK[ir]=0.0;
 		}
 		
@@ -94,6 +98,7 @@ int main(){
 					UK[ir]+=sqrt(Ux*Ux+Uy*Uy);
 					rhoK[ir]=rho;
 					eK[ir]=epsilon;
+					Nparts[ir]+=N;
 				}
 			}
 		}while(!feof(fptr));
@@ -107,7 +112,7 @@ int main(){
 				UK[ir]=UK[ir]/double(npts[ir]);
 				TK[ir]=TK[ir]/double(npts[ir]);
 				r=(ir+0.5)*delR;
-				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,npts[ir],TK[ir],UK[ir],muK[ir],rhoK[ir],eK[ir]);
+				fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,Nparts[ir],TK[ir],UK[ir],muK[ir],rhoK[ir],eK[ir]);
 			}
 			else{
 				r=(ir+0.5)*delR;
@@ -122,6 +127,7 @@ int main(){
 		for(int btype=0;btype<8;btype++){
 			for(ir=0;ir<NR;ir++){
 				npts[ir]=0;
+				Nparts[ir]=0;
 				muB[ir]=TB[ir]=UB[ir]=rhoB[ir]=eB[ir]=0.0;
 			}
 			sprintf(filename,"mucalc_results/mutinfo_B%d_tau%g.txt",btype,tau);
@@ -141,6 +147,7 @@ int main(){
 						UB[ir]+=sqrt(Ux*Ux+Uy*Uy);
 						rhoB[ir]=rho;
 						eB[ir]=epsilon;
+						Nparts[ir]+=N;
 					}
 				}
 			}while(!feof(fptr));
@@ -155,7 +162,7 @@ int main(){
 					TB[ir]=TB[ir]/double(npts[ir]);
 					UB[ir]=UB[ir]/double(npts[ir]);
 					r=(ir+0.5)*delR;
-					fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,npts[ir],TB[ir],UB[ir],muB[ir],rhoB[ir],eB[ir]);
+					fprintf(output,"%6.2f %7d %7.2f %7.4f %7.4f %7.4f %7.4f\n",r,Nparts[ir],TB[ir],UB[ir],muB[ir],rhoB[ir],eB[ir]);
 				}
 				else{
 					r=(ir+0.5)*delR;
