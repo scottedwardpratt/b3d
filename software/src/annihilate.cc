@@ -498,6 +498,7 @@ bool CB3D::CancelAnnihilation(CPart *part1,CPart *part2){
 			betameson=1.0/betameson;
 
 			betaEtot=Emeson*betameson-EB*betaB;
+			
 			/*
 			if(betaEtot!=betaEtot){
 				printf("betaE=%g, betameson=%g, betaB=%g, Emeson=%g, EB=%g\n",betaEtot,betameson,betaB,Emeson,EB);
@@ -507,11 +508,15 @@ bool CB3D::CancelAnnihilation(CPart *part1,CPart *part2){
 					mut1->muB[btype1],mut2->muB[btype2],mut1->mupi,mut2->mupi,mut1->muK,mut2->muK);
 			}
 			*/
+			
 
 			reduction_factor=1.0-exp(muQtot-betaEtot);
+			/*
 			if(reduction_factor<0.0){
 				printf("reduction factor=%g, (%d,%d)\n",reduction_factor,part1->resinfo->code,part2->resinfo->code);
+				printf("T=%g\n",0.5*(mut1->Tpi+mut2->Tpi));
 			}
+			*/
 			//reduction_factor=1.0-exp(muQtot);
 
 			if(randy->ran()>reduction_factor){
