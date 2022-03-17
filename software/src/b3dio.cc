@@ -363,7 +363,7 @@ void CB3D::WriteMuTInfo(){
 
 void CB3D::ReadMuTInfo(){
 	char dummy[500];
-	int ix,iy,iitau,N,NB,ntau,jtype;
+	int ix,iy,iitau,N,NB,ntau,btype;
 	double T,Ux,Uy,mu,rho,epsilon;
 	double tau_print;
 	char filename[60];
@@ -380,7 +380,8 @@ void CB3D::ReadMuTInfo(){
 			fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
 			while(!feof(fptr)){
 				mti=muTinfo[iitau][ix][iy];
-				mti->sufficientN=true;
+				if(N>CMuTInfo::NMINCALC)
+					mti->sufficientNpi=true;
 				mti->Tpi=T;
 				mti->mupi=mu;
 				if(READN){
@@ -401,6 +402,8 @@ void CB3D::ReadMuTInfo(){
 			fscanf(fptr,"%d %d %d  %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&N,&T,&Ux,&Uy,&mu,&rho,&epsilon);
 			while(!feof(fptr)){
 				mti=muTinfo[iitau][ix][iy];
+				if(N>CMuTInfo::NMINCALC)
+					mti->sufficientNK=true;
 				mti->TK=T;
 				mti->muK=mu;
 				if(READN){
@@ -414,21 +417,23 @@ void CB3D::ReadMuTInfo(){
 			fclose(fptr);
 		}
 
-		for(jtype=0;jtype<8;jtype++){
-			sprintf(filename,"mucalc_results/mutinfo_B%d_tau%g.txt",jtype,tau_print);
+		for(btype=0;btype<8;btype++){
+			sprintf(filename,"mucalc_results/mutinfo_B%d_tau%g.txt",btype,tau_print);
 			fptr=fopen(filename,"r");
 			if(fptr){
 				fgets(dummy,500,fptr);
 				fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&NB,&T,&Ux,&Uy,&mu,&rho,&epsilon);
 				while(!feof(fptr)){
 					mti=muTinfo[iitau][ix][iy];
-					mti->TB[jtype]=T;
-					mti->muB[jtype]=mu;
+					if(NB>CMuTInfo::NMINCALC)
+						mti->sufficientNB[btype]=true;
+					mti->TB[btype]=T;
+					mti->muB[btype]=mu;
 					if(READN){
-						mti->NB[jtype]=NB;
-						mti->UxB[jtype]=Ux;
-						mti->UyB[jtype]=Uy;
-						mti->epsilonB[jtype]=epsilon;
+						mti->NB[btype]=NB;
+						mti->UxB[btype]=Ux;
+						mti->UyB[btype]=Uy;
+						mti->epsilonB[btype]=epsilon;
 					}
 					fscanf(fptr,"%d %d %d %lf %lf %lf %lf %lf %lf\n",&ix,&iy,&NB,&T,&Ux,&Uy,&mu,&rho,&epsilon);
 				}

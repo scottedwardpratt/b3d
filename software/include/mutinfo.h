@@ -20,7 +20,8 @@ public:
 	vector<double> EB,PxB,PyB,TxxB,TyyB,TxyB;
 	vector<double> TB,muB;
 	vector<int> NB;
-	bool sufficientN;
+	bool sufficientNpi,sufficientNK;
+	vector<bool> sufficientNB;
 	
 	void UpdateNPE(CB3DCell *cell);
 	void CalcAllMuTU();

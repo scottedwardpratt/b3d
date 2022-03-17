@@ -461,7 +461,9 @@ bool CB3D::CancelAnnihilation(CPart *part1,CPart *part2){
 		mut1=muTinfo[iitau][ix1][iy1];
 		mut2=muTinfo[iitau][ix2][iy2];
 
-		if(mut1->sufficientN && mut2->sufficientN){
+		if(mut1->sufficientNB[btype1] && mut2->sufficientNB[btype2]
+			&& mut1->sufficientNpi && mut2->sufficientNpi
+			&& mut1->sufficientNK && mut2->sufficientNK){
 			netK=fabs(part1->resinfo->strange+part2->resinfo->strange);
 			if(netK>5)
 				netK=4;
@@ -496,6 +498,13 @@ bool CB3D::CancelAnnihilation(CPart *part1,CPart *part2){
 			betameson=1.0/betameson;
 
 			betaEtot=Emeson*betameson-EB*betaB;
+			if(betaEtot!=betaEtot){
+				printf("betaE=%g, betameson=%g, betaB=%g, Emeson=%g, EB=%g\n",betaEtot,betameson,betaB,Emeson,EB);
+				printf("TB1=%g, TB2=%g, Tpi1=%g, Tpi2=%g, TK1=%g, TK2=%g\n",
+					mut1->TB[btype1],mut2->TB[btype2],mut1->Tpi,mut2->Tpi,mut1->TK,mut2->TK);
+				printf("muB1=%g, muB2=%g, mupi1=%g, mupi2=%g, muK1=%g, muK2=%g\n",
+					mut1->muB[btype1],mut2->muB[btype2],mut1->mupi,mut2->mupi,mut1->muK,mut2->muK);
+			}
 
 			reduction_factor=1.0-exp(muQtot-betaEtot);
 

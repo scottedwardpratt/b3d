@@ -23,6 +23,7 @@ CMuTInfo::CMuTInfo(double tau_set){
 	TxxK=TyyK=TxyK=0.0;
 	Npi=NK;
 	Tpi=TK=145.0;
+	sufficientNpi=sufficientNK=false;
 
 	NB.resize(8);
 	TB.resize(8);
@@ -37,6 +38,7 @@ CMuTInfo::CMuTInfo(double tau_set){
 	rhoB.resize(8);
 	UxB.resize(8);
 	UyB.resize(8);
+	sufficientNB.resize(8);
 
 	for(int btype=0;btype<8;btype++){
 		NB[btype]=0;
@@ -45,8 +47,9 @@ CMuTInfo::CMuTInfo(double tau_set){
 		muB[btype]=0.0;
 		TB[btype]=100.0;
 		epsilonB[btype]=0.0;
+		sufficientNB[btype]=false;
 	}
-	sufficientN=false;
+	
 }
 
 void CMuTInfo::Print(){

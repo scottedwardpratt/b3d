@@ -46,13 +46,6 @@ bool CB3D::CheckKinematics(CPart *part1,CPart *part2,
 	z1=part1->r[3]+dtau1overm1*part1->p[3];
 	z2=part2->r[3]+dtau2overm2*part2->p[3];
 
-			/*
-			if(pibsquared<sigmamax && tau<20){
-				printf("b=%g, tau1=%g, tau2=%g actionmother1=%d actiomother2=%d\n",
-					sqrt(pibsquared/PI),part1->tau0,part2->tau0,part1->actionmother, part2->actionmother);
-				printf("bmax=%g\n",sqrt(sigmamax/PI));
-			}
-			*/
 	if(t1>0 && t2>0  && fabs(z1)<t1 && fabs(z2)<t2){
 		tau1=sqrt(t1*t1-z1*z1);
 		tau2=sqrt(t2*t2-z2*z2);
