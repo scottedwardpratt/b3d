@@ -293,7 +293,8 @@ void CB3D::InitMuTCalc(){
 	int ix,iy,ntau;
 	CMuTInfo::b3d=this;
 	CMuTInfo::NXY=parmap.getI("B3D_MUTCALC_NXY",24);
-	CMuTInfo::DXY=parmap.getD("B3D_MuTCalc_DXY",1.0);
+	CMuTInfo::DXY=parmap.getD("B3D_MUTCalc_DXY",1.0);
+	CMuTInfo::NMINCALC=parmap.getD("B3D_MUTCALC_NMINCALC",5);
 	CMuTInfo::taumin.resize(NXY);
 	//CMuTInfo::massB.resize(8);
 	//CMuTInfo::degenB.resize(8);

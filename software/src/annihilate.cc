@@ -507,6 +507,9 @@ bool CB3D::CancelAnnihilation(CPart *part1,CPart *part2){
 			}
 
 			reduction_factor=1.0-exp(muQtot-betaEtot);
+			if(reduction_factor<0.0){
+				printf("reduction factor=%g, (%d,%d)\n",reduction_factor,part1->resinfo->code,part2->resinfo->code);
+			}
 			//reduction_factor=1.0-exp(muQtot);
 
 			if(randy->ran()>reduction_factor){
