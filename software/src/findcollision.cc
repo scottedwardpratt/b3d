@@ -144,27 +144,7 @@ bool CB3D::FindCollision(CPart *part1,CPart *part2,double &taucoll){
 		}
 	}
 	return collide;
-}
-
-
-	
-
-	
-	
-
-	/*
-	resinfo1=part1->resinfo;
-	resinfo2=part2->resinfo;
-	if(part1->balanceID<0 && part2->balanceID<0){
-		sigmamax=SIGMADEFAULT+reslist->SigmaMaxArray[resinfo1->ires][resinfo2->ires]+SIGMAINELASTIC;
-	}
-	else{
-		sigmamax=SIGMABF;
-	}
-	if(BARYON_ANNIHILATION && resinfo1->baryon*resinfo2->baryon<0)
-		sigmamax+=30.0; // cuts off annihilation Xsection at 300 mb
-		*/
-		
+}		
 
 void CB3D::FindAllCollisions(){
 	double taucoll;
@@ -191,7 +171,7 @@ void CB3D::FindAllCollisions(){
 		while(ppos1!=ppos2){
 			part1=ppos1->second;
 			if(part1->balanceID<0 || part2->balanceID<0){
-				if(part1->cell!=NULL & part2->cell!=NULL){
+				if(part1->cell!=NULL && part2->cell!=NULL){
 					if(FindCollision(part1,part2,taucoll))
 						nfound+=1;
 				}
