@@ -67,7 +67,6 @@ int CHyperElement::MakeParts(){
 					sampler->b3d->ncheck+=1;
 				if(abs(resinfo->code)==3212){
 					sampler->b3d->ncheck1+=1;
-					resinfo->Print();
 				}
 				if(abs(resinfo->code)==3222)
 					sampler->b3d->ncheck2+=1;

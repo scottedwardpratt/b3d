@@ -81,55 +81,45 @@ void CResList::freegascalc_onespecies_finitewidth(double resmass, double m1, dou
 double &epsilon,double &P,double &dens,double &sigma2,
 double &dedt,double &maxweight){
 
-	double kr,k,E,E0,dE,gamma,rho,percent,dp,closest;
-	double sum=0.0,esum=0.0,psum=0.0,dsum=0.0,sigsum=0.0,dedtsum=0.0;
-	double n0,resn0,lor,weight;
+	double kr,k,E,dE,Gamma,rho;
+	double norm=0.0,esum=0.0,psum=0.0,dsum=0.0,sigsum=0.0,dedtsum=0.0;
+	double lor,weight,K2,K2mr;
 	double alpha=RESWIDTH_ALPHA;
 	dE=1.0;
-	percent=0.001;
-	dp=0.002;
-	if (width<1.0){
-		dE=0.1;
-		percent=0.0005;
-		dp=0.001;
-	}
-	closest=1000.0;
-	E0=m1+m2;
 	maxweight=-1.0;
 	kr=sqrt(pow((resmass*resmass-m1*m1-m2*m2),2.0)-4.0*m1*m1*m2*m2)/(2.0*resmass);
+	K2mr=gsl_sf_bessel_Kn(2,resmass/T);
 
 	for(E=(m1+m2+0.5*dE);E<2.0*resmass;E+=dE){
 
 		k=sqrt(pow((E*E-m1*m1-m2*m2),2.0)-(4.0*m1*m1*m2*m2))/(2.0*E);
-		gamma=width*pow((2.0*k*k)/(k*k+kr*kr),alpha);
-		rho=(2.0/(width*PI))*0.25*gamma*gamma/((0.25*gamma*gamma)+(resmass-E)*(resmass-E));
-		sum+=rho*dE;
+		Gamma=width*pow((2.0*k*k)/(k*k+kr*kr),alpha);
+		rho=(Gamma/(2.0*PI))/((0.25*Gamma*Gamma)+(resmass-E)*(resmass-E));
+		lor=(width/(2.0*PI))/((0.25*width*width)+(resmass-E)*(resmass-E));
 
-		n0=gsl_sf_bessel_Kn(2,E/T)*E*E*T/(2*PI*PI*pow(HBARC,3.0));
-		resn0=gsl_sf_bessel_Kn(2,resmass/T)*resmass*resmass*T/(2*PI*PI*pow(HBARC,3.0));
-		lor=(width/(2.0*PI))/(0.25*width*width+(resmass-E)*(resmass-E));
-		weight=n0*rho/(resn0*lor);
+		K2=gsl_sf_bessel_Kn(2,E/T);
+		
+		weight=(rho/lor)*(K2*E*E/(K2mr*resmass*resmass));
 
-		if(weight>maxweight) maxweight=weight;
-		if (abs(sum-percent)<closest) closest=abs(sum-percent);
-		else{
-			freegascalc_onespecies(E,T,epsilon,P,dens,sigma2,dedt);
-			esum+=epsilon*rho*(E-E0);
-			psum+=P*rho*(E-E0);
-			dsum+=dens*rho*(E-E0);
-			sigsum+=sigma2*rho*(E-E0);
-			dedtsum+=dedt*rho*(E-E0);
-			closest=1000.0;
-			percent+=dp;
-			E0=E;
-		}
+		if(weight>maxweight)
+			maxweight=weight;
+		freegascalc_onespecies(E,T,epsilon,P,dens,sigma2,dedt);
+		norm+=rho;
+		esum+=epsilon*rho;
+		psum+=P*rho;
+		dsum+=dens*rho;
+		sigsum+=sigma2*rho;
+		dedtsum+=dedt*rho;
 	}
 
-	epsilon=esum/sum;
-	P=psum/sum;
-	dens=dsum/sum;
-	sigma2=sigsum/sum;
-	dedt=dedtsum/sum;
+	epsilon=esum/norm;
+	P=psum/norm;
+	dens=dsum/norm;
+	sigma2=sigsum/norm;
+	dedt=dedtsum/norm;
+	if(fabs(m2)<1.0E-5){
+		printf("m1=%g, dsum=%g, weight=%g, dens=%g\n",m1,dsum,weight,dens);
+	}
 }
 
 void CResList::ReadResInfo(){
@@ -322,7 +312,7 @@ void CResList::CalcConductivity(double T,double &P,double &epsilon,double &nh,ve
 						m2+=resinfoptr->branchlist[0]->resinfoptr[n]->mass;
 					}
 				}
-				if((minmass>0.0)&&(width>1.0E-3)){
+				if((minmass>0.0)&&(width>1.0)){
 					freegascalc_onespecies_finitewidth(m,m1,m2,T,width,epsiloni,pi,densi,sigma2i,dedti,maxweighti);
 				}
 				else{
@@ -356,7 +346,7 @@ double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &ch
 	double m,m1=0.0,m2=0.0,degen,s;
 	double width,minmass,maxweighti;
 	double pi,epsiloni,densi,sigma2i,dedti;
-	double netchi=0.0,netchi0=0.0;
+	//double netchi=0.0,netchi0=0.0;
 	int a,b,n,ires,nres=resmap.size();
 	chi.setZero();
 	P=epsilon=s=nh=0.0;
@@ -387,8 +377,7 @@ double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &ch
 					}
 				}
 				if((minmass>0.0)&&(width>1.0E-3)){
-					freegascalc_onespecies_finitewidth(m,m1,m2,T,width,
-					epsiloni,pi,densi,sigma2i,dedti,maxweighti);
+					freegascalc_onespecies_finitewidth(m,m1,m2,T,width,epsiloni,pi,densi,sigma2i,dedti,maxweighti);
 					if(densi!=densi){
 						resinfoptr->Print();
 						exit(1);
@@ -414,8 +403,8 @@ double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &ch
 		else{
 			density[ires]=0.0;
 		}
-		netchi+=resinfoptr->netchi*density[ires];
-		netchi0+=resinfoptr->netchi0*density[ires];
+		//netchi+=resinfoptr->netchi*density[ires];
+		//netchi0+=resinfoptr->netchi0*density[ires];
 	}
 }
 
@@ -429,7 +418,7 @@ double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &ch
 	double Nud,Nstrange;
 	bool special;
 	strangecontent=udcontent=0.0;
-	double netchi=0.0,netchi0=0.0;
+	//double netchi=0.0,netchi0=0.0;
 	int a,b,n,ires,nres=resmap.size();
 	chi.setZero();
 	P=epsilon=s=nh=0.0;
@@ -501,9 +490,6 @@ double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &ch
 			strangecontent+=Nstrange*densi*degen;
 			udcontent+=Nud*densi*degen;
 			density[ires]=densi*degen;
-			if(abs(resinfoptr->code)==3112 || abs(resinfoptr->code)==3212 || abs(resinfoptr->code)==3222){
-				printf("code=%d: dens=%g\n",resinfoptr->code,density[ires]);
-			}
 			maxweight[ires]=maxweighti;
 			for(a=0;a<3;a++){
 				for(b=0;b<3;b++){
@@ -514,8 +500,8 @@ double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &ch
 		else{
 			density[ires]=0.0;
 		}
-		netchi+=resinfoptr->netchi*density[ires];
-		netchi0+=resinfoptr->netchi0*density[ires];
+		//netchi+=resinfoptr->netchi*density[ires];
+		//netchi0+=resinfoptr->netchi0*density[ires];
 	}
 	strangecontent=strangecontent/s;
 	udcontent=udcontent/s;
@@ -610,13 +596,14 @@ void CResList::freegascalc_onespecies(double mass,double T,double &epsiloni,doub
 	Ji=densi-mass*mass*mass*Ji*Jcon;
 	Ji=Ji/(3.0*T);
 	
+	/*
 	double p,E,Jtest=0.0,dp=1.0;
 	for(p=0.5*dp;p<2000;p+=dp){
 		E=sqrt(p*p+mass*mass);
 		Jtest+=Jcon*exp(-E/T)*dp*p*p*p*p/(3.0*E*E*T);
 	}
-	
-}
+	*/
+	}
 
 
 void CResList::FindFinalProducts(double taumax){

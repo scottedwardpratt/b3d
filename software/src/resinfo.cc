@@ -147,38 +147,36 @@ double CResInfo::GenerateMass(){
 }
 
 double CResInfo::GenerateThermalMass(double maxweight, double T){
-	double m,kr,weight,r1,r2,k,gamma,rho,lor,k2,m1,m2,k2mr;
+	double m,kr,weight,r1,k,Gamma,rho,lor,K2,m1,m2,K2mr;
 	double alpha=reslist->RESWIDTH_ALPHA;
-	if(decay || maxweight<0.0){
+	if(decay && width>1.0){
 		m1=branchlist[0]->resinfoptr[0]->mass;
 		m2=0.0;
 		for(int n=1;n<int(branchlist[0]->resinfoptr.size());n++){
 			m2+=branchlist[0]->resinfoptr[n]->mass;
 		}
-		k2mr = gsl_sf_bessel_Kn(2,mass/T); // K2 for resmass
+		K2mr = gsl_sf_bessel_Kn(2,mass/T); // K2 for resmass
 		kr=pow(mass*mass-m1*m1-m2*m2,2) - (4*m1*m1*m2*m2);
 		kr = (1/(2*mass))*sqrt(kr); // k at resonant mass
-		int i = 0; // for use in while loop
-		while(i==0){
+
+		kr=sqrt(pow((mass*mass-m1*m1-m2*m2),2.0)-4.0*m1*m1*m2*m2)/(2.0*mass);
+
+		do{
 			r1 = randy->ran(); // get random numbers
-			r2 = randy->ran(); // between [0, 1]
 			m = ((width/2)*tan(PI*(r1 - .5))) + mass;// generate random mass value proportional to the lorentz distribution
-			if ((m < minmass) ) continue;
+			if(m > minmass){
 			// throw out values out of range
-			k=sqrt(pow((m*m-m1*m1-m2*m2),2.0)-pow((2.0*m1*m2),2.0))/(2.0*m);
-			gamma=width*pow((2.0*k*k)/(k*k+kr*kr),alpha);
-			rho=(2.0/(width*PI))*(0.25*gamma*gamma)/((0.25*gamma*gamma)+(mass-m)*(mass-m));
-			lor = (width/(2*PI))/(pow(width/2,2.0) + pow(mass-m,2.0));
-			k2 = gsl_sf_bessel_Kn(2,(m/T)); // K2 value
-			weight = rho*k2*m*m/(lor*k2mr*mass*mass*maxweight);
-			if (r2 < weight) i = 1; // success
-		}
+				k=sqrt(pow((m*m-m1*m1-m2*m2),2.0)-pow((2.0*m1*m2),2.0))/(2.0*m);
+				Gamma=width*pow((2.0*k*k)/(k*k+kr*kr),alpha);
+				rho=(Gamma/(2*PI))/((0.25*Gamma*Gamma)+(mass-m)*(mass-m));
+				lor=(width/(2*PI))/((0.25*width*width)+(mass-m)*(mass-m));
+				K2 = gsl_sf_bessel_Kn(2,(m/T)); // K2 value
+				weight = rho*K2*m*m/(lor*K2mr*mass*mass*maxweight);
+			}
+		}while(randy->ran()<weight && m<minmass);
 	}
-	else m=mass;
-	if(m<minmass){
-		sprintf(message,"In GenerateThermalMass, m=%g, but minmass=%g\n",m,minmass);
-		CLog::Fatal(message);
-	}
+	else
+		m=mass;
 	return m; 
 }
 
