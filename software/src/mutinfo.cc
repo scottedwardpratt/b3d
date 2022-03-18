@@ -13,7 +13,7 @@ double CMuTInfo::DXY=0.0;
 vector<vector<double>> CMuTInfo::taumin{};
 vector<CResInfo *> CMuTInfo::Bresinfo{};
 vector<double> CMuTInfo::massB{938.27,1189.37,1314.83,1115.68,1232.0,1385,1530,1672.43};
-vector<double> CMuTInfo::degenB{8,12,8,4,16,12,8,4};
+vector<double> CMuTInfo::degenB{8,12,8,4,16,24,16,8};
 
 CMuTInfo::CMuTInfo(double tau_set){
 	tau=tau_set;
