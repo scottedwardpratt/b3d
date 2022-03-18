@@ -49,7 +49,6 @@ CMuTInfo::CMuTInfo(double tau_set){
 		epsilonB[btype]=0.0;
 		sufficientNB[btype]=false;
 	}
-	
 }
 
 void CMuTInfo::Print(){

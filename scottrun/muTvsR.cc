@@ -6,7 +6,7 @@
 using namespace std;
 
 int main(){
-	int ix,iy,NR=30,ir,N;
+	int ix,iy,NR=36,ir,N;
 	double delR=1.0,DXY=1.0,x,y,tau,r;
 	double Ux,Uy,mu,T,rho,epsilon;
 	FILE *fptr,*output;
@@ -21,7 +21,7 @@ int main(){
 	Nparts.resize(NR,0);
 	char filename[200],dummy[200];
 
-	for(tau=1;tau<47.88888;tau+=1){
+	for(tau=1;tau<40.001;tau+=1){
 		
 
 		//Pions
