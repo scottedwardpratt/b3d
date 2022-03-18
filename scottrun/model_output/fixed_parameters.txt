@@ -14,7 +14,7 @@ MESH_YMIN	-22.0
 MESH_YMAX	22.0
 MESH_NX	441
 MESH_NY	441
-RESONANCE_ALPHA 0.5
+RESONANCE_ALPHA 1.0
 RESONANCE_DECAYS true
 #RESONANCE_INFO_FILE	../progdata/resinfo/resonances_pdg.txt
 #RESONANCE_DECAYS_FILE ../progdata/resinfo/decays_pdg.txt

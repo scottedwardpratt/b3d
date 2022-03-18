@@ -109,11 +109,9 @@ void CB3D::KillAllParts(){
 void CB3D::PrintActionMap(CActionMap *actionmap){
 	CActionMap::iterator epos;
 	CAction *action;
-	int iaction=0;
 	sprintf(message,"_________________ ACTIONMAP %d actions _________________________\n",int(actionmap->size()));
 	CLog::Info(message);
 	for(epos=actionmap->begin();epos!=actionmap->end();++epos){
-		iaction+=1;
 		action=epos->second;
 		action->Print();
 	}

@@ -81,16 +81,22 @@ void CResList::freegascalc_onespecies_finitewidth(double resmass, double m1, dou
 double &epsilon,double &P,double &dens,double &sigma2,
 double &dedt,double &maxweight){
 
-	double kr,k,E,dE,Gamma,rho;
+	double kr,k,E,dE,Gamma,rho,lor;
 	double norm=0.0,esum=0.0,psum=0.0,dsum=0.0,sigsum=0.0,dedtsum=0.0;
-	double lor,weight,K2,K2mr;
+	double weight,K2,K2mr,minE,maxE;
 	double alpha=RESWIDTH_ALPHA;
 	dE=1.0;
 	maxweight=-1.0;
 	kr=sqrt(pow((resmass*resmass-m1*m1-m2*m2),2.0)-4.0*m1*m1*m2*m2)/(2.0*resmass);
 	K2mr=gsl_sf_bessel_Kn(2,resmass/T);
 
-	for(E=(m1+m2+0.5*dE);E<2.0*resmass;E+=dE){
+	minE=m1+m2;
+	if(minE<resmass-500.0)
+		minE=resmass-500.0;
+	if(minE<resmass-5.0*width)
+		minE=resmass-5.0*width;
+	maxE=resmass+5.0*width;
+	for(E=(minE+0.5*dE);E<maxE;E+=dE){
 
 		k=sqrt(pow((E*E-m1*m1-m2*m2),2.0)-(4.0*m1*m1*m2*m2))/(2.0*E);
 		Gamma=width*pow((2.0*k*k)/(k*k+kr*kr),alpha);
@@ -111,15 +117,11 @@ double &dedt,double &maxweight){
 		sigsum+=sigma2*rho;
 		dedtsum+=dedt*rho;
 	}
-
 	epsilon=esum/norm;
 	P=psum/norm;
 	dens=dsum/norm;
 	sigma2=sigsum/norm;
 	dedt=dedtsum/norm;
-	if(fabs(m2)<1.0E-5){
-		printf("m1=%g, dsum=%g, weight=%g, dens=%g\n",m1,dsum,weight,dens);
-	}
 }
 
 void CResList::ReadResInfo(){
@@ -376,7 +378,7 @@ double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &ch
 						m2+=resinfoptr->branchlist[0]->resinfoptr[n]->mass;
 					}
 				}
-				if((minmass>0.0)&&(width>1.0E-3)){
+				if((minmass>0.0)&&(width>1.0)){
 					freegascalc_onespecies_finitewidth(m,m1,m2,T,width,epsiloni,pi,densi,sigma2i,dedti,maxweighti);
 					if(densi!=densi){
 						resinfoptr->Print();
@@ -470,7 +472,7 @@ double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &ch
 						m2+=resinfoptr->branchlist[0]->resinfoptr[n]->mass;
 					}
 				}
-				if((minmass>0.0)&&(width>1.0E-3)){
+				if((minmass>0.0)&&(width>1.0)){
 					freegascalc_onespecies_finitewidth(m,m1,m2,T,width,
 					epsiloni,pi,densi,sigma2i,dedti,maxweighti);
 					if(densi!=densi){
