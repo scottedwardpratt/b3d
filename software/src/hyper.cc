@@ -51,7 +51,6 @@ int CHyperElement::MakeParts(){
 	CResInfo *resinfo;
 	CRandy *randy=sampler->randy;
 	double ETAMAX=sampler->ETAMAX;
-	double Qtot=0.0;
 	if(sampler->cummulative_N+delNtot > sampler->cummulative_random){
 		for(rpos=resmap->begin();rpos!=resmap->end();rpos++){
 			resinfo=rpos->second;
@@ -61,9 +60,17 @@ int CHyperElement::MakeParts(){
 			}
 			ires=resinfo->ires;
 			delN=(*density)[ires]*udotdOmega*nsample;
-			Qtot+=delN*resinfo->charge;
 			sampler->cummulative_N+=delN;
 			while(sampler->cummulative_N>sampler->cummulative_random){
+				//printf("howdy, code=%d\n",resinfo->code);
+				if(abs(resinfo->code)==3112)
+					sampler->b3d->ncheck+=1;
+				if(abs(resinfo->code)==3212){
+					sampler->b3d->ncheck1+=1;
+					resinfo->Print();
+				}
+				if(abs(resinfo->code)==3222)
+					sampler->b3d->ncheck2+=1;
 				GetP(resinfo,plab,mass,(*maxweight)[ires]);
 				part=sampler->b3d->GetDeadPart();	
 #ifdef __XY_REFLECT__	

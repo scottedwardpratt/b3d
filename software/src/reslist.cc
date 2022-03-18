@@ -135,7 +135,7 @@ double &dedt,double &maxweight){
 void CResList::ReadResInfo(){
 	CMerge *merge;
 	int mothercode,code,decay,NResonances;
-	double mothermass,bsum,netm,qR2,bmax;
+	double mothermass,netm,qR2,bmax;
 	int ires,jres,ires1,ires2,iresflip,ichannel,nchannels,ibody,nbodies,LDecay;
 	int netq,netb,nets;
 	string name, filename;
@@ -198,7 +198,6 @@ void CResList::ReadResInfo(){
 		fscanf(decayinfofile,"%d %d",&mothercode,&nchannels);
 		resinfoptr=GetResInfoPtr(mothercode);
 		resinfoptr->minmass=1.0E10;
-		bsum=0.0;
 		bmax=0.0;
 		for(ichannel=0;ichannel<nchannels;ichannel++){
 			bptr=new CBranchInfo();
@@ -261,7 +260,6 @@ void CResList::ReadResInfo(){
 						SigmaMaxArray[ires2][ires1]=SigmaMaxArray[ires1][ires2];
 				}
 			}
-			bsum+=bptr->branching;
 			//if the total mass is smaller than the minimum required mass, replace it
 			if(netm<resinfoptr->minmass){
 				resinfoptr->minmass=netm;
@@ -503,6 +501,9 @@ double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &ch
 			strangecontent+=Nstrange*densi*degen;
 			udcontent+=Nud*densi*degen;
 			density[ires]=densi*degen;
+			if(abs(resinfoptr->code)==3112 || abs(resinfoptr->code)==3212 || abs(resinfoptr->code)==3222){
+				printf("code=%d: dens=%g\n",resinfoptr->code,density[ires]);
+			}
 			maxweight[ires]=maxweighti;
 			for(a=0;a<3;a++){
 				for(b=0;b<3;b++){

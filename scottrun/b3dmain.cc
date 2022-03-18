@@ -36,6 +36,9 @@ int main(int argc, char *argv[]){
 			CLog::Info(message);
 			b3d->Reset();
 			ninit+=b3d->sampler->GenHadronsFromHyperSurface(); // Generates particles from hypersurface
+
+			printf("ncheck=%lld, ncheck1=%lld, ncheck2=%lld\n",b3d->ncheck,b3d->ncheck1,b3d->ncheck2);
+			
 			b3d->PerformAllActions();
 			nscatter+=b3d->nscatter;
 			nmerge+=b3d->nmerge;
@@ -46,7 +49,6 @@ int main(int argc, char *argv[]){
 			nexit+=b3d->nexit;
 			nparts+=b3d->PartMap.size();
 			nbaryons+=b3d->CountBaryons();
-			//printf("ncheck=%lld, ncheck1=%lld, ncheck2=%lld\n",b3d->ncheck,b3d->ncheck1,b3d->ncheck2);
 		}
 		norm=nevents*b3d->NSAMPLE;
 		sprintf(message,"<Nparts>=%8.2f, initial<Nparts>=%8.2f\n",double(nparts)/norm,double(ninit)/norm);

@@ -135,7 +135,8 @@ int CB3D::Collide_Inelastic(CPart *part1,CPart *part2,int &nproducts,array<CPart
 	nproducts=2;
 	int colltype;
 	double inel_weight[NWMAX]={0.0};
-	double inel_d=0.0,q_prime,j1_i,j2_i,M,P2,p1dotp2,r,wtot;
+	//double inel_d=0.0;
+	double q_prime,j1_i,j2_i,M,P2,p1dotp2,r,wtot;
 	list<CInelasticInfo>::iterator inel;
 	list<CInelasticInfo> inel_list;
 	int iw,ir1,ir2,irflip,alpha,G_Value,netq,netb,nets;
@@ -170,12 +171,12 @@ int CB3D::Collide_Inelastic(CPart *part1,CPart *part2,int &nproducts,array<CPart
 		nets = part1->resinfo->strange+part2->resinfo->strange;
 		inel_list = inelasticlist->ThermalArray[abs(netb)][abs(netq)][abs(nets)][Misc::Sign(netb)][Misc::Sign(netq)][Misc::Sign(nets)];
 	}
-	inel_d = Q0*Q0;
+	//inel_d = Q0*Q0;
 	inel = inel_list.begin();
 	iw=0;
 	r=randy->ran();
 	success=false;
-	inel_d=0.0;
+	//inel_d=0.0;
 	while(inel!=inel_list.end()){
 		if((G_Parity && (inel->resinfo_1->G_Parity * inel->resinfo_2->G_Parity == G_Value)) || (!G_Parity)){
 			if(inel->resinfo_1->mass+inel->resinfo_2->mass<M){
@@ -187,7 +188,7 @@ int CB3D::Collide_Inelastic(CPart *part1,CPart *part2,int &nproducts,array<CPart
 			else{
 				inel_weight[iw]=0.0;
 			}
-			inel_d+=inel_weight[iw];
+			//inel_d+=inel_weight[iw];
 		}
 	}
 	wtot=0.0;

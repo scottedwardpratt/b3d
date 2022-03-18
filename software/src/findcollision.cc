@@ -129,14 +129,11 @@ bool CB3D::FindCollision(CPart *part1,CPart *part2,double &taucoll){
 	double pibsquared,Minv2,sigmatot;
 	dsigma_merge.clear();
 
-	ncheck+=1;
 	checkpossible=CheckKinematics(part1,part2,Minv2,pibsquared,taucoll);
 	if(checkpossible){
-		ncheck1+=1;
 		sigmatot=GetSigma(part1,part2,Minv2,sigma_scatter,sigma_merge,sigma_annihilation,sigma_inel,
 			dsigma_merge);
 		if(pibsquared<sigmatot/double(NSAMPLE)){
-			ncheck2+=1;
 			AddAction_Collision(part1,part2,taucoll,pibsquared,
 						sigma_scatter,sigma_merge,sigma_annihilation,sigma_inel,
 						dsigma_merge);
