@@ -162,6 +162,7 @@ double CResInfo::GenerateThermalMass(double maxweight, double T){
 		kr=sqrt(pow((mass*mass-m1*m1-m2*m2),2.0)-4.0*m1*m1*m2*m2)/(2.0*mass);
 
 		do{
+			weight=10000.0;
 			r1 = randy->ran(); // get random numbers
 			m = ((width/2)*tan(PI*(r1 - .5))) + mass;// generate random mass value proportional to the lorentz distribution
 			if(m > minmass){
