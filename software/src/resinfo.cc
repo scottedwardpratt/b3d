@@ -173,7 +173,7 @@ double CResInfo::GenerateThermalMass(double maxweight, double T){
 				K2 = gsl_sf_bessel_Kn(2,(m/T)); // K2 value
 				weight = rho*K2*m*m/(lor*K2mr*mass*mass*maxweight);
 			}
-		}while(randy->ran()<weight && m<minmass);
+		}while(randy->ran()<weight || m<minmass);
 	}
 	else
 		m=mass;
