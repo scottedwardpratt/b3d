@@ -36,9 +36,6 @@ int main(int argc, char *argv[]){
 			CLog::Info(message);
 			b3d->Reset();
 			ninit+=b3d->sampler->GenHadronsFromHyperSurface(); // Generates particles from hypersurface
-
-			printf("ncheck=%lld, ncheck1=%lld, ncheck2=%lld\n",b3d->ncheck,b3d->ncheck1,b3d->ncheck2);
-			
 			b3d->PerformAllActions();
 			nscatter+=b3d->nscatter;
 			nmerge+=b3d->nmerge;
