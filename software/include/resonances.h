@@ -58,6 +58,8 @@ public:
 	bool CheckForNeutral();
 	double GenerateMass();
 	double GenerateThermalMass(double maxweight, double T);
+	void FreeGas(double T,double &epsilon,double &P,double &dens,double &sigma2,double &dedt,double &maxweight);
+	void FreeGas_FiniteWidth(double T,double &epsilon,double &P,double &dens,double &sigma2,double &dedt,double &maxweight);
 	double ChiInt(double T,double vmax); // Integral used by ChiOmega
 	double ChiTilde(double T,double vmax); // Integral used by ChiOmega
 	CResInfo();
@@ -101,7 +103,7 @@ double &nh,vector<double> &density,vector<double> &maxweight,Eigen::Matrix3d &ch
 	double Tf,epsilonf,Pf,lambdaf,nf;
 	vector<double> densityf,maxweightf;
 	Eigen::Matrix3d chif,chiinvf;
-	double triangle(double m0,double m1,double m2);
+	//double triangle(double m0,double m1,double m2);
 	static CB3D *b3d;
 	static CBalance *cb;
 	static CSampler *sampler;

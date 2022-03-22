@@ -561,9 +561,10 @@ void CPart::FindActions(){
 		KillActions();
 	}
 	if(resinfo->code!=22 && msquared<resinfo->minmass*resinfo->minmass){
-		sprintf(message,"msquared too small, =%g, minmass=%g\n",sqrt(msquared),resinfo->minmass);
+		sprintf(message,"msquared too small, =%14.9e, minmass=%14.9e\n",sqrt(msquared),resinfo->minmass);
 		CLog::Info(message);
 		Print();
+		exit(1);
 		msquared=resinfo->minmass*resinfo->minmass;
 		Setp0();
 	}

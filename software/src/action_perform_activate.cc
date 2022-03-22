@@ -14,4 +14,5 @@ void CAction::PerformActivate(){
 	part->actionmother=b3d->nactions;
 	part->FindActions();
 	b3d->nactivate+=1;
+	part->SetMass();
 }

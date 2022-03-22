@@ -169,21 +169,6 @@ int CB3D::Annihilate(CPart *part1,CPart *part2,int &ndaughters,array<CPart*,5> &
 			CLog::Fatal(message);
 		}
 	}
-/*
-	for(alpha=0;alpha<4;alpha++)
-		P[alpha]=0.0;
-	double Mtot=0.0;
-	for(ibody=0;ibody<nbodies;ibody++){
-		dptr=daughter[ibody];
-		Mtot+=dptr->resinfo->mass;
-		for(alpha=0;alpha<4;alpha++)
-			P[alpha]+=dptr->p[alpha];
-	}
-	double Minv=sqrt(P[0]*P[0]-P[1]*P[1]-P[2]*P[2]-P[3]*P[3]);
-	printf("Minv=%g =? %g, Mtot=%g\n",Minv,mass[0],Mtot);
-	if(Mtot>Minv)
-		exit(1);
-		*/
 	return ndaughters;
 }
 

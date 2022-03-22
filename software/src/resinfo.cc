@@ -139,7 +139,7 @@ double CResInfo::GenerateMass(){
 			lor = (width/(2*PI))/(pow(width/2,2.0) + pow(mass-m,2.0));
 			weight = rho/(lor*8.0);
 			r=randy->ran();
-		}while(r>weight || m<minmass);
+		}while(r>weight || m<=minmass);
 	}
 	else
 		m=mass;
@@ -174,7 +174,7 @@ double CResInfo::GenerateThermalMass(double maxweight, double T){
 				K2 = gsl_sf_bessel_Kn(2,(m/T)); // K2 value
 				weight = rho*K2*m*m/(lor*K2mr*mass*mass*maxweight);
 			}
-		}while(randy->ran()>weight || m<minmass);
+		}while(randy->ran()>weight || m<=minmass);
 	}
 	else
 		m=mass;
@@ -354,8 +354,5 @@ void CResInfo::SetBtype(){
 			if(name[0]=='L')
 				Btype=3;
 		}
-		//if(Btype==4){
-		//	printf("%2d:%s\n",Btype,name.c_str());
-		//}
 	}
 }

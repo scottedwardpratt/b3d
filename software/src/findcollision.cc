@@ -145,7 +145,6 @@ bool CB3D::FindCollision(CPart *part1,CPart *part2,double &taucoll){
 
 void CB3D::FindAllCollisions(){
 	double taucoll;
-	int nfound=0;
 	CPartMap::iterator ppos1,ppos2;
 	CPart *part1,*part2;
 	CActionMap::iterator epos;
@@ -169,8 +168,7 @@ void CB3D::FindAllCollisions(){
 			part1=ppos1->second;
 			if(part1->balanceID<0 || part2->balanceID<0){
 				if(part1->cell!=NULL && part2->cell!=NULL){
-					if(FindCollision(part1,part2,taucoll))
-						nfound+=1;
+					FindCollision(part1,part2,taucoll);
 				}
 			}
 			++ppos1;

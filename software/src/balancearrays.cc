@@ -368,7 +368,6 @@ void CBalanceArrays::ProcessPartMap(){   // makes denom + correlations from casc
 	double ya,yb,dely,delymax,B3D_ETAMAX=b3d->ETAMAX;
 	CPartMap::iterator it;
 	multimap<double,CPart *>::iterator ita,itb;
-	int netN=0,netQ=0;
 	int pida,pidb;
 	CPart *parta,*partb;
 	pair<CPartMap::iterator,CPartMap::iterator> itpair;
@@ -386,10 +385,6 @@ void CBalanceArrays::ProcessPartMap(){   // makes denom + correlations from casc
 	else{
 		for(it=b3d->PartMap.begin();it!=b3d->PartMap.end();++it){
 			parta=it->second;
-			if(abs(parta->resinfo->charge)==1){
-				netN+=1;
-				netQ+=parta->resinfo->charge;
-			}
 			
 			if(parta->balanceID<0){
 				ya=atanh(parta->p[3]/parta->p[0]);
