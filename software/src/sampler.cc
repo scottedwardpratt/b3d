@@ -132,7 +132,7 @@ void CSampler::ReadHyperElements2D_OSU(){
 			&tau,&x,&y,&ux,&uy,&dOmega0,&dOmegaX,&dOmegaY,&pitildexx,&pitildeyy,&pitildexy);
 		}
 		if(!feof(fptr)){
-			u0=sqrt(1.0+ux*ux+uy*uy);
+			u0=sqrt(1.0+ux*ux+uy*uy);!
 			udotdOmega=u0*dOmega0-ux*dOmegaX-uy*dOmegaY;
 			if(udotdOmega<0.0){
 				sprintf(message,"udotdOmega<0 =%g!!!\n",udotdOmega);
