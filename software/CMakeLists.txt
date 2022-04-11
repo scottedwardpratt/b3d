@@ -13,6 +13,7 @@ find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED)
 include_directories(SYSTEM ${GSL_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIR})
 message("Includes: ${GSL_INCLUDE_DIR} ${EIGEN3_INCLUDE_DIR}")
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GITHOME_MSU}/commonutils/software/include ${GITHOME_MSU}/coral/software/include)
 
 file(GLOB b3d_src src/*.cc)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "lib")
@@ -20,6 +21,6 @@ add_library(b3d STATIC ${b3d_src})
 target_link_libraries(b3d ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY} ${Boost_LIBRARIES})
 message("Libraries: ${GSL_LIBRARY} ${GSL_CBLAS_LIBRARY}")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GITHOME_MSU}/commonutils/software/include ${GITHOME_MSU}/coral/software/include ${CMAKE_CURRENT_SOURCE_DIR}/../hydrobalance/include)
+
 
 
